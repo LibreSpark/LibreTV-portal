@@ -1,0 +1,33 @@
+{
+  "name": "libretv-portal",
+  "version": "1.0.0",
+  "description": "LibreTV门户网站 - 免费开源的在线视频搜索平台",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx serve . -s -l 3000",
+    "build": "echo 'Build completed'",
+    "start": "npx serve . -s -l 3000",
+    "preview": "npx serve . -s -l 4173"
+  },
+  "keywords": [
+    "libretv",
+    "video",
+    "streaming",
+    "portal",
+    "landing",
+    "opensource"
+  ],
+  "author": "LibreTV Team",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LibreSpark/LibreTV.git"
+  },
+  "homepage": "https://libretv.vercel.app",
+  "bugs": {
+    "url": "https://github.com/LibreSpark/LibreTV/issues"
+  }
+}

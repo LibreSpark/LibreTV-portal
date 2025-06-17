@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://libretv.vercel.app/sitemap.xml
+
+# Specific rules for important pages
+Allow: /index.html
+Allow: /styles/
+Allow: /scripts/
+Allow: /assets/
+
+# Block unnecessary files
+Disallow: /vercel.json
+Disallow: /package.json
+Disallow: /.git/
+Disallow: /node_modules/
+
+# Crawl-delay (optional)
+Crawl-delay: 1

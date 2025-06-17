@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LibreTV - 自由观影，畅享精彩</title>
+    <meta name="description" content="LibreTV是一个免费、开源的在线视频搜索平台，智能广告过滤、安全可靠，支持苹果CMS API，支持多种部署方式，让您自由观影。">
+    <meta name="keywords" content="LibreTV,免费视频,开源,视频搜索,在线观影,无广告">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://libretv.vercel.app/">
+    <meta property="og:title" content="LibreTV - 自由观影，畅享精彩">    <meta property="og:description" content="免费、开源的在线视频搜索平台，智能广告过滤，支持苹果CMS API">
+    <meta property="og:image" content="./assets/logo-black.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://libretv.vercel.app/">
+    <meta property="twitter:title" content="LibreTV - 自由观影，畅享精彩">
+    <meta property="twitter:description" content="免费、开源的在线视频搜索平台，智能广告过滤，支持苹果CMS API">
+    <meta property="twitter:image" content="./assets/logo-black.png">
+
+    <!-- Favicon -->
+    <link rel="icon" href="./assets/logo-black.png">
+    <link rel="apple-touch-icon" href="./assets/logo-black.png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="./styles/main.css">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Particles.js for background -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+</head>
+<body>
+    <!-- Particles Background -->
+    <div id="particles-js"></div>
+    
+    <!-- Navigation -->
+    <nav class="navbar">        
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="logo-text">LibreTV</span>
+            </div>            
+            <div class="nav-menu" id="nav-menu">
+                <a href="#hero" class="nav-link">首页</a>
+                <a href="#features" class="nav-link">特性</a>
+                <a href="#deployment" class="nav-link">部署</a>
+                <a href="#disclaimer" class="nav-link">重要声明</a>
+                <a href="#about" class="nav-link">关于</a>
+                <a href="https://github.com/LibreSpark/LibreTV" class="nav-link github-link" target="_blank">
+                    <svg class="github-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0C5.374 0 0 5.373 0 12 0 17.302 3.438 21.8 8.207 23.387c.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    GitHub
+                </a>
+            </div>
+            <div class="nav-toggle" id="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+        <div class="hero-container">
+            <div class="hero-content" data-aos="fade-up" data-aos-duration="1000">
+                <div class="hero-badge" data-aos="fade-up" data-aos-delay="200">
+                    <span class="badge-text">🎬 免费开源</span>
+                </div>
+                <h1 class="hero-title" data-aos="fade-up" data-aos-delay="400">
+                    <span class="gradient-text">LibreTV</span>
+                </h1>
+                <h2 class="hero-subtitle" data-aos="fade-up" data-aos-delay="600">
+                    自由观影，畅享精彩
+                </h2>                <p class="hero-description" data-aos="fade-up" data-aos-delay="800">
+                    免费、开源的在线视频搜索平台，智能广告过滤、安全可靠，支持多种部署方式，让您随时随地享受高质量的观影体验。
+                </p>
+                <div class="hero-buttons" data-aos="fade-up" data-aos-delay="1000">
+                    <a href="https://tv.ciao.su/" class="btn btn-primary" target="_blank">
+                        <span>立即体验</span>
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M13 17l5-5-5-5M6 17l5-5-5-5"/>
+                        </svg>
+                    </a>
+                    <a href="https://github.com/LibreSpark/LibreTV" class="btn btn-secondary" target="_blank">
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0C5.374 0 0 5.373 0 12 0 17.302 3.438 21.8 8.207 23.387c.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        <span>查看源码</span>
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image" data-aos="fade-left" data-aos-delay="1200">
+                <div class="hero-mockup">
+                    <div class="mockup-browser">
+                        <div class="mockup-header">
+                            <div class="mockup-buttons">
+                                <div class="mockup-button red"></div>
+                                <div class="mockup-button yellow"></div>
+                                <div class="mockup-button green"></div>
+                            </div>
+                            <div class="mockup-url">libretv.is-an.org</div>
+                        </div>                        <div class="mockup-content">
+                            <img src="./assets/nomedia.png" alt="LibreTV Preview" class="mockup-img">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator" data-aos="fade-up" data-aos-delay="2000">
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">核心特性</h2>
+                <p class="section-subtitle">为什么选择LibreTV？</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">完全免费</h3>
+                    <p class="feature-description">100%免费使用，无任何付费功能，无会员制度，让每个人都能享受自由观影。</p>
+                </div>                <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">智能广告过滤</h3>
+                    <p class="feature-description">内置HLS广告切片过滤逻辑，尽可能减少视频播放中的广告干扰，提供更纯净的观影体验。</p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="600">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                            <polyline points="9,22 9,12 15,12 15,22"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">开源透明</h3>
+                    <p class="feature-description">完全开源，代码透明，社区驱动开发，安全可信赖。</p>
+                </div>                <div class="feature-card" data-aos="fade-up" data-aos-delay="800">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            <polyline points="3.27,6.96 12,12.01 20.73,6.96"/>
+                            <line x1="12" y1="22.08" x2="12" y2="12"/>
+                        </svg>
+                    </div>
+                    
+                    <h3 class="feature-title">多源聚合</h3>
+                    <p class="feature-description">聚合多个优质视频源，智能搜索，丰富的内容库满足不同用户的观影需求。支持标准苹果CMS V10 API格式，可自定义接口源。</p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="1200">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                            <line x1="8" y1="21" x2="16" y2="21"/>
+                            <line x1="12" y1="17" x2="12" y2="21"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">响应式设计</h3>
+                    <p class="feature-description">完美适配手机、平板、电脑等各种设备，支持键盘快捷键操作，随时随地享受观影。</p>
+                </div>                <div class="feature-card" data-aos="fade-up" data-aos-delay="1200">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">易于部署</h3>
+                    <p class="feature-description">支持Docker、Vercel、Netlify、Cloudflare等多种部署方式，快速搭建个人实例。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Deployment Section -->
+    <section id="deployment" class="deployment">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">快速部署</h2>
+                <p class="section-subtitle">选择适合您的部署方式</p>
+            </div>            <!-- Docker deployment row -->
+            <div class="deployment-grid-docker">
+                <div class="deployment-card deployment-card-wide" data-aos="fade-up" data-aos-delay="200">
+                    <div class="deployment-icon">
+                        <img src="./assets/logos/docker-icon.svg" alt="Docker" class="deployment-logo">
+                    </div>
+                    <h3 class="deployment-title">Docker 部署</h3>
+                    <p class="deployment-description">使用Docker容器化部署，简单快捷，适合有服务器的用户。</p>                    <div class="deployment-code">
+                        <code>docker run -d \<br>  --name libretv \<br>  --restart unless-stopped \<br>  -p 8899:8080 \<br>  -e PASSWORD=your_password \<br>  bestzwei/libretv:latest</code>
+                        <button class="copy-btn" title="复制代码" aria-label="复制代码">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="deployment-card deployment-card-wide" data-aos="fade-up" data-aos-delay="400">
+                    <div class="deployment-icon">
+                        <img src="./assets/logos/docker-icon.svg" alt="Docker Compose" class="deployment-logo">
+                    </div>
+                    <h3 class="deployment-title">Docker Compose 部署</h3>
+                    <p class="deployment-description">使用Docker Compose一键部署，配置更简单，管理更方便。</p>                    <div class="deployment-code">
+                        <code>services:<br>  libretv:<br>    image: bestzwei/libretv:latest<br>    container_name: libretv<br>    ports:<br>      - "8899:8080"<br>    environment:<br>      - PASSWORD=${PASSWORD:-your_password}<br>    restart: unless-stopped</code>
+                        <button class="copy-btn" title="复制代码" aria-label="复制代码">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Other deployment options -->
+            <div class="deployment-grid">
+                <div class="deployment-card" data-aos="fade-up" data-aos-delay="600">
+                    <div class="deployment-icon">
+                        <img src="./assets/logos/vercel-icon.svg" alt="Vercel" class="deployment-logo">
+                    </div>
+                    <h3 class="deployment-title">Vercel 部署</h3>
+                    <p class="deployment-description">一键部署到Vercel，免费托管，全球CDN加速。</p>                    <div class="deployment-button">
+                        <a href="https://vercel.com/new/clone?repository-url=https://github.com/LibreSpark/LibreTV" class="btn btn-vercel" target="_blank">
+                            Deploy to Vercel
+                        </a>
+                    </div>
+                </div>
+                <div class="deployment-card" data-aos="fade-up" data-aos-delay="800">
+                    <div class="deployment-icon">
+                        <img src="./assets/logos/netlify-icon.svg" alt="Netlify" class="deployment-logo">
+                    </div>
+                    <h3 class="deployment-title">Netlify 部署</h3>
+                    <p class="deployment-description">部署到Netlify，支持边缘函数，性能优异。</p>                    <div class="deployment-button">
+                        <a href="https://app.netlify.com/start/deploy?repository=https://github.com/LibreSpark/LibreTV" class="btn btn-netlify" target="_blank">
+                            Deploy to Netlify
+                        </a>
+                    </div>
+                </div>
+                <div class="deployment-card" data-aos="fade-up" data-aos-delay="1000">
+                    <div class="deployment-icon">
+                        <img src="./assets/logos/cloudflare-icon.svg" alt="Cloudflare" class="deployment-logo">
+                    </div>
+                    <h3 class="deployment-title">Cloudflare 部署</h3>
+                    <p class="deployment-description">使用Cloudflare Pages部署，享受强大的边缘计算能力。</p>                    <div class="deployment-code">
+                        <code>wrangler pages deploy dist</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology & API Section -->
+    <section class="tech-api">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">技术栈 & API格式</h2>
+                <p class="section-subtitle">现代化的技术架构与标准化API支持</p>
+            </div>
+            <div class="tech-api-content">
+                <div class="tech-stack" data-aos="fade-right" data-aos-delay="200">
+                    <h3 class="tech-title">🛠️ 技术栈</h3>
+                    <div class="tech-grid">
+                        <div class="tech-item">
+                            <span class="tech-name">前端</span>
+                            <span class="tech-desc">HTML5 + CSS3 + JavaScript (ES6+)</span>
+                        </div>
+                        <div class="tech-item">
+                            <span class="tech-name">样式</span>
+                            <span class="tech-desc">Tailwind CSS</span>
+                        </div>
+                        <div class="tech-item">
+                            <span class="tech-name">视频</span>
+                            <span class="tech-desc">HLS.js + ArtPlayer</span>
+                        </div>
+                        <div class="tech-item">
+                            <span class="tech-name">后端</span>
+                            <span class="tech-desc">Node.js + Serverless Functions</span>
+                        </div>
+                        <div class="tech-item">
+                            <span class="tech-name">存储</span>
+                            <span class="tech-desc">localStorage 本地存储</span>
+                        </div>
+                        <div class="tech-item">
+                            <span class="tech-name">代理</span>
+                            <span class="tech-desc">服务端 HLS 代理和处理</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="api-format" data-aos="fade-left" data-aos-delay="400">
+                    <h3 class="api-title">📡 API格式支持</h3>
+                    <div class="api-info">
+                        <p class="api-description">
+                            LibreTV 支持标准的 <strong>苹果 CMS V10 API</strong> 格式，兼容大部分CMS资源站点：
+                        </p>
+                        <div class="api-endpoints">
+                            <div class="api-endpoint">
+                                <span class="endpoint-type">搜索接口</span>
+                                <code>https://example.com/api.php/provide/vod/?ac=videolist&wd=关键词</code>
+                            </div>
+                            <div class="api-endpoint">
+                                <span class="endpoint-type">详情接口</span>
+                                <code>https://example.com/api.php/provide/vod/?ac=detail&ids=视频ID</code>
+                            </div>
+                        </div>
+                        <div class="api-custom">
+                            <h4>添加自定义源</h4>
+                            <p>在设置面板中选择"自定义接口"，输入接口地址：</p>
+                            <code>https://example.com/api.php/provide/vod</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="shortcuts-info" data-aos="fade-up" data-aos-delay="600">
+                <h3 class="shortcuts-title">⌨️ 键盘快捷键</h3>
+                <div class="shortcuts-grid">
+                    <div class="shortcut-item">
+                        <kbd>空格</kbd>
+                        <span>播放/暂停</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>←→</kbd>
+                        <span>快退/快进</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>↑↓</kbd>
+                        <span>音量调节</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>M</kbd>
+                        <span>静音切换</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>F</kbd>
+                        <span>全屏切换</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Esc</kbd>
+                        <span>退出全屏</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-number" data-target="100" data-stat="fork-count">0</div>
+                    <div class="stat-label">Forks</div>
+                </div>
+                <div class="stat-item" data-aos="fade-up" data-aos-delay="400">
+                    <div class="stat-number" data-target="500" data-stat="star-count">0</div>
+                    <div class="stat-label">GitHub Stars</div>
+                </div>
+                <div class="stat-item" data-aos="fade-up" data-aos-delay="600">
+                    <div class="stat-number" data-target="20" data-stat="contributor-count">0</div>
+                    <div class="stat-label">贡献者</div>
+                </div>
+                <div class="stat-item" data-aos="fade-up" data-aos-delay="800">
+                    <div class="stat-number" data-target="99" data-stat="uptime-rate">0</div>
+                    <div class="stat-label">正常运行率</div>
+                </div>
+            </div>
+        </div>    </section>
+
+    <!-- Important Disclaimer Section -->
+    <section id="disclaimer" class="disclaimer">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">⚠️ 重要声明</h2>
+                <p class="section-subtitle">请在使用前仔细阅读以下重要信息</p>
+            </div>
+            <div class="disclaimer-content" data-aos="fade-up" data-aos-delay="200">
+                <div class="disclaimer-grid">
+                    <div class="disclaimer-card" data-aos="fade-up" data-aos-delay="300">
+                        <div class="disclaimer-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M12 9v4m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                            </svg>
+                        </div>
+                        <h3 class="disclaimer-title">服务性质</h3>
+                        <p class="disclaimer-text">
+                            LibreTV 仅提供视频搜索服务，不直接提供、存储或上传任何视频内容。所有搜索结果均来自第三方公开接口。
+                        </p>
+                    </div>
+                    <div class="disclaimer-card" data-aos="fade-up" data-aos-delay="400">
+                        <div class="disclaimer-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="8.5" cy="7" r="4"/>
+                                <path d="m20 8-6 6"/>
+                                <path d="m14 8 6 6"/>
+                            </svg>
+                        </div>
+                        <h3 class="disclaimer-title">用户责任</h3>
+                        <p class="disclaimer-text">
+                            用户在使用本站服务时，须遵守相关法律法规，不得利用搜索结果从事侵权行为，如下载、传播未经授权的作品等。
+                        </p>
+                    </div>
+                    <div class="disclaimer-card" data-aos="fade-up" data-aos-delay="500">
+                        <div class="disclaimer-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                                <line x1="12" y1="9" x2="12" y2="13"/>
+                                <line x1="12" y1="17" x2="12.01" y2="17"/>
+                            </svg>
+                        </div>
+                        <h3 class="disclaimer-title">广告风险提示</h3>
+                        <p class="disclaimer-text">
+                            本站所有视频均来自第三方采集站，视频中出现的广告与本站无关，请勿相信或点击视频中的任何广告内容，谨防上当受骗。
+                        </p>
+                    </div>
+                    <div class="disclaimer-card" data-aos="fade-up" data-aos-delay="600">
+                        <div class="disclaimer-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            </svg>
+                        </div>
+                        <h3 class="disclaimer-title">安全建议</h3>
+                        <p class="disclaimer-text">
+                            强烈建议在部署时设置密码保护，避免公开访问可能带来的法律风险。请勿将实例链接公开分享或传播。
+                        </p>
+                    </div>
+                    <div class="disclaimer-card" data-aos="fade-up" data-aos-delay="700">
+                        <div class="disclaimer-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14,2 14,8 20,8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                                <polyline points="10,9 9,9 8,9"/>
+                            </svg>
+                        </div>
+                        <h3 class="disclaimer-title">法律责任</h3>
+                        <p class="disclaimer-text">
+                            本项目开发者不对使用本项目产生的任何后果负责。使用本项目时，您必须遵守当地的法律法规。
+                        </p>
+                    </div>
+                    <div class="disclaimer-card" data-aos="fade-up" data-aos-delay="800">
+                        <div class="disclaimer-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                <path d="m2 17 10 5 10-5"/>
+                                <path d="m2 12 10 5 10-5"/>
+                            </svg>
+                        </div>
+                        <h3 class="disclaimer-title">使用范围</h3>
+                        <p class="disclaimer-text">
+                            本项目仅供学习和个人使用，请勿将部署的实例用于商业用途或公开服务。如因公开分享导致的任何法律问题，用户需自行承担责任。
+                        </p>
+                    </div>
+                </div>
+                <div class="disclaimer-notice" data-aos="fade-up" data-aos-delay="900">
+                    <div class="notice-content">
+                        <h4 class="notice-title">📢 特别提醒</h4>
+                        <p class="notice-text">
+                            LibreTV 是一个开源项目，旨在为用户提供便捷的视频搜索服务。我们致力于合法合规地运营，但由于视频内容来源于第三方，我们无法保证所有内容的合法性。
+                        </p>
+                        <p class="notice-text">
+                            如果您发现任何违法或侵权内容，请及时联系相关内容提供方进行处理。我们鼓励用户举报违法内容，共同维护良好的网络环境。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-content">                <div class="about-text" data-aos="fade-right">
+                    <h2 class="section-title">关于 LibreTV</h2>
+                    <p class="about-description">
+                        LibreTV 是一个致力于为用户提供自由、安全观影体验的开源项目。我们相信每个人都应该享有免费获取优质内容的权利，而不应该被广告、付费墙或其他限制所束缚。
+                    </p>                    <p class="about-description">
+                        我们的使命是构建一个完全透明、社区驱动的视频搜索平台，让技术服务于人，让观影回归纯粹。通过开源的方式，我们确保平台的可持续发展和用户隐私的保护。
+                    </p>
+                    <div class="about-features">
+                        <div class="about-feature">
+                            <svg class="about-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M9 12l2 2 4-4"/>
+                                <path d="M21 12c.552 0 1-.448 1-1V8c0-.552-.448-1-1-1h-3l-2-3H8L6 7H3c-.552 0-1 .448-1 1v3c0 .552.448 1 1 1h18z"/>
+                            </svg>
+                            <span>用户隐私保护</span>
+                        </div>
+                        <div class="about-feature">
+                            <svg class="about-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M9 12l2 2 4-4"/>
+                                <path d="M12 1l3.09 6.26L22 9l-5 4.87L18.18 21 12 17.77 5.82 21 7 13.87 2 9l6.91-1.74L12 1z"/>
+                            </svg>
+                            <span>持续更新维护</span>
+                        </div>
+                        <div class="about-feature">
+                            <svg class="about-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M9 12l2 2 4-4"/>
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                            <span>社区共同建设</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image" data-aos="fade-left">
+                    <div class="about-card">
+                        <div class="card-header">
+                            <div class="card-avatar">
+                                <img src="./assets/logo-black.png" alt="LibreTV">
+                            </div>
+                            <div class="card-info">
+                                <h3>LibreTV Project</h3>
+                                <p>开源视频搜索平台</p>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <p>"让每个人都能享受自由观影的乐趣"</p>
+                        </div>                        <div class="card-stats">
+                            <div class="card-stat">
+                                <span class="stat-value">100%</span>
+                                <span class="stat-name">开源</span>
+                            </div>
+                            <div class="card-stat">
+                                <span class="stat-value">智能</span>
+                                <span class="stat-name">广告过滤</span>
+                            </div>
+                            <div class="card-stat">
+                                <span class="stat-value">∞</span>
+                                <span class="stat-name">免费</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="./assets/logo-black.png" alt="LibreTV Logo" class="footer-logo-img">
+                        <span class="footer-logo-text">LibreTV</span>
+                    </div>                    <p class="footer-description">
+                        自由观影，畅享精彩。LibreTV 致力于为用户提供免费、开源、智能广告过滤的观影体验。
+                    </p>
+                    <div class="footer-social">
+                        <a href="https://github.com/LibreSpark/LibreTV" class="social-link" target="_blank" aria-label="GitHub">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 0C5.374 0 0 5.373 0 12 0 17.302 3.438 21.8 8.207 23.387c.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">快速链接</h3>                    <ul class="footer-links">
+                        <li><a href="#features">核心特性</a></li>
+                        <li><a href="#deployment">快速部署</a></li>
+                        <li><a href="#disclaimer">重要声明</a></li>
+                        <li><a href="#about">关于我们</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">部署选项</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://vercel.com/new/clone?repository-url=https://github.com/LibreSpark/LibreTV" target="_blank">Vercel 部署</a></li>
+                        <li><a href="https://app.netlify.com/start/deploy?repository=https://github.com/LibreSpark/LibreTV" target="_blank">Netlify 部署</a></li>
+                        <li><a href="https://hub.docker.com/r/bestzwei/libretv" target="_blank">Docker 镜像</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">开发者</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://github.com/LibreSpark/LibreTV" target="_blank">GitHub 仓库</a></li>
+                        <li><a href="https://github.com/LibreSpark/LibreTV/issues" target="_blank">问题反馈</a></li>
+                        <li><a href="https://github.com/LibreSpark/LibreTV/blob/main/CONTRIBUTING.md" target="_blank">贡献指南</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    <p>&copy; 2024 LibreTV. 基于 MIT 许可证开源</p>
+                </div>
+                <div class="footer-legal">
+                    <a href="#privacy">隐私政策</a>
+                    <a href="#terms">使用条款</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" aria-label="回到顶部">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M18 15l-6-6-6 6"/>
+        </svg>
+    </button>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="./scripts/main.js"></script>
+</body>
+</html>
