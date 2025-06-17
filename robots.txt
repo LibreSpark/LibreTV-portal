@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://libretv.vercel.app/sitemap.xml
+Sitemap: https://libretv.is-an.org/sitemap.xml
 
 # Specific rules for important pages
 Allow: /index.html

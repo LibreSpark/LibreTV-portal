@@ -2,6 +2,8 @@
 
 LibreTV的官方门户网站，一个美观现代的静态网站，用于介绍LibreTV项目和提供部署指南。
 
+🌐 **在线访问**: [https://libretv.is-an.org/](https://libretv.is-an.org/)
+
 ## 📁 项目结构
 
 ```
@@ -91,7 +93,7 @@ LibreTV-portal/
 
 ## 📄 许可证
 
-本项目基于MIT许可证开源 - 查看 [LICENSE](../LICENSE) 文件了解详情。
+本项目基于Apache-2.0许可证开源 - 查看 [LICENSE](LICENSE) 文件了解详情。
 
 ## 🙏 致谢
 

@@ -16,9 +16,8 @@
     "portal",
     "landing",
     "opensource"
-  ],
-  "author": "LibreTV Team",
-  "license": "MIT",
+  ],  "author": "LibreTV Team",
+  "license": "Apache-2.0",
   "devDependencies": {
     "serve": "^14.2.1"
   },
@@ -26,7 +25,7 @@
     "type": "git",
     "url": "https://github.com/LibreSpark/LibreTV.git"
   },
-  "homepage": "https://libretv.vercel.app",
+  "homepage": "https://libretv.is-an.org",
   "bugs": {
     "url": "https://github.com/LibreSpark/LibreTV/issues"
   }
