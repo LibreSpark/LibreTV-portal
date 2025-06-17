@@ -2,47 +2,6 @@
 
 LibreTV的官方门户网站，一个美观现代的静态网站，用于介绍LibreTV项目和提供部署指南。
 
-## 🌟 特性
-
-- **现代设计**: 使用最新的Web设计趋势，包括毛玻璃效果、渐变背景等
-- **响应式布局**: 完美适配桌面端、平板和移动设备
-- **丰富动画**: 集成AOS动画库和Particles.js粒子效果
-- **高性能**: 优化的代码和资源，快速加载
-- **SEO友好**: 完整的meta标签和结构化数据
-- **一键部署**: 支持Vercel、Netlify等平台快速部署
-
-## 🚀 快速开始
-
-### 本地开发
-
-1. 克隆仓库
-```bash
-git clone https://github.com/LibreSpark/LibreTV.git
-cd LibreTV/LibreTV-portal
-```
-
-2. 安装依赖（可选）
-```bash
-npm install
-```
-
-3. 启动开发服务器
-```bash
-npm run dev
-```
-
-4. 打开浏览器访问 `http://localhost:3000`
-
-### 一键部署
-
-#### Vercel部署
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/LibreSpark/LibreTV/tree/main/LibreTV-portal)
-
-#### Netlify部署
-
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/LibreSpark/LibreTV)
-
 ## 📁 项目结构
 
 ```
@@ -101,71 +60,6 @@ LibreTV-portal/
 - **压缩优化**: CSS和JavaScript代码压缩
 - **CDN加速**: 字体和库文件使用CDN
 
-## 🔧 自定义配置
-
-### 修改主题色彩
-
-在 `styles/main.css` 中修改CSS变量：
-
-```css
-:root {
-    --primary-color: #00ccff;      /* 主色调 */
-    --secondary-color: #ff3c78;    /* 次要色调 */
-    --accent-color: #8b5cf6;       /* 强调色 */
-    /* ... 其他颜色变量 */
-}
-```
-
-### 修改粒子效果
-
-在 `scripts/main.js` 中的 `initParticles()` 函数中修改配置：
-
-```javascript
-particlesJS('particles-js', {
-    particles: {
-        number: { value: 50 },     // 粒子数量
-        color: { value: '#00ccff' }, // 粒子颜色
-        // ... 其他配置
-    }
-});
-```
-
-### 修改动画效果
-
-可以通过修改AOS库的配置来调整动画：
-
-```javascript
-AOS.init({
-    duration: 800,        // 动画持续时间
-    easing: 'ease-out-cubic', // 缓动函数
-    once: true,          // 只播放一次
-    offset: 100,         // 触发偏移量
-});
-```
-
-## 📈 SEO优化
-
-网站包含完整的SEO优化：
-
-- **Meta标签**: 完整的描述、关键词和作者信息
-- **Open Graph**: 社交媒体分享优化
-- **Twitter Cards**: Twitter分享卡片
-- **结构化数据**: JSON-LD格式的结构化数据
-- **语义化HTML**: 正确的HTML5语义标签
-- **友好URL**: 清晰的页面结构和锚点
-
-## 🌐 浏览器支持
-
-- **现代浏览器**: Chrome 88+, Firefox 85+, Safari 14+, Edge 88+
-- **移动浏览器**: iOS Safari 14+, Chrome Mobile 88+
-- **特性降级**: 对不支持的浏览器提供基础功能
-
-## 🔒 安全特性
-
-- **内容安全策略**: 通过HTTP头部实现
-- **XSS保护**: X-XSS-Protection头部
-- **点击劫持保护**: X-Frame-Options头部
-- **MIME类型嗅探保护**: X-Content-Type-Options头部
 
 ## 📝 开发指南
 
