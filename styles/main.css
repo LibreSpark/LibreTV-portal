@@ -1802,3 +1802,10 @@ section {
     background: var(--primary-color);
     color: white;
 }
+
+/* Logo image styling */
+.nav-logo .logo-img {
+    height: 36px;
+    width: auto;
+    display: block;
+}
