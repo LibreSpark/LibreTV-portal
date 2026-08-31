@@ -54,6 +54,7 @@ body {
     width: 100%;
     height: 100%;
     z-index: -1;
+    display: block;
     background: linear-gradient(45deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
 }
 
@@ -353,12 +354,12 @@ body::before {
 
 .hero-mockup {
     position: relative;
-    transform: perspective(1000px) rotateY(-10deg) rotateX(5deg);
+    transform: translateY(var(--py, 0)) perspective(1000px) rotateY(-10deg) rotateX(5deg);
     transition: transform var(--transition-slow);
 }
 
 .hero-mockup:hover {
-    transform: perspective(1000px) rotateY(-5deg) rotateX(2deg);
+    transform: translateY(var(--py, 0)) perspective(1000px) rotateY(-5deg) rotateX(2deg);
 }
 
 .mockup-browser {
@@ -654,14 +655,6 @@ section {
 
 .deployment-card-wide .deployment-code {
     text-align: left;
-    white-space: pre-line;
-    line-height: 1.4;
-    padding: 2rem 1.5rem; /* Increased vertical padding from 1.5rem to 2rem */
-    font-size: 0.8rem;
-    display: flex;
-    align-items: center; /* Center content vertically */
-    min-height: 160px; /* Ensure consistent height */
-    position: relative; /* Added for copy button positioning */
 }
 
 .copy-btn {
@@ -726,15 +719,7 @@ section {
 }
 
 .deployment-code {
-    background: var(--dark-surface);
-    border: 1px solid var(--border-color);
-    border-radius: 0.5rem;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-    font-size: 0.875rem;
-    color: var(--primary-color);
-    overflow-x: auto;
+    text-align: left;
 }
 
 .deployment-button {
@@ -2009,4 +1994,139 @@ section {
     height: 36px;
     width: auto;
     display: block;
+}
+
+/* ----------------------------------------------------------------
+   Accessibility: skip link, focus visibility, reduced motion
+   ---------------------------------------------------------------- */
+.skip-link {
+    position: fixed;
+    top: -100px;
+    left: 1rem;
+    z-index: 2000;
+    background: var(--primary-color);
+    color: #fff;
+    padding: 0.6rem 1.2rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: top var(--transition-fast);
+}
+
+.skip-link:focus {
+    top: 1rem;
+}
+
+:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* ----------------------------------------------------------------
+   Reveal-on-scroll (replaces AOS)
+   ---------------------------------------------------------------- */
+.js .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+    transition-delay: var(--d, 0ms);
+    will-change: opacity, transform;
+}
+
+.js .reveal.in {
+    opacity: 1;
+    transform: none;
+}
+
+/* Active nav link (fixes previously missing style) */
+.nav-link.active {
+    color: var(--text-primary);
+}
+
+.nav-link.active::after {
+    width: 100%;
+}
+
+/* Toast for copy feedback */
+.toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--dark-surface-light);
+    color: #fff;
+    border: 1px solid var(--border-color);
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    z-index: 1500;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-normal), transform var(--transition-normal);
+    box-shadow: var(--shadow-large);
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Code blocks: real <pre> with copy button */
+.code-block {
+    position: relative;
+    display: block;
+    margin: 0 0 1.5rem;
+    background: var(--dark-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 1.25rem 3rem 1.25rem 1.25rem;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'DejaVu Sans Mono', monospace;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--primary-color);
+    overflow-x: auto;
+    white-space: pre;
+    text-align: left;
+}
+
+.code-block code {
+    font: inherit;
+    color: inherit;
+    background: none;
+    white-space: pre;
+}
+
+@media (max-width: 480px) {
+    .deployment-card-wide .code-block {
+        font-size: 0.72rem;
+        padding: 1rem 2.5rem 1rem 1rem;
+    }
+}
+
+/* ----------------------------------------------------------------
+   Respect users who prefer reduced motion
+   ---------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+    }
+
+    .js .reveal {
+        opacity: 1;
+        transform: none;
+    }
+
+    .scroll-indicator,
+    .features::after,
+    .stats::after,
+    .disclaimer-notice::before {
+        animation: none !important;
+    }
 }

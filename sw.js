@@ -1,79 +1,69 @@
-// LibreTV Portal Service Worker
-const CACHE_NAME = 'libretv-portal-v1';
-const urlsToCache = [
-    '/',
-    '/index.html',
-    '/styles/main.css',
-    '/scripts/main.js',
-    '/assets/logo.png',
-    'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap',
-    'https://unpkg.com/aos@2.3.1/dist/aos.css',
-    'https://unpkg.com/aos@2.3.1/dist/aos.js',
-    'https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js'
+// LibreTV Portal Service Worker - network-first for HTML, stale-while-revalidate for assets
+const CACHE_NAME = 'libretv-portal-v2';
+const PRECACHE = [
+    './',
+    './index.html',
+    './styles/main.css',
+    './scripts/main.js',
+    './assets/logo.png',
+    './assets/logo-black.png'
 ];
 
-// Install event
-self.addEventListener('install', function(event) {
+self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME)
-            .then(function(cache) {
-                console.log('Opened cache');
-                return cache.addAll(urlsToCache);
-            })
-            .catch(function(error) {
-                console.log('Cache install failed:', error);
-            })
+            .then((cache) => cache.addAll(PRECACHE))
+            .then(() => self.skipWaiting())
+            .catch(() => { /* offline install best-effort */ })
     );
 });
 
-// Fetch event
-self.addEventListener('fetch', function(event) {
-    event.respondWith(
-        caches.match(event.request)
-            .then(function(response) {
-                // Return cached version or fetch from network
-                if (response) {
-                    return response;
-                }
-                
-                return fetch(event.request).then(function(response) {
-                    // Check if valid response
-                    if (!response || response.status !== 200 || response.type !== 'basic') {
-                        return response;
-                    }
-                    
-                    // Clone the response
-                    const responseToCache = response.clone();
-                    
-                    caches.open(CACHE_NAME)
-                        .then(function(cache) {
-                            cache.put(event.request, responseToCache);
-                        });
-                    
-                    return response;
-                });
-            })
-            .catch(function() {
-                // Return offline page if available
-                if (event.request.destination === 'document') {
-                    return caches.match('/');
-                }
-            })
-    );
-});
-
-// Activate event
-self.addEventListener('activate', function(event) {
+self.addEventListener('activate', (event) => {
     event.waitUntil(
-        caches.keys().then(function(cacheNames) {
-            return Promise.all(
-                cacheNames.map(function(cacheName) {
-                    if (cacheName !== CACHE_NAME) {
-                        console.log('Deleting old cache:', cacheName);
-                        return caches.delete(cacheName);
-                    }
+        caches.keys()
+            .then((keys) => Promise.all(keys.map((k) => (k !== CACHE_NAME ? caches.delete(k) : null))))
+            .then(() => self.clients.claim())
+    );
+});
+
+self.addEventListener('fetch', (event) => {
+    const req = event.request;
+    if (req.method !== 'GET') return;
+
+    const url = new URL(req.url);
+    // Never cache cross-origin API / analytics
+    if (!url.origin.startsWith(self.location.origin) &&
+        !url.origin.includes('libretv.is-an.org')) {
+        return;
+    }
+
+    // Navigation requests: network-first, fall back to cached shell
+    if (req.mode === 'navigate') {
+        event.respondWith(
+            fetch(req)
+                .then((res) => {
+                    const copy = res.clone();
+                    caches.open(CACHE_NAME).then((c) => c.put(req, copy));
+                    return res;
                 })
-            );
+                .catch(() => caches.match(req).then((r) => r || caches.match('./index.html')))
+        );
+        return;
+    }
+
+    // Static assets: stale-while-revalidate
+    event.respondWith(
+        caches.match(req).then((cached) => {
+            const network = fetch(req)
+                .then((res) => {
+                    if (res && res.status === 200 && (res.type === 'basic' || res.type === 'cors')) {
+                        const copy = res.clone();
+                        caches.open(CACHE_NAME).then((c) => c.put(req, copy));
+                    }
+                    return res;
+                })
+                .catch(() => cached);
+            return cached || network;
         })
     );
 });
