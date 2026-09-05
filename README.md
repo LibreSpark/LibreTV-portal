@@ -62,7 +62,7 @@ LibreTV-portal/
 
 ## 🧩 数据说明
 
-首页的 GitHub Stars / Forks / 贡献者数量通过 GitHub API 实时获取（带 10 分钟本地缓存与失败兜底，失败时显示 `—`，**不展示任何编造数据**）；「当前版本」为与 LibreTV `package.json` 同步的静态值。
+首页的 GitHub Stars / Forks / 贡献者数量与当前版本号均通过 GitHub API 实时获取（版本号读取主分支 `package.json`，带 10 分钟本地缓存与失败兜底，失败时显示 `—`，**不展示任何编造数据**）。
 
 ## 🚀 本地开发
 

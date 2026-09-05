@@ -309,9 +309,10 @@
         const opts = { signal: controller.signal };
 
         try {
-            const [repoRes, contribRes] = await Promise.all([
+            const [repoRes, contribRes, pkgRes] = await Promise.all([
                 fetch('https://api.github.com/repos/LibreSpark/LibreTV', opts),
-                fetch('https://api.github.com/repos/LibreSpark/LibreTV/contributors?per_page=1&anon=true', opts)
+                fetch('https://api.github.com/repos/LibreSpark/LibreTV/contributors?per_page=1&anon=true', opts),
+                fetch('https://api.github.com/repos/LibreSpark/LibreTV/contents/package.json', opts)
             ]);
             clearTimeout(timeout);
 
@@ -328,10 +329,20 @@
                 contributors = Array.isArray(arr) ? arr.length : 0;
             }
 
+            let version = '';
+            if (pkgRes.ok) {
+                const pkgFile = await pkgRes.json();
+                try {
+                    const pkg = JSON.parse(atob(pkgFile.content.replace(/\n/g, '')));
+                    version = typeof pkg.version === 'string' ? pkg.version : '';
+                } catch (e) { /* keep empty on parse failure */ }
+            }
+
             const stats = {
                 forks: repo.forks_count || 0,
                 stars: repo.stargazers_count || 0,
-                contributors: contributors
+                contributors: contributors,
+                version: version
             };
             applyStats(stats);
             safeStorageSet(cacheKey, JSON.stringify(stats));
@@ -347,6 +358,10 @@
         setStat('fork-count', stats.forks);
         setStat('star-count', stats.stars);
         setStat('contributor-count', stats.contributors);
+        // Version is not a number: write it directly, no count-up animation
+        $$('[data-stat="version"]').forEach(el => {
+            el.textContent = stats.version ? 'v' + stats.version : '—';
+        });
     }
 
     function setStat(id, value) {
