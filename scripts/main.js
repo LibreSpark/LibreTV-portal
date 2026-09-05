@@ -40,8 +40,8 @@
 
         function resize() {
             dpr = Math.min(window.devicePixelRatio || 1, 2);
-            width = canvas.clientWidth = window.innerWidth;
-            height = canvas.clientHeight = window.innerHeight;
+            width = window.innerWidth;
+            height = window.innerHeight;
             canvas.width = width * dpr;
             canvas.height = height * dpr;
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -256,10 +256,12 @@
     }
 
     function renderStat(el) {
-        if (!el.dataset.target || counted.has(el)) return;
+        const target = parseInt(el.dataset.target, 10);
+        if (Number.isNaN(target) || counted.has(el)) return;
         counted.add(el);
-        const target = parseInt(el.dataset.target, 10) || 0;
-        if (prefersReducedMotion) {
+        // Skip the count-up when the page is hidden: rAF is suspended in
+        // background tabs and the animation would never run or finish.
+        if (prefersReducedMotion || document.hidden) {
             el.textContent = formatNum(target);
             return;
         }
@@ -350,7 +352,10 @@
     function setStat(id, value) {
         $$('[data-stat="' + id + '"]').forEach(el => {
             el.dataset.target = value;
-            renderStat(el); // render immediately if already in view; otherwise observer handles it
+            // Render immediately only if already in view; otherwise the
+            // IntersectionObserver from initCounters renders on scroll.
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom > 0) renderStat(el);
         });
     }
 
