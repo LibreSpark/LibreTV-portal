@@ -251,9 +251,6 @@
      * ---------------------------------------------------------------- */
     const counted = new WeakSet();
 
-    function suffix(el) {
-        return el.dataset.stat === 'uptime-rate' ? '%' : '';
-    }
     function formatNum(n) {
         return Number(n).toLocaleString();
     }
@@ -263,18 +260,17 @@
         counted.add(el);
         const target = parseInt(el.dataset.target, 10) || 0;
         if (prefersReducedMotion) {
-            el.textContent = formatNum(target) + suffix(el);
+            el.textContent = formatNum(target);
             return;
         }
         const duration = 1600;
         const start = performance.now();
-        const suf = suffix(el);
         function frame(now) {
             const t = Math.min((now - start) / duration, 1);
             const eased = 1 - Math.pow(1 - t, 3); // easeOutCubic
-            el.textContent = formatNum(Math.floor(eased * target)) + suf;
+            el.textContent = formatNum(Math.floor(eased * target));
             if (t < 1) requestAnimationFrame(frame);
-            else el.textContent = formatNum(target) + suf;
+            else el.textContent = formatNum(target);
         }
         requestAnimationFrame(frame);
     }
@@ -349,7 +345,6 @@
         setStat('fork-count', stats.forks);
         setStat('star-count', stats.stars);
         setStat('contributor-count', stats.contributors);
-        // uptime is not a real public metric; leave as "—"
     }
 
     function setStat(id, value) {

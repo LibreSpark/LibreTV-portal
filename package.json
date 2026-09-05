@@ -1,7 +1,7 @@
 {
   "name": "libretv-portal",
   "version": "1.0.0",
-  "description": "LibreTV门户网站 - 免费开源的在线视频搜索平台",
+  "description": "LibreTV门户网站 - 免费开源的在线视频聚合搜索与观看平台",
   "main": "index.html",
   "scripts": {
     "dev": "npx serve . -s -l 3000",
@@ -17,7 +17,7 @@
     "landing",
     "opensource"
   ],  "author": "LibreTV Team",
-  "license": "Apache-2.0",
+  "license": "AGPL-3.0-or-later",
   "devDependencies": {
     "serve": "^14.2.1"
   },

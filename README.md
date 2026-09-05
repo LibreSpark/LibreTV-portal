@@ -1,6 +1,6 @@
 # LibreTV Portal
 
-LibreTV 的官方门户网站 —— 一个美观、现代、**零外部依赖**的静态落地页，用于介绍 LibreTV 项目与提供部署指南。
+LibreTV 的官方门户网站 —— 一个美观、现代、**零外部依赖**的静态落地页，用于介绍 LibreTV（v2.x Next.js 全栈版）项目与提供部署指南。
 
 🌐 **在线访问**: [https://libretv.is-an.org/](https://libretv.is-an.org/)
 
@@ -10,7 +10,7 @@ LibreTV 的官方门户网站 —— 一个美观、现代、**零外部依赖**
 - **现代视觉**：暗色科技风配色、毛玻璃、渐变、视差与悬浮交互。
 - **流畅动画**：滚动渐入（尊重 `prefers-reduced-motion`）、数字滚动计数、粒子背景。
 - **完全可访问**：语义化标签、`<main>` 主体、`skip-link`、键盘可操作的移动端菜单（Esc / 点击外部关闭 / 焦点管理）、`:focus-visible` 焦点样式。
-- **响应式设计**：移动优先，桌面 / 平板 / 手机三档断点。
+- **响应式设计**：移动优先，桌面（≥993px）/ 平板（≤992px 堆叠）/ 手机（≤768px）/ 小屏（≤480px）四档断点。
 - **PWA 就绪**：Service Worker（HTML network-first、静态资源 stale-while-revalidate）支持离线访问。
 - **SEO / 社交分享**：Open Graph / Twitter Card（绝对 URL）、JSON-LD 结构化数据、`canonical`、`sitemap.xml`、`robots.txt`。
 - **安全**：所有外链 `rel="noopener noreferrer"`、CSP / `X-Frame-Options` / `Referrer-Policy` 等响应头。
@@ -27,9 +27,9 @@ LibreTV-portal/
 ├── assets/
 │   ├── logo.png / logo-black.png
 │   ├── nomedia.png
-│   └── logos/          # Docker / Vercel / Netlify / Cloudflare 图标
+│   └── logos/          # Docker 图标
 ├── sw.js               # Service Worker
-├── vercel.json         # Vercel 配置（含安全响应头）
+├── vercel.json         # 部署平台配置（含安全响应头与缓存策略）
 ├── sitemap.xml / robots.txt
 ├── deploy.sh           # 本地开发/部署辅助脚本（bash）
 ├── package.json
@@ -46,9 +46,10 @@ LibreTV-portal/
 
 ## 📱 响应式设计
 
-- **桌面端** (≥1200px)：完整多列布局。
-- **平板端** (768px–1199px)：适配的两列布局。
+- **桌面端** (≥993px)：完整多列布局。
+- **平板端** (768px–992px)：双列布局降级为堆叠。
 - **移动端** (≤767px)：单列堆叠、汉堡菜单。
+- **小屏** (≤480px)：进一步收紧字号与间距。
 
 ## ⚡ 性能与优化要点
 
@@ -61,7 +62,7 @@ LibreTV-portal/
 
 ## 🧩 数据说明
 
-首页的 GitHub Stars / Forks / 贡献者数量通过 GitHub API 实时获取（带 10 分钟本地缓存与失败兜底，失败时显示 `—`，**不展示任何编造数据**）。"正常运行率" 并非真实公开指标，故保留为占位符。
+首页的 GitHub Stars / Forks / 贡献者数量通过 GitHub API 实时获取（带 10 分钟本地缓存与失败兜底，失败时显示 `—`，**不展示任何编造数据**）；「当前版本」为与 LibreTV `package.json` 同步的静态值。
 
 ## 🚀 本地开发
 
@@ -74,7 +75,7 @@ npx serve . -l 3000
 
 ## 📦 部署
 
-支持 Vercel / Netlify / Cloudflare Pages / Docker，详见站点内「快速部署」板块。
+本门户为纯静态站点，任意静态托管均可；LibreTV 本体支持 Docker / Docker Compose / 源码运行，详见站点内「快速部署」板块。
 
 ## 🤝 贡献
 
@@ -86,13 +87,12 @@ npx serve . -l 3000
 
 ## 📄 许可证
 
-基于 Apache-2.0 许可证开源 —— 查看 [LICENSE](LICENSE) 了解详情。
+基于 AGPL-3.0-or-later 许可证开源 —— 查看 [LICENSE](LICENSE) 了解详情。
 
 ## 🙏 致谢
 
-- [Vercel](https://vercel.com/) 部署平台
 - LibreTV 社区贡献者
 
 ---
 
-**LibreTV Portal** - 自由观影，畅享精彩 🎬
+**LibreTV Portal** - 免费在线视频聚合搜索与观看平台 🎬

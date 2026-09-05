@@ -1,5 +1,5 @@
 // LibreTV Portal Service Worker - network-first for HTML, stale-while-revalidate for assets
-const CACHE_NAME = 'libretv-portal-v2';
+const CACHE_NAME = 'libretv-portal-v3';
 const PRECACHE = [
     './',
     './index.html',
