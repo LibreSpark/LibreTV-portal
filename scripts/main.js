@@ -1,521 +1,463 @@
-// LibreTV Portal - Main JavaScript
+// LibreTV Portal - Main JavaScript (ES module pattern, no external deps)
+(function () {
+    'use strict';
 
-// DOM Content Loaded
-document.addEventListener('DOMContentLoaded', async function() {
-    // Initialize all components
-    initParticles();
-    initNavigation();
-    initScrollAnimations();
-    
-    // Update stats with GitHub data before initializing counters
-    await updateStatsWithGitHubData();
-    initCounters();
-    
-    initBackToTop();
-    initSmoothScroll();
-    initLazyLoad();
-    
-    // Initialize AOS (Animate On Scroll)
-    if (typeof AOS !== 'undefined') {
-        AOS.init({
-            duration: 800,
-            easing: 'ease-in-out',
-            once: true
-        });
-    }
-});
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
-// Particles.js Configuration
-function initParticles() {
-    if (typeof particlesJS !== 'undefined') {
-        particlesJS('particles-js', {
-            particles: {
-                number: {
-                    value: 80,
-                    density: {
-                        enable: true,
-                        value_area: 800
-                    }
-                },
-                color: {
-                    value: '#00ccff'
-                },
-                shape: {
-                    type: 'circle'
-                },
-                opacity: {
-                    value: 0.2,
-                    random: true
-                },
-                size: {
-                    value: 3,
-                    random: true
-                },
-                line_linked: {
-                    enable: true,
-                    distance: 150,
-                    color: '#00ccff',
-                    opacity: 0.2,
-                    width: 1
-                },
-                move: {
-                    enable: true,
-                    speed: 2,
-                    direction: 'none',
-                    random: true,
-                    out_mode: 'out'
-                }
-            },
-            interactivity: {
-                detect_on: 'canvas',
-                events: {
-                    onhover: {
-                        enable: true,
-                        mode: 'grab'
-                    },
-                    onclick: {
-                        enable: true,
-                        mode: 'push'
-                    },
-                    resize: true
-                }
-            }
-        });
-    }
-}
+    /* ---------------------------------------------------------------- *
+     * Utilities
+     * ---------------------------------------------------------------- */
+    const $ = (sel, ctx = document) => ctx.querySelector(sel);
+    const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
 
-// Navigation functionality
-function initNavigation() {
-    const navToggle = document.getElementById('nav-toggle');
-    const navMenu = document.getElementById('nav-menu');
-    const navLinks = document.querySelectorAll('.nav-link');
-    
-    // Mobile menu toggle
-    if (navToggle && navMenu) {
-        navToggle.addEventListener('click', function() {
-            navToggle.classList.toggle('active');
-            navMenu.classList.toggle('active');
-        });
+    function debounce(fn, wait) {
+        let t;
+        return function (...args) {
+            clearTimeout(t);
+            t = setTimeout(() => fn.apply(this, args), wait);
+        };
     }
-    
-    // Close mobile menu when clicking on links
-    navLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            if (navToggle && navMenu) {
-                navToggle.classList.remove('active');
-                navMenu.classList.remove('active');
-            }
-        });
-    });
-    
-    // Highlight active nav link on scroll
-    window.addEventListener('scroll', function() {
-        const scrollPos = window.scrollY + 100;
-        
-        navLinks.forEach(link => {
-            const section = document.querySelector(link.getAttribute('href'));
-            if (section) {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.offsetHeight;
-                
-                if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
-                    navLinks.forEach(navLink => navLink.classList.remove('active'));
-                    link.classList.add('active');
-                }
-            }
-        });
-        
-        // Navbar background on scroll
-        const navbar = document.querySelector('.navbar');
-        if (navbar) {
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
+
+    function safeStorageGet(key) {
+        try { return localStorage.getItem(key); } catch (e) { return null; }
+    }
+    function safeStorageSet(key, value) {
+        try { localStorage.setItem(key, value); } catch (e) { /* ignore */ }
+    }
+
+    /* ---------------------------------------------------------------- *
+     * Particles background (lightweight self-contained canvas)
+     * ---------------------------------------------------------------- */
+    function initParticles() {
+        const canvas = document.getElementById('particles-js');
+        if (!canvas || prefersReducedMotion) return;
+
+        const ctx = canvas.getContext('2d');
+        let width, height, dpr, particles = [];
+        const COUNT = isMobile ? 36 : 80;
+        const COLOR = '0, 204, 255';
+
+        function resize() {
+            dpr = Math.min(window.devicePixelRatio || 1, 2);
+            width = canvas.clientWidth = window.innerWidth;
+            height = canvas.clientHeight = window.innerHeight;
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         }
-    });
-}
 
-// Scroll animations
-function initScrollAnimations() {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-    
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('animate');
-            }
-        });
-    }, observerOptions);
-    
-    // Observe elements for animation
-    const animateElements = document.querySelectorAll('.feature-card, .deployment-card, .stat-item');
-    animateElements.forEach(element => {
-        observer.observe(element);
-    });
-}
+        function makeParticles() {
+            particles = Array.from({ length: COUNT }, () => ({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 0.4,
+                vy: (Math.random() - 0.5) * 0.4,
+                r: Math.random() * 2 + 1
+            }));
+        }
 
-// Animated counters
-function initCounters() {
-    const counters = document.querySelectorAll('.stat-number');
-    const counterObserver = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const counter = entry.target;
-                const target = parseInt(counter.getAttribute('data-target'));
-                const isPercentage = counter.getAttribute('data-stat') === 'uptime-rate';
-                const duration = 2000; // 2 seconds
-                const increment = target / (duration / 16); // 60fps
-                
-                let current = 0;
-                const timer = setInterval(() => {
-                    current += increment;
-                    if (current >= target) {
-                        current = target;
-                        clearInterval(timer);
+        function step() {
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < particles.length; i++) {
+                const p = particles[i];
+                p.x += p.vx; p.y += p.vy;
+                if (p.x < 0 || p.x > width) p.vx *= -1;
+                if (p.y < 0 || p.y > height) p.vy *= -1;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${COLOR}, 0.25)`;
+                ctx.fill();
+
+                for (let j = i + 1; j < particles.length; j++) {
+                    const q = particles[j];
+                    const dx = p.x - q.x, dy = p.y - q.y;
+                    const dist = Math.hypot(dx, dy);
+                    if (dist < 140) {
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(q.x, q.y);
+                        ctx.strokeStyle = `rgba(${COLOR}, ${0.12 * (1 - dist / 140)})`;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
                     }
-                    
-                    // Format number with commas for thousands
-                    const formattedNumber = Math.floor(current).toLocaleString();
-                    counter.textContent = formattedNumber + (isPercentage ? '%' : '');
-                }, 16);
-                
-                counterObserver.unobserve(counter);
+                }
             }
-        });
-    }, { threshold: 0.5 });
-    
-    counters.forEach(counter => {
-        counterObserver.observe(counter);
-    });
-}
+            rafId = requestAnimationFrame(step);
+        }
 
-// Back to top button
-function initBackToTop() {
-    const backToTopButton = document.getElementById('backToTop');
-    
-    if (backToTopButton) {
-        window.addEventListener('scroll', function() {
-            if (window.scrollY > 500) {
-                backToTopButton.classList.add('visible');
-            } else {
-                backToTopButton.classList.remove('visible');
+        let rafId;
+        resize();
+        makeParticles();
+        step();
+
+        window.addEventListener('resize', debounce(() => { resize(); makeParticles(); }, 250), { passive: true });
+
+        // Pause when tab hidden to save CPU
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                cancelAnimationFrame(rafId);
+            } else if (!prefersReducedMotion) {
+                rafId = requestAnimationFrame(step);
             }
         });
-        
-        backToTopButton.addEventListener('click', function() {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
+    }
+
+    /* ---------------------------------------------------------------- *
+     * Mobile navigation
+     * ---------------------------------------------------------------- */
+    function initNavigation() {
+        const toggle = document.getElementById('nav-toggle');
+        const menu = document.getElementById('nav-menu');
+        if (!toggle || !menu) return;
+
+        function closeMenu() {
+            menu.classList.remove('active');
+            toggle.classList.remove('active');
+            toggle.setAttribute('aria-expanded', 'false');
+        }
+        function openMenu() {
+            menu.classList.add('active');
+            toggle.classList.add('active');
+            toggle.setAttribute('aria-expanded', 'true');
+        }
+
+        toggle.addEventListener('click', () => {
+            if (menu.classList.contains('active')) closeMenu(); else openMenu();
+        });
+
+        // Close on link click
+        $$('.nav-link', menu).forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.remove('active');
+                toggle.classList.remove('active');
+                toggle.setAttribute('aria-expanded', 'false');
             });
         });
+
+        // Close on Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && menu.classList.contains('active')) {
+                closeMenu();
+                toggle.focus();
+            }
+        });
+
+        // Close on outside click
+        document.addEventListener('click', (e) => {
+            if (menu.classList.contains('active') && !menu.contains(e.target) && !toggle.contains(e.target)) {
+                closeMenu();
+            }
+        });
     }
-}
 
-// Smooth scroll for anchor links
-function initSmoothScroll() {
-    const links = document.querySelectorAll('a[href^="#"]');
-    
-    links.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const targetId = this.getAttribute('href');
-            const targetSection = document.querySelector(targetId);
-            
-            if (targetSection) {
-                const offsetTop = targetSection.offsetTop - 80; // Account for fixed navbar
-                
-                window.scrollTo({
-                    top: offsetTop,
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
-}
-
-// Lazy loading for images
-function initLazyLoad() {
-    const images = document.querySelectorAll('img[data-src]');
-    
-    const imageObserver = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target;
-                img.src = img.dataset.src;
-                img.classList.remove('loading');
-                imageObserver.unobserve(img);
-            }
-        });
-    });
-    
-    images.forEach(img => {
-        img.classList.add('loading');
-        imageObserver.observe(img);
-    });
-}
-
-// GitHub API Data Update
-async function updateStatsWithGitHubData() {
-    try {
-        // Check if we have cached data that's still fresh (less than 10 minutes old)
-        const cacheKey = 'github_stats_cache';
-        const cacheTimeKey = 'github_stats_cache_time';
-        const cacheExpiration = 10 * 60 * 1000; // 10 minutes in milliseconds
-        
-        const cachedData = localStorage.getItem(cacheKey);
-        const cacheTime = localStorage.getItem(cacheTimeKey);
-        
-        if (cachedData && cacheTime && 
-            (Date.now() - parseInt(cacheTime)) < cacheExpiration) {
-            // Use cached data
-            const stats = JSON.parse(cachedData);
-            updateStatsFromData(stats);
-            console.log('Using cached GitHub stats');
+    /* ---------------------------------------------------------------- *
+     * Reveal-on-scroll (replaces AOS)
+     * ---------------------------------------------------------------- */
+    function initReveal() {
+        const items = $$('.reveal');
+        if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+            items.forEach(el => el.classList.add('in'));
             return;
         }
-        
-        // GitHub API endpoint for repository information
-        const repoUrl = 'https://api.github.com/repos/LibreSpark/LibreTV';
-        const contributorsUrl = 'https://api.github.com/repos/LibreSpark/LibreTV/contributors';
-        
-        // Fetch repository data with timeout
-        const fetchWithTimeout = (url, timeout = 5000) => {
-            return Promise.race([
-                fetch(url),
-                new Promise((_, reject) =>
-                    setTimeout(() => reject(new Error('Request timeout')), timeout)
-                )
-            ]);
-        };
-        
-        const [repoResponse, contributorsResponse] = await Promise.all([
-            fetchWithTimeout(repoUrl),
-            fetchWithTimeout(contributorsUrl)
-        ]);
-        
-        if (repoResponse.ok && contributorsResponse.ok) {
-            const repoData = await repoResponse.json();
-            const contributorsData = await contributorsResponse.json();
-            
-            const stats = {
-                forks: repoData.forks_count || 100,
-                stars: repoData.stargazers_count || 500,
-                contributors: contributorsData.length || 20,
-                uptime: 99
-            };
-            
-            // Cache the data
-            localStorage.setItem(cacheKey, JSON.stringify(stats));
-            localStorage.setItem(cacheTimeKey, Date.now().toString());
-            
-            updateStatsFromData(stats);
-            console.log('GitHub stats updated successfully:', stats);
-        } else {
-            console.warn('Failed to fetch GitHub data, using fallback values');
-            setFallbackStats();
-        }
-    } catch (error) {
-        console.warn('Error fetching GitHub data:', error.message);
-        setFallbackStats();
-    }
-}
-
-// Update stats from data object
-function updateStatsFromData(stats) {
-    updateStatElement('fork-count', stats.forks);
-    updateStatElement('star-count', stats.stars);
-    updateStatElement('contributor-count', stats.contributors);
-    updateStatElement('uptime-rate', stats.uptime);
-}
-
-// Update individual stat element
-function updateStatElement(id, value) {
-    const elements = document.querySelectorAll(`[data-stat="${id}"]`);
-    elements.forEach(element => {
-        element.setAttribute('data-target', value);
-        // Don't set the text content here, let the counter animation handle it
-    });
-}
-
-// Set fallback stats if GitHub API fails
-function setFallbackStats() {
-    const fallbackStats = {
-        forks: 100,
-        stars: 500,
-        contributors: 20,
-        uptime: 99
-    };
-    updateStatsFromData(fallbackStats);
-}
-
-// Utility functions
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-function throttle(func, limit) {
-    let inThrottle;
-    return function() {
-        const args = arguments;
-        const context = this;
-        if (!inThrottle) {
-            func.apply(context, args);
-            inThrottle = true;
-            setTimeout(() => inThrottle = false, limit);
-        }
-    }
-}
-
-// Performance optimizations
-const debouncedResize = debounce(function() {
-    // Handle window resize
-    if (typeof particlesJS !== 'undefined') {
-        particlesJS.refresh();
-    }
-}, 250);
-
-const throttledScroll = throttle(function() {
-    // Handle scroll events
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    
-    // Parallax effect for hero section
-    const hero = document.querySelector('.hero');
-    if (hero) {
-        const heroImage = hero.querySelector('.hero-image');
-        if (heroImage && scrollTop < hero.offsetHeight) {
-            const parallaxSpeed = 0.5;
-            heroImage.style.transform = `translateY(${scrollTop * parallaxSpeed}px)`;
-        }
-    }
-}, 16);
-
-// Event listeners
-window.addEventListener('resize', debouncedResize);
-window.addEventListener('scroll', throttledScroll);
-
-// Loading states
-document.addEventListener('DOMContentLoaded', function() {
-    // Remove loading class from body
-    document.body.classList.remove('loading');
-    
-    // Fade in main content
-    const mainContent = document.querySelector('main');
-    if (mainContent) {
-        mainContent.classList.add('fade-in');
-    }
-});
-
-// Handle external links
-document.addEventListener('click', function(e) {
-    if (e.target.tagName === 'A' && e.target.hostname !== window.location.hostname) {
-        e.target.setAttribute('rel', 'noopener noreferrer');
-    }
-});
-
-// Intersection Observer for animations
-const createObserver = (callback, options = {}) => {
-    const defaultOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-    
-    return new IntersectionObserver(callback, { ...defaultOptions, ...options });
-};
-
-// Error handling
-window.addEventListener('error', function(e) {
-    console.error('LibreTV Portal Error:', e.error);
-    // Could send error to analytics here
-});
-
-// Service Worker registration (if available)
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js')
-            .then(function(registration) {
-                console.log('SW registered: ', registration);
-            })
-            .catch(function(registrationError) {
-                console.log('SW registration failed: ', registrationError);
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in');
+                    observer.unobserve(entry.target);
+                }
             });
-    });
-}
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        items.forEach(el => observer.observe(el));
+    }
 
-// Copy code functionality
-document.querySelectorAll('.copy-btn').forEach(button => {
-    button.addEventListener('click', function() {
-        // Find the closest code element
-        const code = this.parentElement.querySelector('code').textContent;
-        
-        // Create a textarea element to help with copying
-        const textarea = document.createElement('textarea');
-        textarea.value = code;
-        textarea.style.position = 'fixed';  // Avoid scrolling to bottom
-        document.body.appendChild(textarea);
-        textarea.select();
-        
-        try {
-            // Execute copy command
-            document.execCommand('copy');
-            
-            // Visual feedback that copy was successful
-            this.classList.add('copied');
-            
-            // Change the SVG to a checkmark temporarily
-            const originalSVG = this.innerHTML;
-            this.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>`;
-            
-            // Revert back after 2 seconds
-            setTimeout(() => {
-                this.classList.remove('copied');
-                this.innerHTML = originalSVG;
-            }, 2000);
-        } catch (err) {
-            console.error('Failed to copy text: ', err);
+    /* ---------------------------------------------------------------- *
+     * Scroll-driven UI (single rAF scheduler)
+     * ---------------------------------------------------------------- */
+    function initScrollUI() {
+        const navbar = $('.navbar');
+        const backToTop = document.getElementById('backToTop');
+        const navLinks = $$('.nav-link').filter(l => l.getAttribute('href').startsWith('#'));
+        const sections = navLinks.map(l => document.querySelector(l.getAttribute('href'))).filter(Boolean);
+        const heroMockup = $('.hero-mockup');
+
+        let ticking = false;
+
+        function onScroll() {
+            const y = window.scrollY;
+            const limit = 80;
+
+            if (navbar) navbar.classList.toggle('scrolled', y > limit);
+            if (backToTop) backToTop.classList.toggle('visible', y > 500);
+
+            // Active link highlight
+            if (sections.length) {
+                const pos = y + 120;
+                let activeIdx = -1;
+                sections.forEach((sec, i) => {
+                    if (pos >= sec.offsetTop && pos < sec.offsetTop + sec.offsetHeight) activeIdx = i;
+                });
+                navLinks.forEach((l, i) => l.classList.toggle('active', i === activeIdx));
+            }
+
+            // Subtle parallax on hero mockup (inner element, no transform conflict)
+            if (heroMockup && !prefersReducedMotion && y < window.innerHeight) {
+                heroMockup.style.setProperty('--py', (y * 0.06) + 'px');
+            }
+
+            ticking = false;
         }
-        
-        document.body.removeChild(textarea);
-    });
-});
 
-// Export functions for external use
-window.LibreTVPortal = {
-    initParticles,
-    initNavigation,
-    initScrollAnimations,
-    initCounters,
-    initBackToTop,
-    initSmoothScroll,
-    initLazyLoad,
-    debounce,
-    throttle,
-    createObserver
-};
-window.LibreTVPortal = {
-    initParticles,
-    initNavigation,
-    initScrollAnimations,
-    initCounters,
-    initBackToTop,
-    initSmoothScroll,
-    initLazyLoad,
-    debounce,
-    throttle,
-    createObserver
-};
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                ticking = true;
+                requestAnimationFrame(onScroll);
+            }
+        }, { passive: true });
+
+        onScroll();
+
+        if (backToTop) {
+            backToTop.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+            });
+        }
+    }
+
+    /* ---------------------------------------------------------------- *
+     * Smooth anchor scrolling + focus management
+     * ---------------------------------------------------------------- */
+    function initSmoothScroll() {
+        $$('a[href^="#"]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const id = link.getAttribute('href');
+                if (id === '#' || id.length < 2) return;
+                const target = $(id);
+                if (!target) return;
+                e.preventDefault();
+                const offset = target.getBoundingClientRect().top + window.scrollY - 80;
+                window.scrollTo({ top: offset, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+                // Update hash + move focus for a11y (non-jumpy)
+                history.replaceState(null, '', id);
+                target.setAttribute('tabindex', '-1');
+                target.focus({ preventScroll: true });
+            });
+        });
+    }
+
+    /* ---------------------------------------------------------------- *
+     * Animated counters (rAF based, async-data safe)
+     * ---------------------------------------------------------------- */
+    const counted = new WeakSet();
+
+    function formatNum(n) {
+        return Number(n).toLocaleString();
+    }
+
+    function renderStat(el) {
+        if (!el.dataset.target || counted.has(el)) return;
+        counted.add(el);
+        const target = parseInt(el.dataset.target, 10) || 0;
+        if (prefersReducedMotion) {
+            el.textContent = formatNum(target);
+            return;
+        }
+        const duration = 1600;
+        const start = performance.now();
+        function frame(now) {
+            const t = Math.min((now - start) / duration, 1);
+            const eased = 1 - Math.pow(1 - t, 3); // easeOutCubic
+            el.textContent = formatNum(Math.floor(eased * target));
+            if (t < 1) requestAnimationFrame(frame);
+            else el.textContent = formatNum(target);
+        }
+        requestAnimationFrame(frame);
+    }
+
+    function initCounters() {
+        const counters = $$('.stat-number');
+        if (!('IntersectionObserver' in window)) {
+            counters.forEach(renderStat);
+            return;
+        }
+        const obs = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) renderStat(e.target); });
+        }, { threshold: 0.5 });
+        counters.forEach(el => obs.observe(el));
+    }
+
+    /* ---------------------------------------------------------------- *
+     * GitHub stats (AbortController, accurate contributor count, fallback)
+     * ---------------------------------------------------------------- */
+    async function updateStatsWithGitHubData() {
+        const cacheKey = 'github_stats_cache';
+        const cacheTimeKey = 'github_stats_cache_time';
+        const EXPIRE = 10 * 60 * 1000;
+
+        const cached = safeStorageGet(cacheKey);
+        const cachedTime = safeStorageGet(cacheTimeKey);
+        if (cached && cachedTime && (Date.now() - parseInt(cachedTime, 10)) < EXPIRE) {
+            applyStats(JSON.parse(cached));
+            return;
+        }
+
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 5000);
+        const opts = { signal: controller.signal };
+
+        try {
+            const [repoRes, contribRes] = await Promise.all([
+                fetch('https://api.github.com/repos/LibreSpark/LibreTV', opts),
+                fetch('https://api.github.com/repos/LibreSpark/LibreTV/contributors?per_page=1&anon=true', opts)
+            ]);
+            clearTimeout(timeout);
+
+            if (!repoRes.ok) throw new Error('repo ' + repoRes.status);
+            const repo = await repoRes.json();
+
+            let contributors = 0;
+            const link = contribRes.headers.get('Link');
+            if (contribRes.ok && link) {
+                const match = link.match(/&page=(\d+)>;\s*rel="last"/);
+                contributors = match ? parseInt(match[1], 10) : (contribRes.ok ? 1 : 0);
+            } else if (contribRes.ok) {
+                const arr = await contribRes.json();
+                contributors = Array.isArray(arr) ? arr.length : 0;
+            }
+
+            const stats = {
+                forks: repo.forks_count || 0,
+                stars: repo.stargazers_count || 0,
+                contributors: contributors
+            };
+            applyStats(stats);
+            safeStorageSet(cacheKey, JSON.stringify(stats));
+            safeStorageSet(cacheTimeKey, Date.now().toString());
+        } catch (err) {
+            clearTimeout(timeout);
+            // Keep existing "—" placeholder; do not show fake numbers
+            console.warn('GitHub stats unavailable, keeping placeholder:', err.message);
+        }
+    }
+
+    function applyStats(stats) {
+        setStat('fork-count', stats.forks);
+        setStat('star-count', stats.stars);
+        setStat('contributor-count', stats.contributors);
+    }
+
+    function setStat(id, value) {
+        $$('[data-stat="' + id + '"]').forEach(el => {
+            el.dataset.target = value;
+            renderStat(el); // render immediately if already in view; otherwise observer handles it
+        });
+    }
+
+    /* ---------------------------------------------------------------- *
+     * Copy-to-clipboard
+     * ---------------------------------------------------------------- */
+    function initCopy() {
+        $$('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const block = btn.closest('.code-block');
+                const code = block ? block.querySelector('code') : null;
+                if (!code) return;
+                const text = code.textContent;
+
+                let ok = false;
+                try {
+                    if (navigator.clipboard && window.isSecureContext) {
+                        await navigator.clipboard.writeText(text);
+                        ok = true;
+                    } else {
+                        const ta = document.createElement('textarea');
+                        ta.value = text;
+                        ta.style.position = 'fixed';
+                        ta.style.opacity = '0';
+                        document.body.appendChild(ta);
+                        ta.select();
+                        ok = document.execCommand('copy');
+                        document.body.removeChild(ta);
+                    }
+                } catch (e) {
+                    ok = false;
+                }
+
+                showCopyFeedback(btn, ok);
+            });
+        });
+    }
+
+    function showCopyFeedback(btn, ok) {
+        const original = btn.innerHTML;
+        btn.innerHTML = ok
+            ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>'
+            : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+        btn.classList.toggle('copied', ok);
+        showToast(ok ? '已复制 ✓' : '复制失败，请手动选择');
+        setTimeout(() => { btn.innerHTML = original; btn.classList.remove('copied'); }, 2000);
+    }
+
+    let toastTimer;
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    /* ---------------------------------------------------------------- *
+     * External link hardening
+     * ---------------------------------------------------------------- */
+    function initExternalLinks() {
+        document.addEventListener('click', (e) => {
+            const a = e.target.closest('a');
+            if (!a || a.target !== '_blank') return;
+            if (!/noopener/.test(a.rel)) {
+                a.setAttribute('rel', (a.rel ? a.rel + ' ' : '') + 'noopener noreferrer');
+            }
+        });
+    }
+
+    /* ---------------------------------------------------------------- *
+     * Misc
+     * ---------------------------------------------------------------- */
+    function initMisc() {
+        const year = document.getElementById('currentYear');
+        if (year) year.textContent = new Date().getFullYear();
+    }
+
+    function initServiceWorker() {
+        if (!('serviceWorker' in navigator)) return;
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js').catch(() => { /* no-op */ });
+        });
+    }
+
+    /* ---------------------------------------------------------------- *
+     * Boot
+     * ---------------------------------------------------------------- */
+    function boot() {
+        initParticles();
+        initNavigation();
+        initReveal();
+        initScrollUI();
+        initSmoothScroll();
+        initCounters();
+        initCopy();
+        initExternalLinks();
+        initMisc();
+        initServiceWorker();
+        updateStatsWithGitHubData();
+        window.__libretvReady = true;
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot);
+    } else {
+        boot();
+    }
+})();

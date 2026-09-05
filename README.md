@@ -1,113 +1,98 @@
 # LibreTV Portal
 
-LibreTV的官方门户网站，一个美观现代的静态网站，用于介绍LibreTV项目和提供部署指南。
+LibreTV 的官方门户网站 —— 一个美观、现代、**零外部依赖**的静态落地页，用于介绍 LibreTV（v2.x Next.js 全栈版）项目与提供部署指南。
 
 🌐 **在线访问**: [https://libretv.is-an.org/](https://libretv.is-an.org/)
+
+## ✨ 特性
+
+- **零运行时 CDN 依赖**：移除了 AOS / Particles.js / Google Fonts 等第三方脚本与字体，改用系统字体栈、原生 `IntersectionObserver` 揭示动画与自研轻量 `<canvas>` 粒子背景，首屏更快、国内访问更稳定。
+- **现代视觉**：暗色科技风配色、毛玻璃、渐变、视差与悬浮交互。
+- **流畅动画**：滚动渐入（尊重 `prefers-reduced-motion`）、数字滚动计数、粒子背景。
+- **完全可访问**：语义化标签、`<main>` 主体、`skip-link`、键盘可操作的移动端菜单（Esc / 点击外部关闭 / 焦点管理）、`:focus-visible` 焦点样式。
+- **响应式设计**：移动优先，桌面（≥993px）/ 平板（≤992px 堆叠）/ 手机（≤768px）/ 小屏（≤480px）四档断点。
+- **PWA 就绪**：Service Worker（HTML network-first、静态资源 stale-while-revalidate）支持离线访问。
+- **SEO / 社交分享**：Open Graph / Twitter Card（绝对 URL）、JSON-LD 结构化数据、`canonical`、`sitemap.xml`、`robots.txt`。
+- **安全**：所有外链 `rel="noopener noreferrer"`、CSP / `X-Frame-Options` / `Referrer-Policy` 等响应头。
 
 ## 📁 项目结构
 
 ```
 LibreTV-portal/
-├── index.html          # 主页面
+├── index.html          # 主页面（语义化、单入口、无重复脚本）
 ├── styles/
-│   └── main.css        # 主样式文件
+│   └── main.css        # 主样式（CSS 变量 / Grid / Flexbox / 响应式）
 ├── scripts/
-│   └── main.js         # 主JavaScript文件
+│   └── main.js         # 主脚本（IIFE 模块化，无外部依赖）
 ├── assets/
-│   ├── logo.png        # Logo文件
-│   └── logos/          # 各种图标
-├── vercel.json         # Vercel配置
-├── package.json        # 项目配置
-└── README.md          # 说明文档
+│   ├── logo.png / logo-black.png
+│   ├── nomedia.png
+│   └── logos/          # Docker 图标
+├── sw.js               # Service Worker
+├── vercel.json         # 部署平台配置（含安全响应头与缓存策略）
+├── sitemap.xml / robots.txt
+├── deploy.sh           # 本地开发/部署辅助脚本（bash）
+├── package.json
+└── README.md
 ```
-
-## 🎨 设计特色
-
-- **现代色彩方案**: 以蓝色为主色调的科技感配色
-- **流畅动画**: 页面滚动时的渐入动画效果
-- **粒子背景**: 动态粒子效果增强视觉体验
-- **交互反馈**: 悬停和点击时的丰富交互效果
-- **毛玻璃效果**: 现代的半透明毛玻璃元素
 
 ## 🛠️ 技术栈
 
-- **HTML5**: 语义化标签和现代特性
-- **CSS3**: 
-  - CSS Grid和Flexbox布局
-  - CSS自定义属性（CSS变量）
-  - 现代动画和过渡效果
-  - 响应式设计
-- **JavaScript (ES6+)**:
-  - 现代JavaScript特性
-  - Intersection Observer API
-  - Web API集成
-- **第三方库**:
-  - [AOS](https://michalsnik.github.io/aos/) - 滚动动画
-  - [Particles.js](https://vincentgarreau.com/particles.js/) - 粒子效果
-- **Web字体**: Google Fonts (Inter)
+- **HTML5**：语义化标签、结构化数据。
+- **CSS3**：CSS 变量、Grid / Flexbox、原生动画与过渡、响应式、`@media (prefers-reduced-motion)`。
+- **JavaScript (ES6+)**：IIFE 模块、`IntersectionObserver`、Canvas 动画、`requestAnimationFrame`、Fetch + `AbortController`。
+- **字体**：系统字体栈（无外部字体请求）。
+- **库**：无（零运行时第三方库）。
 
 ## 📱 响应式设计
 
-网站采用移动优先的响应式设计，确保在各种设备上都有出色的显示效果：
+- **桌面端** (≥993px)：完整多列布局。
+- **平板端** (768px–992px)：双列布局降级为堆叠。
+- **移动端** (≤767px)：单列堆叠、汉堡菜单。
+- **小屏** (≤480px)：进一步收紧字号与间距。
 
-- **桌面端** (≥1200px): 完整的多列布局
-- **平板端** (768px-1199px): 适配的两列布局
-- **移动端** (≤767px): 单列堆叠布局，优化的导航菜单
+## ⚡ 性能与优化要点
 
-## ⚡ 性能优化
+- 首屏无阻塞脚本（脚本 `defer`、粒子用 Canvas 自绘）。
+- 移动端 / 减弱动效偏好下自动降级（粒子数量减少、关闭无限动画）。
+- 标签页隐藏时暂停粒子动画以节省 CPU。
+- Service Worker 静态资源走 stale-while-revalidate，HTML 走 network-first，部署更新即时生效。
+- 图片添加显式尺寸与 `fetchpriority`，减少布局偏移（CLS）。
+- 代码复制使用 `navigator.clipboard`，并带 `execCommand` 回退与 Toast 反馈。
 
-- **延迟加载**: 图片懒加载减少初始加载时间
-- **代码分割**: JavaScript模块化加载
-- **缓存策略**: 静态资源长期缓存
-- **压缩优化**: CSS和JavaScript代码压缩
-- **CDN加速**: 字体和库文件使用CDN
+## 🧩 数据说明
 
+首页的 GitHub Stars / Forks / 贡献者数量通过 GitHub API 实时获取（带 10 分钟本地缓存与失败兜底，失败时显示 `—`，**不展示任何编造数据**）；「当前版本」为与 LibreTV `package.json` 同步的静态值。
 
-## 📝 开发指南
+## 🚀 本地开发
 
-### 添加新页面
+```bash
+npm install
+npm run dev      # 启动本地服务器 http://localhost:3000
+# 或
+npx serve . -l 3000
+```
 
-1. 创建新的HTML文件
-2. 在导航菜单中添加链接
-3. 确保使用相同的样式和脚本引用
+## 📦 部署
 
-### 修改样式
+本门户为纯静态站点，任意静态托管均可；LibreTV 本体支持 Docker / Docker Compose / 源码运行，详见站点内「快速部署」板块。
 
-1. 优先使用CSS变量进行主题修改
-2. 遵循现有的命名约定
-3. 保持响应式设计兼容性
+## 🤝 贡献
 
-### 添加新功能
-
-1. 在 `scripts/main.js` 中添加新函数
-2. 确保使用现代JavaScript特性
-3. 添加必要的错误处理
-
-## 🤝 贡献指南
-
-1. Fork本仓库
-2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 创建Pull Request
+1. Fork 本仓库
+2. 创建特性分支 (`git checkout -b feature/amazing-feature`)
+3. 提交更改 (`git commit -m 'Add some amazing feature'`)
+4. 推送到分支 (`git push origin feature/amazing-feature`)
+5. 创建 Pull Request
 
 ## 📄 许可证
 
-本项目基于Apache-2.0许可证开源 - 查看 [LICENSE](LICENSE) 文件了解详情。
+基于 AGPL-3.0-or-later 许可证开源 —— 查看 [LICENSE](LICENSE) 了解详情。
 
 ## 🙏 致谢
 
-- [AOS](https://michalsnik.github.io/aos/) - 滚动动画库
-- [Particles.js](https://vincentgarreau.com/particles.js/) - 粒子效果库
-- [Google Fonts](https://fonts.google.com/) - Web字体服务
-- [Vercel](https://vercel.com/) - 部署平台
-
-## 📞 联系我们
-
-- **GitHub**: [LibreSpark/LibreTV](https://github.com/LibreSpark/LibreTV)
-- **Issues**: [问题反馈](https://github.com/LibreSpark/LibreTV/issues)
-- **主项目**: [LibreTV](https://libretv.is-an.org/)
+- LibreTV 社区贡献者
 
 ---
 
-**LibreTV Portal** - 自由观影，畅享精彩 🎬
+**LibreTV Portal** - 免费在线视频聚合搜索与观看平台 🎬
