@@ -4,10 +4,11 @@
   "description": "LibreTV门户网站 - 免费开源的在线视频聚合搜索与观看平台",
   "main": "index.html",
   "scripts": {
-    "dev": "npx serve . -s -l 3000",
+    "dev": "npx serve . -l 3000",
     "build": "echo 'Build completed'",
-    "start": "npx serve . -s -l 3000",
-    "preview": "npx serve . -s -l 4173"
+    "start": "npx serve . -l 3000",
+    "preview": "npx serve . -l 4173",
+    "wiki:sync": "node scripts/build-wiki.mjs"
   },
   "keywords": [
     "libretv",
@@ -19,6 +20,7 @@
   ],  "author": "LibreTV Team",
   "license": "AGPL-3.0-or-later",
   "devDependencies": {
+    "marked": "^16.4.1",
     "serve": "^14.2.1"
   },
   "repository": {

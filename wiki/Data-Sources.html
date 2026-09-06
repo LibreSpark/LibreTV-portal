@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据源 - LibreTV 文档</title>
+    <meta name="description" content="LibreTV 采用 空壳设计 ：不内置任何采集站，由部署者/用户自行添加，避免内置源失效与合规风险。 搜索用的 采集源 与首页的 推荐源 （豆瓣 / Bangumi / 影视榜单）是两套独立配置：前者决定&quot;能搜到什么&quot;，后者决定首页展示什么，见 Recommendations。 部署者预置 ：通过">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="author" content="LibreTV Team">
+    <link rel="canonical" href="https://libretv.is-an.org/wiki/Data-Sources.html">
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://libretv.is-an.org/wiki/Data-Sources.html">
+    <meta property="og:title" content="数据源 - LibreTV 文档">
+    <meta property="og:description" content="LibreTV 采用 空壳设计 ：不内置任何采集站，由部署者/用户自行添加，避免内置源失效与合规风险。 搜索用的 采集源 与首页的 推荐源 （豆瓣 / Bangumi / 影视榜单）是两套独立配置：前者决定&quot;能搜到什么&quot;，后者决定首页展示什么，见 Recommendations。 部署者预置 ：通过">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="数据源 - LibreTV 文档">
+    <meta name="twitter:description" content="LibreTV 采用 空壳设计 ：不内置任何采集站，由部署者/用户自行添加，避免内置源失效与合规风险。 搜索用的 采集源 与首页的 推荐源 （豆瓣 / Bangumi / 影视榜单）是两套独立配置：前者决定&quot;能搜到什么&quot;，后者决定首页展示什么，见 Recommendations。 部署者预置 ：通过">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/logo-black.png">
+    <link rel="apple-touch-icon" href="../assets/logo-black.png">
+
+    <link rel="stylesheet" href="../styles/wiki.css">
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+<body class="wiki-page">
+    <a class="skip-link" href="#wiki-main">跳到主要内容</a>
+
+    
+
+    <!-- Navigation -->
+    <nav class="navbar" aria-label="文档导航">
+        <div class="nav-container">
+            <a class="nav-logo" href="../index.html" aria-label="返回 LibreTV 首页">
+                <img src="../assets/logo-black.png" alt="LibreTV Logo" class="logo-img">
+                <span class="logo-text">LibreTV</span>
+            </a>
+            <div class="nav-menu" id="nav-menu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="index.html" class="nav-link active">文档</a>
+                <a href="https://github.com/LibreSpark/LibreTV" class="nav-link github-link" target="_blank" rel="noopener noreferrer">
+                    <svg class="github-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M12 0C5.374 0 0 5.373 0 12 0 17.302 3.438 21.8 8.207 23.387c.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    <span>GitHub</span>
+                </a>
+            </div>
+            <button class="nav-toggle" id="nav-toggle" aria-label="切换菜单" aria-expanded="false" aria-controls="nav-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+    </nav>
+
+    <main id="wiki-main" class="wiki-main">
+        <div class="wiki-container">
+            <!-- Sidebar -->
+            <aside class="wiki-sidebar" id="wiki-sidebar" aria-label="文档目录">
+                <div class="wiki-sidebar-close"><button type="button" id="sidebarClose" aria-label="关闭文档目录">✕</button></div>
+                <div class="wiki-sidebar-inner">
+                    <div class="wiki-sidebar-title">📖 文档</div>
+                    <nav class="wiki-nav">
+                        <ul>
+                            <li><a href="index.html">首页</a></li>
+                            <li><a href="Architecture.html">架构</a></li>
+                            <li><a href="Deployment.html">部署</a></li>
+                            <li><a href="Configuration.html">配置</a></li>
+                            <li><a href="Data-Sources.html" class="active">数据源</a></li>
+                            <li><a href="Recommendations.html">首页推荐</a></li>
+                            <li><a href="Player.html">播放器</a></li>
+                            <li><a href="Proxy-Security.html">代理与安全</a></li>
+                            <li><a href="FAQ.html">FAQ</a></li>
+                            <li><a class="nav-external" href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">GitHub 仓库 ↗</a></li>
+                        </ul>
+                    </nav>
+                    <div class="wiki-sidebar-meta">
+                        <a href="https://github.com/LibreSpark/LibreTV/wiki/Data-Sources" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页 ↗</a>
+                    </div>
+                </div>
+            </aside>
+            <div class="wiki-sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
+            <button class="wiki-sidebar-toggle" id="sidebarToggle" type="button" aria-controls="wiki-sidebar" aria-expanded="false">☰ 文档目录</button>
+
+            <!-- Content -->
+            <article class="wiki-content">
+                <div class="wiki-breadcrumb">
+                    <a href="index.html">文档</a><span aria-hidden="true">/</span><span>数据源</span>
+                </div>
+                <h1 class="wiki-title gradient-text">数据源</h1>
+                <div class="wiki-body markdown-body">
+<p>LibreTV 采用<strong>空壳设计</strong>：不内置任何采集站，由部署者/用户自行添加，避免内置源失效与合规风险。</p>
+<blockquote>
+<p>搜索用的<strong>采集源</strong>与首页的<strong>推荐源</strong>（豆瓣 / Bangumi / 影视榜单）是两套独立配置：前者决定&quot;能搜到什么&quot;，后者决定首页展示什么，见 <a href="Recommendations.html">Recommendations</a>。</p>
+</blockquote>
+<ul>
+<li><strong>部署者预置</strong>：通过 <code>DEFAULT_SOURCES</code> 环境变量下发（JSON 数组），所有用户开箱即搜，详见<a href="Configuration.html">配置文档</a>；</li>
+<li><strong>用户自建</strong>：设置抽屉「+ 添加 API」手动添加，保存在浏览器 localStorage。</li>
+</ul>
+<h2 id="支持的数据源类型">支持的数据源类型</h2>
+<p>Apple CMS（苹果CMS）标准采集接口，即提供以下接口的资源站：</p>
+<pre><code>搜索：{api}?ac=videolist&amp;wd={关键词}
+详情：{api}?ac=videolist&amp;ids={vod_id}
+</code></pre>
+<h2 id="添加数据源">添加数据源</h2>
+<p>设置 → 数据源 → 「+ 添加 API」：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>必填</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>名称</td>
+<td>是</td>
+<td>显示用名称</td>
+</tr>
+<tr>
+<td>API 地址</td>
+<td>是</td>
+<td>形如 <code>https://example.com/api.php/provide/vod</code>，结尾 <code>/</code> 会自动去除</td>
+</tr>
+<tr>
+<td>详情页地址</td>
+<td>否</td>
+<td>形如 <code>https://example.com</code>；部分源列表接口不返回播放地址，需要爬取详情页 HTML 提取 m3u8</td>
+</tr>
+<tr>
+<td>成人标记</td>
+<td>否</td>
+<td>标记后受「成人内容过滤」开关控制</td>
+</tr>
+</tbody></table>
+<p>添加后默认自动勾选参与搜索。</p>
+<h2 id="详情页爬取特殊源">详情页爬取（特殊源）</h2>
+<p>当标准详情接口拿不到播放地址时，服务端自动降级：</p>
+<ol>
+<li>请求 <code>{detail}/index.php/vod/detail/id/{id}.html</code>；</li>
+<li>通用正则提取 <code>\$https://...m3u8</code>；</li>
+<li>若无结果，尝试非凡影视特征路径模式（<code>/日期/哈希/index.m3u8</code>）；</li>
+<li>去重后作为剧集列表。</li>
+</ol>
+<h2 id="服务端聚合行为">服务端聚合行为</h2>
+<ul>
+<li>所有勾选的源<strong>并行</strong>搜索，单源 8 秒超时；</li>
+<li>任一源失败不影响整体，失败源在结果区顶部以名称列出；</li>
+<li>结果按「源内去重（sourceKey+vodId）→ 名称排序（zh-CN）」合并；</li>
+<li>成人过滤在服务端执行，关键词包括：伦理片、福利、里番动漫、无码、SWAG 等。</li>
+</ul>
+<h2 id="源可用性测试">源可用性测试</h2>
+<p>设置 → 数据源，每个源右侧的 <strong>⚡</strong> 按钮触发服务端探活：</p>
+<ul>
+<li>以搜索 <code>test</code> 的完整往返衡量：返回响应耗时（ms）与结果条数；</li>
+<li>结果以徽章内联展示（<code>✓ 610ms</code> 绿色 / <code>✗ 超时</code> 红色）；</li>
+<li>探活请求与搜索一样经过 SSRF 校验，仅支持公网 http(s) 地址。</li>
+</ul>
+<h2 id="源订阅-分享">源订阅 / 分享</h2>
+<p>源列表可以脱离单台设备流转：导出为 JSON 文件 → 托管到任意公开 URL → 他人在「设置」里填入该 URL 订阅。</p>
+<h3 id="订阅格式libretv-sourcelist-json">订阅格式（LibreTV-SourceList JSON）</h3>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;我的源列表&quot;,
+  &quot;version&quot;: 1,
+  &quot;sources&quot;: [
+    {
+      &quot;name&quot;: &quot;暴风资源&quot;,
+      &quot;url&quot;: &quot;https://bfzyapi.com/api.php/provide/vod&quot;,
+      &quot;detail&quot;: &quot;https://bfzyapi.com&quot;,
+      &quot;isAdult&quot;: false
+    }
+  ]
+}
+</code></pre>
+<p><strong>字段说明</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>位置</th>
+<th>类型</th>
+<th>必填</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>name</code></td>
+<td>顶层</td>
+<td>string</td>
+<td>否</td>
+<td>列表名称，订阅后显示在订阅条目上；缺省时显示订阅地址主机名</td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td>顶层</td>
+<td>number</td>
+<td>否</td>
+<td>格式版本，当前为 <code>1</code>；导入端目前忽略该字段</td>
+</tr>
+<tr>
+<td><code>sources</code></td>
+<td>顶层</td>
+<td>array</td>
+<td><strong>是</strong></td>
+<td>源数组，最多 100 个，超出部分截断</td>
+</tr>
+<tr>
+<td><code>sources[].name</code></td>
+<td>项</td>
+<td>string</td>
+<td>否</td>
+<td>源显示名；缺省时使用 URL 主机名</td>
+</tr>
+<tr>
+<td><code>sources[].url</code></td>
+<td>项</td>
+<td>string</td>
+<td><strong>是</strong></td>
+<td>Apple CMS 采集接口地址（公网 http/https），结尾 <code>/</code> 自动去除</td>
+</tr>
+<tr>
+<td><code>sources[].detail</code></td>
+<td>项</td>
+<td>string</td>
+<td>否</td>
+<td>详情页根地址，用于列表接口拿不到播放地址的源</td>
+</tr>
+<tr>
+<td><code>sources[].isAdult</code></td>
+<td>项</td>
+<td>boolean</td>
+<td>否</td>
+<td>成人内容标记，默认 <code>false</code>；受「成人内容过滤」开关控制</td>
+</tr>
+</tbody></table>
+<p><strong>兼容与限制</strong>：</p>
+<ul>
+<li>也接受<strong>裸数组</strong>格式 <code>[{ &quot;name&quot;: &quot;...&quot;, &quot;url&quot;: &quot;...&quot; }, ...]</code>（此时列表名显示为主机名）；</li>
+<li>按 <code>url</code> 去重（先到先得）；非公网 http(s) 地址（内网/回环/保留地址）会被<strong>静默过滤</strong>；</li>
+<li>订阅由<strong>服务端</strong>拉取（拉取前经过 SSRF 校验），因此订阅地址<strong>无需配置 CORS</strong>，Gist、对象存储、任意静态托管均可。</li>
+</ul>
+<h3 id="订阅行为">订阅行为</h3>
+<ul>
+<li><strong>导入</strong>：设置 → 源订阅 / 分享 → 填入订阅地址 → 「订阅」；导入的源自动勾选（成人过滤开启时跳过成人源），并在列表中带「订阅」标识；</li>
+<li><strong>手动同步</strong>：订阅条目上的 <strong>⟳</strong> 随时强制同步——整体替换该订阅名下的源（与订阅 URL 相同的手动源会被去重合并），成功/失败均以提示反馈；</li>
+<li><strong>订阅源的管理边界</strong>：订阅源以远端列表为准——单独编辑会在下次同步时被覆盖，单独移除会在重新同步时恢复；如需调整请修改远端列表后同步，或直接删除整个订阅；</li>
+<li><strong>删除订阅</strong>：同时移除其导入的所有源。</li>
+</ul>
+<h3 id="分享导出">分享（导出）</h3>
+<p>设置 → 源订阅 / 分享 → 「导出源列表」：把当前全部来源（部署者预置 + 手动添加 + 订阅导入，按 URL 去重）导出为上述格式的 JSON 文件。托管后即可被他人订阅。</p>
+<h2 id="自定义源的数据流">自定义源的数据流</h2>
+<p>数据源配置<strong>只保存在用户浏览器</strong>（localStorage），服务端不存储。每次搜索/详情请求会把用到的源配置随请求上传，因此：</p>
+<ul>
+<li>同一部署的不同用户可以有不同的数据源集合；</li>
+<li>分享播放链接时 URL 会携带 <code>sourceUrl</code> 参数，接收者即使未配置同名的源也能播放（见 <a href="Player.html">Player</a>）。</li>
+</ul>
+<h2 id="常见问题">常见问题</h2>
+<p><strong>Q: 添加源后搜索无结果？</strong>
+用浏览器直接访问 <code>{api}?ac=videolist&amp;wd=test</code> 验证是否返回 JSON。部分源校验 Referer/UA 或已停更。</p>
+<p><strong>Q: 搜索成功但详情提示&quot;未找到播放资源&quot;？</strong>
+该源的播放地址可能需要详情页爬取，请补填「详情页地址」；或该影片在源内本身无 m3u8 地址。</p>
+<p><strong>Q: 可以批量导入吗？</strong>
+旧版支持逗号分隔的多个 API 地址一次性导入（<code>?urls=</code> 参数）。重构版暂未移植该入口，可通过「导出/导入配置」迁移。</p>
+
+                </div>
+                <nav class="wiki-pager" aria-label="上一篇 / 下一篇">
+                    <a href="Configuration.html"><span class="pager-label">← 上一篇</span><span class="pager-title">配置</span></a>
+                    <a class="pager-next" href="Recommendations.html"><span class="pager-label">下一篇 →</span><span class="pager-title">首页推荐</span></a>
+                </nav>
+            </article>
+
+            <!-- Page TOC -->
+            <aside class="wiki-toc" aria-label="本页目录">
+                <div class="wiki-toc-title">本页目录</div>
+                <ul>
+            <li class="toc-h2"><a href="#支持的数据源类型">支持的数据源类型</a></li>
+            <li class="toc-h2"><a href="#添加数据源">添加数据源</a></li>
+            <li class="toc-h2"><a href="#详情页爬取特殊源">详情页爬取（特殊源）</a></li>
+            <li class="toc-h2"><a href="#服务端聚合行为">服务端聚合行为</a></li>
+            <li class="toc-h2"><a href="#源可用性测试">源可用性测试</a></li>
+            <li class="toc-h2"><a href="#源订阅-分享">源订阅 / 分享</a></li>
+            <li class="toc-h3"><a href="#订阅格式libretv-sourcelist-json">订阅格式（LibreTV-SourceList JSON）</a></li>
+            <li class="toc-h3"><a href="#订阅行为">订阅行为</a></li>
+            <li class="toc-h3"><a href="#分享导出">分享（导出）</a></li>
+            <li class="toc-h2"><a href="#自定义源的数据流">自定义源的数据流</a></li>
+            <li class="toc-h2"><a href="#常见问题">常见问题</a></li>
+            </ul>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="wiki-footer">
+        <div class="wiki-container" style="display:block;">
+            <div>
+                <a href="../index.html">LibreTV 门户首页</a> ·
+                <a href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">GitHub 仓库</a> ·
+                <a href="https://github.com/LibreSpark/LibreTV/wiki" target="_blank" rel="noopener noreferrer">Wiki 源</a>
+            </div>
+            <div class="footer-copyright">&copy; <span id="currentYear"></span> LibreTV · 基于 AGPL-3.0 许可证开源 · 文档内容同步自主仓库 Wiki</div>
+        </div>
+    </footer>
+
+    <button class="back-to-top" id="backToTop" aria-label="回到顶部">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+            <path d="M18 15l-6-6-6 6"/>
+        </svg>
+    </button>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="../scripts/wiki.js" defer></script>
+</body>
+</html>

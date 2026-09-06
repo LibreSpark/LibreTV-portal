@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>部署 - LibreTV 文档</title>
+    <meta name="description" content="镜像为多阶段构建（DOCKER BUILD=1 时输出 standalone），运行容器不包含构建工具，体积小。 版本号 只在 package.json 的 version 字段维护 ： /api/status 返回的 version 由 next.config.ts 在构建时读取并注入（proce">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="author" content="LibreTV Team">
+    <link rel="canonical" href="https://libretv.is-an.org/wiki/Deployment.html">
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://libretv.is-an.org/wiki/Deployment.html">
+    <meta property="og:title" content="部署 - LibreTV 文档">
+    <meta property="og:description" content="镜像为多阶段构建（DOCKER BUILD=1 时输出 standalone），运行容器不包含构建工具，体积小。 版本号 只在 package.json 的 version 字段维护 ： /api/status 返回的 version 由 next.config.ts 在构建时读取并注入（proce">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="部署 - LibreTV 文档">
+    <meta name="twitter:description" content="镜像为多阶段构建（DOCKER BUILD=1 时输出 standalone），运行容器不包含构建工具，体积小。 版本号 只在 package.json 的 version 字段维护 ： /api/status 返回的 version 由 next.config.ts 在构建时读取并注入（proce">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/logo-black.png">
+    <link rel="apple-touch-icon" href="../assets/logo-black.png">
+
+    <link rel="stylesheet" href="../styles/wiki.css">
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+<body class="wiki-page">
+    <a class="skip-link" href="#wiki-main">跳到主要内容</a>
+
+    
+
+    <!-- Navigation -->
+    <nav class="navbar" aria-label="文档导航">
+        <div class="nav-container">
+            <a class="nav-logo" href="../index.html" aria-label="返回 LibreTV 首页">
+                <img src="../assets/logo-black.png" alt="LibreTV Logo" class="logo-img">
+                <span class="logo-text">LibreTV</span>
+            </a>
+            <div class="nav-menu" id="nav-menu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="index.html" class="nav-link active">文档</a>
+                <a href="https://github.com/LibreSpark/LibreTV" class="nav-link github-link" target="_blank" rel="noopener noreferrer">
+                    <svg class="github-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M12 0C5.374 0 0 5.373 0 12 0 17.302 3.438 21.8 8.207 23.387c.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    <span>GitHub</span>
+                </a>
+            </div>
+            <button class="nav-toggle" id="nav-toggle" aria-label="切换菜单" aria-expanded="false" aria-controls="nav-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+    </nav>
+
+    <main id="wiki-main" class="wiki-main">
+        <div class="wiki-container">
+            <!-- Sidebar -->
+            <aside class="wiki-sidebar" id="wiki-sidebar" aria-label="文档目录">
+                <div class="wiki-sidebar-close"><button type="button" id="sidebarClose" aria-label="关闭文档目录">✕</button></div>
+                <div class="wiki-sidebar-inner">
+                    <div class="wiki-sidebar-title">📖 文档</div>
+                    <nav class="wiki-nav">
+                        <ul>
+                            <li><a href="index.html">首页</a></li>
+                            <li><a href="Architecture.html">架构</a></li>
+                            <li><a href="Deployment.html" class="active">部署</a></li>
+                            <li><a href="Configuration.html">配置</a></li>
+                            <li><a href="Data-Sources.html">数据源</a></li>
+                            <li><a href="Recommendations.html">首页推荐</a></li>
+                            <li><a href="Player.html">播放器</a></li>
+                            <li><a href="Proxy-Security.html">代理与安全</a></li>
+                            <li><a href="FAQ.html">FAQ</a></li>
+                            <li><a class="nav-external" href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">GitHub 仓库 ↗</a></li>
+                        </ul>
+                    </nav>
+                    <div class="wiki-sidebar-meta">
+                        <a href="https://github.com/LibreSpark/LibreTV/wiki/Deployment" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页 ↗</a>
+                    </div>
+                </div>
+            </aside>
+            <div class="wiki-sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
+            <button class="wiki-sidebar-toggle" id="sidebarToggle" type="button" aria-controls="wiki-sidebar" aria-expanded="false">☰ 文档目录</button>
+
+            <!-- Content -->
+            <article class="wiki-content">
+                <div class="wiki-breadcrumb">
+                    <a href="index.html">文档</a><span aria-hidden="true">/</span><span>部署</span>
+                </div>
+                <h1 class="wiki-title gradient-text">部署</h1>
+                <div class="wiki-body markdown-body">
+<h2 id="docker推荐">Docker（推荐）</h2>
+<pre><code class="language-bash">git clone &lt;本仓库&gt;
+cd libretv
+
+# 设置密码
+echo &quot;PASSWORD=your-strong-password&quot; &gt; .env
+
+docker compose up -d --build
+# 访问 http://localhost:8080
+</code></pre>
+<p>镜像为多阶段构建（<code>DOCKER_BUILD=1</code> 时输出 standalone），运行容器不包含构建工具，体积小。</p>
+<h2 id="镜像分发与版本管理">镜像分发与版本管理</h2>
+<h3 id="版本号单一事实来源">版本号：单一事实来源</h3>
+<p>版本号<strong>只在 <code>package.json</code> 的 <code>version</code> 字段维护</strong>：</p>
+<ul>
+<li><code>/api/status</code> 返回的 <code>version</code> 由 <code>next.config.ts</code> 在构建时读取并注入（<code>process.env.APP_VERSION</code>）；</li>
+<li>Docker 镜像 tag 建议与它保持一致，使用者可凭 <code>/api/status</code> 的返回值核对部署版本。</li>
+</ul>
+<p>改版本只需一处：<code>npm version patch|minor|major</code>（会同步更新 <code>package.json</code> 并打 git tag）。</p>
+<h3 id="发布镜像已自动化">发布镜像（已自动化）</h3>
+<p>镜像由 GitHub Actions 自动构建并推送到 <strong>GHCR</strong>：<code>.github/workflows/docker-publish.yml</code>。</p>
+<p>发布流程（开发者侧只需三步）：</p>
+<pre><code class="language-bash">npm version patch          # 2.0.0 → 2.0.1，自动更新 package.json 并打 git tag
+git push
+git push --tags
+</code></pre>
+<p>推送到 <code>v*</code> tag 后，CI 会先校验 tag 与 <code>package.json</code> 版本一致（不一致直接失败，防止镜像标签
+与 <code>/api/status</code> 返回值脱节），再跑类型检查与单测，通过则构建 <code>linux/amd64</code> + <code>linux/arm64</code>
+双架构镜像并推送，产出三个 tag：</p>
+<ul>
+<li><code>ghcr.io/librespark/libretv:2.0.1</code>（完整版本）</li>
+<li><code>ghcr.io/librespark/libretv:2.0</code>（次版本）</li>
+<li><code>ghcr.io/librespark/libretv:latest</code></li>
+</ul>
+<p>无需配置任何 secrets，<code>GITHUB_TOKEN</code> 由 GitHub 自动注入并具备 <code>packages: write</code> 权限。
+首次发布后，需要到仓库的 <strong>Packages</strong> 页面把镜像可见性设为 Public（默认 Private，拉取需要登录）。</p>
+<h3 id="使用者侧">使用者侧</h3>
+<pre><code class="language-bash">git clone &lt;本仓库&gt; &amp;&amp; cd LibreTV
+echo &quot;PASSWORD=your-strong-password&quot; &gt; .env
+docker compose pull &amp;&amp; docker compose up -d     # 拉取 ghcr.io/librespark/libretv:latest
+</code></pre>
+<p>锁定特定版本时在 <code>.env</code> 中设置：</p>
+<pre><code class="language-bash">LIBRETV_IMAGE=ghcr.io/librespark/libretv:2.0.1
+</code></pre>
+<h3 id="本地源码构建不经过-ci">本地源码构建（不经过 CI）</h3>
+<p><code>docker-compose.yml</code> 同时声明了 <code>build: .</code> 与 <code>image:</code>，本地没有镜像时会用源码构建
+（tag 落在 <code>ghcr.io/librespark/libretv:latest</code>）：</p>
+<pre><code class="language-bash">docker compose up -d --build
+</code></pre>
+<h3 id="构建上下文">构建上下文</h3>
+<p>仓库含 <code>.dockerignore</code>，<code>node_modules</code>/<code>.next</code>/文档/日志不会进入构建上下文，
+<code>COPY . .</code> 不会把本地依赖或构建产物带进镜像，也不会因 <code>.git</code> 而使 context 膨胀。</p>
+<h3 id="docker-composeyml">docker-compose.yml</h3>
+<pre><code class="language-yaml">services:
+  libretv:
+    build: .
+    image: ${LIBRETV_IMAGE:-ghcr.io/librespark/libretv:latest}
+    restart: unless-stopped
+    ports: [&quot;8080:8080&quot;]
+    environment:
+      - PASSWORD=${PASSWORD:?请在 .env 中设置 PASSWORD}
+      # - PROXY_SECRET=your-secret
+</code></pre>
+<h2 id="手动部署">手动部署</h2>
+<p>要求 Node.js ≥ 20（推荐 22）：</p>
+<pre><code class="language-bash">npm ci
+PASSWORD=your-password npm run build
+PASSWORD=your-password npm start          # 默认 8080 端口
+</code></pre>
+<blockquote>
+<p>注意：<code>output: &#39;standalone&#39;</code> 仅在 <code>DOCKER_BUILD=1</code> 时启用，本地 <code>next start</code> 无需（也不兼容）standalone。</p>
+</blockquote>
+<h3 id="生产建议">生产建议</h3>
+<ul>
+<li>使用反向代理（Nginx / Caddy）终结 HTTPS，转发到 8080；</li>
+<li>会话 Cookie 在生产环境（<code>NODE_ENV=production</code>）下自动启用 <code>Secure</code>，需 HTTPS 访问；</li>
+<li>设置 <code>PROXY_SECRET</code> 而非依赖 PASSWORD 派生，避免更换密码导致全员会话失效以外的副作用。</li>
+</ul>
+<h2 id="环境变量">环境变量</h2>
+<p>完整列表见 <a href="Configuration.html">Configuration</a>。最小可运行配置只有一个 <code>PASSWORD</code>。</p>
+<h2 id="健康检查与验证">健康检查与验证</h2>
+<pre><code class="language-bash">curl http://localhost:8080/api/status
+# {&quot;passwordRequired&quot;:true,&quot;verified&quot;:false,&quot;version&quot;:&quot;2.0.0&quot;}
+
+# 未登录访问受保护接口应返回 401
+curl -X POST http://localhost:8080/api/search -d &#39;{}&#39; -H &#39;Content-Type: application/json&#39; -i | head -1
+# HTTP/1.1 401 Unauthorized
+
+# SSRF 防护应拦截内网地址
+curl -i &quot;http://localhost:8080/api/proxy/http%3A%2F%2F127.0.0.1%3A8080%2F&quot; | head -1
+# HTTP/1.1 400/403
+</code></pre>
+<h2 id="升级">升级</h2>
+<ol>
+<li><code>git pull</code></li>
+<li><code>npm ci &amp;&amp; npm run build</code>（Docker 部署改为 <code>docker compose pull &amp;&amp; docker compose up -d</code>，源码构建则为 <code>docker compose up -d --build</code>）</li>
+<li>用户数据（历史/进度/设置）在浏览器端，升级无感迁移。</li>
+<li>可通过 <code>/api/status</code> 的 <code>version</code> 字段核对线上版本是否已更新。</li>
+</ol>
+<h2 id="从旧版迁移">从旧版迁移</h2>
+<ul>
+<li>旧版打开「设置 → 配置文件 → 导出」，新版「设置 → 配置 → 导入配置」选择同一文件即可迁移数据源与观看历史；</li>
+<li>旧版 localStorage 各零散 key 不会被读取，仅识别标准导出 JSON；</li>
+<li>旧版的 <code>PASSWORD</code> 环境变量直接沿用（明文比对改为服务端恒定时间比较，用户无感知）。</li>
+</ul>
+<h2 id="开发">开发</h2>
+<pre><code class="language-bash">npm install
+PASSWORD=dev-password npm run dev    # http://localhost:8080
+npm run typecheck                    # TypeScript 检查
+npm test                             # 单元测试（cms-parser / m3u8 / ssrf）
+</code></pre>
+
+                </div>
+                <nav class="wiki-pager" aria-label="上一篇 / 下一篇">
+                    <a href="Architecture.html"><span class="pager-label">← 上一篇</span><span class="pager-title">架构</span></a>
+                    <a class="pager-next" href="Configuration.html"><span class="pager-label">下一篇 →</span><span class="pager-title">配置</span></a>
+                </nav>
+            </article>
+
+            <!-- Page TOC -->
+            <aside class="wiki-toc" aria-label="本页目录">
+                <div class="wiki-toc-title">本页目录</div>
+                <ul>
+            <li class="toc-h2"><a href="#docker推荐">Docker（推荐）</a></li>
+            <li class="toc-h2"><a href="#镜像分发与版本管理">镜像分发与版本管理</a></li>
+            <li class="toc-h3"><a href="#版本号单一事实来源">版本号：单一事实来源</a></li>
+            <li class="toc-h3"><a href="#发布镜像已自动化">发布镜像（已自动化）</a></li>
+            <li class="toc-h3"><a href="#使用者侧">使用者侧</a></li>
+            <li class="toc-h3"><a href="#本地源码构建不经过-ci">本地源码构建（不经过 CI）</a></li>
+            <li class="toc-h3"><a href="#构建上下文">构建上下文</a></li>
+            <li class="toc-h3"><a href="#docker-composeyml">docker-compose.yml</a></li>
+            <li class="toc-h2"><a href="#手动部署">手动部署</a></li>
+            <li class="toc-h3"><a href="#生产建议">生产建议</a></li>
+            <li class="toc-h2"><a href="#环境变量">环境变量</a></li>
+            <li class="toc-h2"><a href="#健康检查与验证">健康检查与验证</a></li>
+            <li class="toc-h2"><a href="#升级">升级</a></li>
+            <li class="toc-h2"><a href="#从旧版迁移">从旧版迁移</a></li>
+            <li class="toc-h2"><a href="#开发">开发</a></li>
+            </ul>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="wiki-footer">
+        <div class="wiki-container" style="display:block;">
+            <div>
+                <a href="../index.html">LibreTV 门户首页</a> ·
+                <a href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">GitHub 仓库</a> ·
+                <a href="https://github.com/LibreSpark/LibreTV/wiki" target="_blank" rel="noopener noreferrer">Wiki 源</a>
+            </div>
+            <div class="footer-copyright">&copy; <span id="currentYear"></span> LibreTV · 基于 AGPL-3.0 许可证开源 · 文档内容同步自主仓库 Wiki</div>
+        </div>
+    </footer>
+
+    <button class="back-to-top" id="backToTop" aria-label="回到顶部">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+            <path d="M18 15l-6-6-6 6"/>
+        </svg>
+    </button>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="../scripts/wiki.js" defer></script>
+</body>
+</html>

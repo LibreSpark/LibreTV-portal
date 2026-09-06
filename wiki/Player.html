@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>播放器 - LibreTV 文档</title>
+    <meta name="description" content="播放器基于 ArtPlayer + hls.js，封装在 src/components/player shell.tsx，页面入口为 /watch 路由。 source + id 存在时：从 /api/detail 拉取剧集列表，index 指定当前集； 仅 url 参数时（直连分享）：直接播放该地">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="author" content="LibreTV Team">
+    <link rel="canonical" href="https://libretv.is-an.org/wiki/Player.html">
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://libretv.is-an.org/wiki/Player.html">
+    <meta property="og:title" content="播放器 - LibreTV 文档">
+    <meta property="og:description" content="播放器基于 ArtPlayer + hls.js，封装在 src/components/player shell.tsx，页面入口为 /watch 路由。 source + id 存在时：从 /api/detail 拉取剧集列表，index 指定当前集； 仅 url 参数时（直连分享）：直接播放该地">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="播放器 - LibreTV 文档">
+    <meta name="twitter:description" content="播放器基于 ArtPlayer + hls.js，封装在 src/components/player shell.tsx，页面入口为 /watch 路由。 source + id 存在时：从 /api/detail 拉取剧集列表，index 指定当前集； 仅 url 参数时（直连分享）：直接播放该地">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/logo-black.png">
+    <link rel="apple-touch-icon" href="../assets/logo-black.png">
+
+    <link rel="stylesheet" href="../styles/wiki.css">
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+<body class="wiki-page">
+    <a class="skip-link" href="#wiki-main">跳到主要内容</a>
+
+    
+
+    <!-- Navigation -->
+    <nav class="navbar" aria-label="文档导航">
+        <div class="nav-container">
+            <a class="nav-logo" href="../index.html" aria-label="返回 LibreTV 首页">
+                <img src="../assets/logo-black.png" alt="LibreTV Logo" class="logo-img">
+                <span class="logo-text">LibreTV</span>
+            </a>
+            <div class="nav-menu" id="nav-menu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="index.html" class="nav-link active">文档</a>
+                <a href="https://github.com/LibreSpark/LibreTV" class="nav-link github-link" target="_blank" rel="noopener noreferrer">
+                    <svg class="github-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M12 0C5.374 0 0 5.373 0 12 0 17.302 3.438 21.8 8.207 23.387c.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    <span>GitHub</span>
+                </a>
+            </div>
+            <button class="nav-toggle" id="nav-toggle" aria-label="切换菜单" aria-expanded="false" aria-controls="nav-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+    </nav>
+
+    <main id="wiki-main" class="wiki-main">
+        <div class="wiki-container">
+            <!-- Sidebar -->
+            <aside class="wiki-sidebar" id="wiki-sidebar" aria-label="文档目录">
+                <div class="wiki-sidebar-close"><button type="button" id="sidebarClose" aria-label="关闭文档目录">✕</button></div>
+                <div class="wiki-sidebar-inner">
+                    <div class="wiki-sidebar-title">📖 文档</div>
+                    <nav class="wiki-nav">
+                        <ul>
+                            <li><a href="index.html">首页</a></li>
+                            <li><a href="Architecture.html">架构</a></li>
+                            <li><a href="Deployment.html">部署</a></li>
+                            <li><a href="Configuration.html">配置</a></li>
+                            <li><a href="Data-Sources.html">数据源</a></li>
+                            <li><a href="Recommendations.html">首页推荐</a></li>
+                            <li><a href="Player.html" class="active">播放器</a></li>
+                            <li><a href="Proxy-Security.html">代理与安全</a></li>
+                            <li><a href="FAQ.html">FAQ</a></li>
+                            <li><a class="nav-external" href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">GitHub 仓库 ↗</a></li>
+                        </ul>
+                    </nav>
+                    <div class="wiki-sidebar-meta">
+                        <a href="https://github.com/LibreSpark/LibreTV/wiki/Player" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页 ↗</a>
+                    </div>
+                </div>
+            </aside>
+            <div class="wiki-sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
+            <button class="wiki-sidebar-toggle" id="sidebarToggle" type="button" aria-controls="wiki-sidebar" aria-expanded="false">☰ 文档目录</button>
+
+            <!-- Content -->
+            <article class="wiki-content">
+                <div class="wiki-breadcrumb">
+                    <a href="index.html">文档</a><span aria-hidden="true">/</span><span>播放器</span>
+                </div>
+                <h1 class="wiki-title gradient-text">播放器</h1>
+                <div class="wiki-body markdown-body">
+<p>播放器基于 ArtPlayer + hls.js，封装在 <code>src/components/player-shell.tsx</code>，页面入口为 <code>/watch</code> 路由。</p>
+<h2 id="播放链接格式">播放链接格式</h2>
+<pre><code>/watch?source=custom_0&amp;id=20717&amp;index=0&amp;title=流浪地球&amp;sourceUrl=https://..
+        └─数据源 key    └─影片 id   └─集数     └─标题        └─数据源地址（分享链接兜底）
+</code></pre>
+<ul>
+<li><code>source</code> + <code>id</code> 存在时：从 <code>/api/detail</code> 拉取剧集列表，<code>index</code> 指定当前集；</li>
+<li>仅 <code>url</code> 参数时（直连分享）：直接播放该地址，无剧集列表；</li>
+<li>URL 即状态：刷新/分享/前进后退均无损。</li>
+</ul>
+<h2 id="功能">功能</h2>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>自动连播</td>
+<td>单集结束 0.8s 后自动下一集；片尾自动清除该集进度</td>
+</tr>
+<tr>
+<td>进度恢复</td>
+<td>优先 URL <code>position</code> 参数，否则读 IndexedDB；&gt;10s 且非片尾（95%）时恢复并提示&quot;已从 XX:XX 继续播放&quot;</td>
+</tr>
+<tr>
+<td>换源</td>
+<td>「切换资源」→ 跨源搜索同名影片 → 详情接口测速 → 按速度排序；切换后保留当前集数索引</td>
+</tr>
+<tr>
+<td>集数倒序</td>
+<td>倒序排列按钮，激活集自动滚动进可视区</td>
+</tr>
+<tr>
+<td>广告过滤</td>
+<td>自定义 hls.js loader 对 manifest/level 文本剔除 <code>#EXT-X-DISCONTINUITY</code> 广告分段（设置中可关）</td>
+</tr>
+<tr>
+<td>错误恢复</td>
+<td>HLS 网络错误自动 <code>startLoad</code>，媒体错误自动 <code>recoverMediaError</code>；多次失败显示错误面板</td>
+</tr>
+<tr>
+<td>代理回退</td>
+<td>直连致命网络错误（CORS/防盗链/分片被拒）时，自动改走 <code>/api/proxy/</code>（cookie 鉴权）重试一次</td>
+</tr>
+<tr>
+<td>画中画 / 截图 / 网页全屏 / 倍速</td>
+<td>ArtPlayer 原生能力</td>
+</tr>
+</tbody></table>
+<h2 id="快捷键">快捷键</h2>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>空格</code></td>
+<td>播放 / 暂停</td>
+</tr>
+<tr>
+<td><code>←</code> / <code>→</code></td>
+<td>快退 / 快进 5 秒</td>
+</tr>
+<tr>
+<td><code>↑</code> / <code>↓</code></td>
+<td>音量 ±10%</td>
+</tr>
+<tr>
+<td><code>F</code></td>
+<td>全屏切换</td>
+</tr>
+<tr>
+<td><code>Alt + ←</code> / <code>Alt + →</code></td>
+<td>上一集 / 下一集</td>
+</tr>
+<tr>
+<td>双击</td>
+<td>全屏切换</td>
+</tr>
+<tr>
+<td>移动端长按</td>
+<td>3 倍速播放（松开恢复）</td>
+</tr>
+</tbody></table>
+<h2 id="播放进度与历史">播放进度与历史</h2>
+<ul>
+<li><strong>进度</strong>：<code>video:timeupdate</code> 每 5 秒节流保存 + 暂停/页面隐藏/组件卸载时强制保存 → IndexedDB <code>progress</code> 表；</li>
+<li><strong>历史</strong>：进入播放页 2 秒后写入 <code>history</code> 表（仅 <code>sourceKey + vodId + episodeIndex</code> 定位信息），播放中增量更新进度；</li>
+<li><strong>剧集同步</strong>：从历史进入播放页时重新拉取详情，天然获得最新剧集列表（旧版需专门的同步逻辑）。</li>
+</ul>
+<h2 id="播放失败的排查顺序">播放失败的排查顺序</h2>
+<ol>
+<li><strong>换源</strong>：点击「切换资源」，选择测速绿色（低延迟）的其他源；</li>
+<li><strong>观察回退提示</strong>：若出现&quot;直连失败，改用代理重试&quot;说明该源分片有防盗链，代理通常可解；</li>
+<li><strong>关广告过滤</strong>：个别源本身依赖 DISCONTINUITY 做多码率切换，误过滤会黑屏；</li>
+<li><strong>直接验证</strong>：浏览器访问详情返回的 m3u8 地址确认源本身可用。</li>
+</ol>
+
+                </div>
+                <nav class="wiki-pager" aria-label="上一篇 / 下一篇">
+                    <a href="Recommendations.html"><span class="pager-label">← 上一篇</span><span class="pager-title">首页推荐</span></a>
+                    <a class="pager-next" href="Proxy-Security.html"><span class="pager-label">下一篇 →</span><span class="pager-title">代理与安全</span></a>
+                </nav>
+            </article>
+
+            <!-- Page TOC -->
+            <aside class="wiki-toc" aria-label="本页目录">
+                <div class="wiki-toc-title">本页目录</div>
+                <ul>
+            <li class="toc-h2"><a href="#播放链接格式">播放链接格式</a></li>
+            <li class="toc-h2"><a href="#功能">功能</a></li>
+            <li class="toc-h2"><a href="#快捷键">快捷键</a></li>
+            <li class="toc-h2"><a href="#播放进度与历史">播放进度与历史</a></li>
+            <li class="toc-h2"><a href="#播放失败的排查顺序">播放失败的排查顺序</a></li>
+            </ul>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="wiki-footer">
+        <div class="wiki-container" style="display:block;">
+            <div>
+                <a href="../index.html">LibreTV 门户首页</a> ·
+                <a href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">GitHub 仓库</a> ·
+                <a href="https://github.com/LibreSpark/LibreTV/wiki" target="_blank" rel="noopener noreferrer">Wiki 源</a>
+            </div>
+            <div class="footer-copyright">&copy; <span id="currentYear"></span> LibreTV · 基于 AGPL-3.0 许可证开源 · 文档内容同步自主仓库 Wiki</div>
+        </div>
+    </footer>
+
+    <button class="back-to-top" id="backToTop" aria-label="回到顶部">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+            <path d="M18 15l-6-6-6 6"/>
+        </svg>
+    </button>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="../scripts/wiki.js" defer></script>
+</body>
+</html>

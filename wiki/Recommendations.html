@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页推荐 - LibreTV 文档</title>
+    <meta name="description" content="首页在没有搜索关键词时展示推荐内容。推荐 数据源可在设置中切换 （设置 → 播放与过滤 → 「首页推荐」开关 + 「推荐数据源」下拉），同一时间只展示一个来源： | 来源 | 内容 | 依赖 | | | | | | 豆瓣 | 电影/剧集分类 + 标签（热门、最新、高分等），分页加载 | 无 | | ">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="author" content="LibreTV Team">
+    <link rel="canonical" href="https://libretv.is-an.org/wiki/Recommendations.html">
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://libretv.is-an.org/wiki/Recommendations.html">
+    <meta property="og:title" content="首页推荐 - LibreTV 文档">
+    <meta property="og:description" content="首页在没有搜索关键词时展示推荐内容。推荐 数据源可在设置中切换 （设置 → 播放与过滤 → 「首页推荐」开关 + 「推荐数据源」下拉），同一时间只展示一个来源： | 来源 | 内容 | 依赖 | | | | | | 豆瓣 | 电影/剧集分类 + 标签（热门、最新、高分等），分页加载 | 无 | | ">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="首页推荐 - LibreTV 文档">
+    <meta name="twitter:description" content="首页在没有搜索关键词时展示推荐内容。推荐 数据源可在设置中切换 （设置 → 播放与过滤 → 「首页推荐」开关 + 「推荐数据源」下拉），同一时间只展示一个来源： | 来源 | 内容 | 依赖 | | | | | | 豆瓣 | 电影/剧集分类 + 标签（热门、最新、高分等），分页加载 | 无 | | ">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/logo-black.png">
+    <link rel="apple-touch-icon" href="../assets/logo-black.png">
+
+    <link rel="stylesheet" href="../styles/wiki.css">
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+<body class="wiki-page">
+    <a class="skip-link" href="#wiki-main">跳到主要内容</a>
+
+    
+
+    <!-- Navigation -->
+    <nav class="navbar" aria-label="文档导航">
+        <div class="nav-container">
+            <a class="nav-logo" href="../index.html" aria-label="返回 LibreTV 首页">
+                <img src="../assets/logo-black.png" alt="LibreTV Logo" class="logo-img">
+                <span class="logo-text">LibreTV</span>
+            </a>
+            <div class="nav-menu" id="nav-menu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="index.html" class="nav-link active">文档</a>
+                <a href="https://github.com/LibreSpark/LibreTV" class="nav-link github-link" target="_blank" rel="noopener noreferrer">
+                    <svg class="github-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M12 0C5.374 0 0 5.373 0 12 0 17.302 3.438 21.8 8.207 23.387c.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    <span>GitHub</span>
+                </a>
+            </div>
+            <button class="nav-toggle" id="nav-toggle" aria-label="切换菜单" aria-expanded="false" aria-controls="nav-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+    </nav>
+
+    <main id="wiki-main" class="wiki-main">
+        <div class="wiki-container">
+            <!-- Sidebar -->
+            <aside class="wiki-sidebar" id="wiki-sidebar" aria-label="文档目录">
+                <div class="wiki-sidebar-close"><button type="button" id="sidebarClose" aria-label="关闭文档目录">✕</button></div>
+                <div class="wiki-sidebar-inner">
+                    <div class="wiki-sidebar-title">📖 文档</div>
+                    <nav class="wiki-nav">
+                        <ul>
+                            <li><a href="index.html">首页</a></li>
+                            <li><a href="Architecture.html">架构</a></li>
+                            <li><a href="Deployment.html">部署</a></li>
+                            <li><a href="Configuration.html">配置</a></li>
+                            <li><a href="Data-Sources.html">数据源</a></li>
+                            <li><a href="Recommendations.html" class="active">首页推荐</a></li>
+                            <li><a href="Player.html">播放器</a></li>
+                            <li><a href="Proxy-Security.html">代理与安全</a></li>
+                            <li><a href="FAQ.html">FAQ</a></li>
+                            <li><a class="nav-external" href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">GitHub 仓库 ↗</a></li>
+                        </ul>
+                    </nav>
+                    <div class="wiki-sidebar-meta">
+                        <a href="https://github.com/LibreSpark/LibreTV/wiki/Recommendations" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页 ↗</a>
+                    </div>
+                </div>
+            </aside>
+            <div class="wiki-sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
+            <button class="wiki-sidebar-toggle" id="sidebarToggle" type="button" aria-controls="wiki-sidebar" aria-expanded="false">☰ 文档目录</button>
+
+            <!-- Content -->
+            <article class="wiki-content">
+                <div class="wiki-breadcrumb">
+                    <a href="index.html">文档</a><span aria-hidden="true">/</span><span>首页推荐</span>
+                </div>
+                <h1 class="wiki-title gradient-text">首页推荐</h1>
+                <div class="wiki-body markdown-body">
+<p>首页在没有搜索关键词时展示推荐内容。推荐<strong>数据源可在设置中切换</strong>（设置 → 播放与过滤 → 「首页推荐」开关 + 「推荐数据源」下拉），同一时间只展示一个来源：</p>
+<table>
+<thead>
+<tr>
+<th>来源</th>
+<th>内容</th>
+<th>依赖</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>豆瓣</td>
+<td>电影/剧集分类 + 标签（热门、最新、高分等），分页加载</td>
+<td>无</td>
+</tr>
+<tr>
+<td>Bangumi 新番放送</td>
+<td>每日放送表，按星期筛选（周一~周日），一次全量</td>
+<td>无，<a href="https://github.com/bangumi/api" target="_blank" rel="noopener noreferrer">api.bgm.tv</a> 免 key</td>
+</tr>
+<tr>
+<td>影视榜单</td>
+<td>豆瓣五个周榜（电影/国产剧/海外剧/国内外综艺）+ 百度热播剧，chips 切换</td>
+<td><a href="https://github.com/vikiboss/60s" target="_blank" rel="noopener noreferrer">60s API</a> 免 key，见 <code>60S_API_BASE</code></td>
+</tr>
+</tbody></table>
+<p>所有来源均在<strong>服务端</strong>直连上游并做内存缓存，浏览器只请求本站 API，不暴露用户 IP。</p>
+<h2 id="各来源实现细节">各来源实现细节</h2>
+<h3 id="豆瓣apidouban">豆瓣（<code>/api/douban</code>）</h3>
+<ul>
+<li>上游 <code>movie.douban.com/j/search_subjects</code>，服务端伪装 UA/Referer 直连；</li>
+<li>直连被拒时降级到 <code>FALLBACK_CORS_PROXY</code> 环境变量指定的代理；</li>
+<li>缓存 10 分钟。</li>
+</ul>
+<h3 id="bangumiapibangumicalendar">Bangumi（<code>/api/bangumi/calendar</code>）</h3>
+<ul>
+<li>上游 <code>api.bgm.tv/calendar</code>（每日放送），完全公开免 key；</li>
+<li>条目转换为与豆瓣一致的卡片结构：中文名优先（<code>name_cn</code>）、评分保留一位小数、封面取 <code>large</code> 档；</li>
+<li>缓存 30 分钟；</li>
+<li>点击卡片同样走标题搜索采集站，Bangumi 中文名可直接命中。</li>
+</ul>
+<h3 id="影视榜单apihot-list">影视榜单（<code>/api/hot-list</code>）</h3>
+<p>经 <a href="https://github.com/vikiboss/60s" target="_blank" rel="noopener noreferrer">60s API</a> 聚合，六个榜单：</p>
+<table>
+<thead>
+<tr>
+<th>榜单</th>
+<th>标识</th>
+<th>上游</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>电影周榜</td>
+<td><code>douban_movie_weekly</code></td>
+<td>豆瓣移动端 rexxar 接口（60s 代为伪装 iPhone UA 抓取）</td>
+</tr>
+<tr>
+<td>国产剧周榜</td>
+<td><code>douban_tv_chinese</code></td>
+<td>同上</td>
+</tr>
+<tr>
+<td>海外剧周榜</td>
+<td><code>douban_tv_global</code></td>
+<td>同上</td>
+</tr>
+<tr>
+<td>国内综艺</td>
+<td><code>douban_show_chinese</code></td>
+<td>同上</td>
+</tr>
+<tr>
+<td>海外综艺</td>
+<td><code>douban_show_global</code></td>
+<td>同上</td>
+</tr>
+<tr>
+<td>百度热播剧</td>
+<td><code>baidu_teleplay</code></td>
+<td>top.baidu.com 电视剧榜（无评分，海报偶缺，缺图条目已过滤）</td>
+</tr>
+</tbody></table>
+<ul>
+<li>豆瓣周榜海报默认走 <code>doubanio.viki.moe</code> 代理域名，规避豆瓣图床防盗链；</li>
+<li>缓存 1 小时；</li>
+<li><code>60S_API_BASE</code> 环境变量可指向自部署的 60s 实例（<code>docker run -d -p 4399:4399 vikiboss/60s:latest</code>），官方公共实例有限流。</li>
+</ul>
+<h2 id="为什么默认是影视榜单">为什么默认是影视榜单</h2>
+<p>豆瓣搜索接口偶尔限流且封面有防盗链；影视榜单数据最完整（海报/评分/简介齐全）、60s 侧做了封面代理，且榜单内容与&quot;找片看&quot;的意图最匹配。旧部署升级后<strong>已保存过设置的用户不受影响</strong>，仍沿用其已持久化的选择。</p>
+<h2 id="常见问题">常见问题</h2>
+<p><strong>Q: 首页推荐区完全不显示？</strong>
+检查设置 → 播放与过滤 → 「首页推荐」开关是否关闭。</p>
+<p><strong>Q: 切换推荐源后没变化？</strong>
+来源选择保存在浏览器 localStorage，切换后立即生效；若被浏览器策略清除存储则回到默认。</p>
+<p><strong>Q: 影视榜单加载失败？</strong>
+多为官方 60s 公共实例限流或被墙。可在服务端配置 <code>60S_API_BASE</code> 指向自部署实例或社区镜像后重启。</p>
+
+                </div>
+                <nav class="wiki-pager" aria-label="上一篇 / 下一篇">
+                    <a href="Data-Sources.html"><span class="pager-label">← 上一篇</span><span class="pager-title">数据源</span></a>
+                    <a class="pager-next" href="Player.html"><span class="pager-label">下一篇 →</span><span class="pager-title">播放器</span></a>
+                </nav>
+            </article>
+
+            <!-- Page TOC -->
+            <aside class="wiki-toc" aria-label="本页目录">
+                <div class="wiki-toc-title">本页目录</div>
+                <ul>
+            <li class="toc-h2"><a href="#各来源实现细节">各来源实现细节</a></li>
+            <li class="toc-h3"><a href="#豆瓣apidouban">豆瓣（/api/douban）</a></li>
+            <li class="toc-h3"><a href="#bangumiapibangumicalendar">Bangumi（/api/bangumi/calendar）</a></li>
+            <li class="toc-h3"><a href="#影视榜单apihot-list">影视榜单（/api/hot-list）</a></li>
+            <li class="toc-h2"><a href="#为什么默认是影视榜单">为什么默认是影视榜单</a></li>
+            <li class="toc-h2"><a href="#常见问题">常见问题</a></li>
+            </ul>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="wiki-footer">
+        <div class="wiki-container" style="display:block;">
+            <div>
+                <a href="../index.html">LibreTV 门户首页</a> ·
+                <a href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">GitHub 仓库</a> ·
+                <a href="https://github.com/LibreSpark/LibreTV/wiki" target="_blank" rel="noopener noreferrer">Wiki 源</a>
+            </div>
+            <div class="footer-copyright">&copy; <span id="currentYear"></span> LibreTV · 基于 AGPL-3.0 许可证开源 · 文档内容同步自主仓库 Wiki</div>
+        </div>
+    </footer>
+
+    <button class="back-to-top" id="backToTop" aria-label="回到顶部">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+            <path d="M18 15l-6-6-6 6"/>
+        </svg>
+    </button>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="../scripts/wiki.js" defer></script>
+</body>
+</html>

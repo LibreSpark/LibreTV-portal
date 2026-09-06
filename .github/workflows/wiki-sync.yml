@@ -1,0 +1,47 @@
+# 每日同步 LibreTV 主仓库 Wiki → 渲染为静态页面提交进本仓库
+# 内容源：https://github.com/LibreSpark/LibreTV.wiki.git
+# 推送 main 后由 static.yml 自动部署 GitHub Pages，Vercel 亦跟随。
+
+name: Sync LibreTV Wiki
+
+on:
+  schedule:
+    - cron: "0 3 * * *" # 每日 UTC 3:00
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wiki-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build wiki pages
+        run: node scripts/build-wiki.mjs
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add wiki sitemap.xml
+          if git diff --cached --quiet; then
+            echo "No wiki changes."
+          else
+            git commit -m "docs(wiki): 同步 LibreTV 主仓库 Wiki"
+            git push
+          fi

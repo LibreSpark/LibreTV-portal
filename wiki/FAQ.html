@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - LibreTV 文档</title>
+    <meta name="description" content="Q: 打开站点一直提示&quot;需要配置密码&quot;？ 服务器未设置 PASSWORD 环境变量。Docker 部署检查 .env；手动部署确认启动命令中带 PASSWORD=...。设置后需重启服务。 Q: 登录后刷新又要求输入密码？ 生产环境（HTTPS）下 Cookie 为 Secure，用 HTTP 访问">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="author" content="LibreTV Team">
+    <link rel="canonical" href="https://libretv.is-an.org/wiki/FAQ.html">
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://libretv.is-an.org/wiki/FAQ.html">
+    <meta property="og:title" content="FAQ - LibreTV 文档">
+    <meta property="og:description" content="Q: 打开站点一直提示&quot;需要配置密码&quot;？ 服务器未设置 PASSWORD 环境变量。Docker 部署检查 .env；手动部署确认启动命令中带 PASSWORD=...。设置后需重启服务。 Q: 登录后刷新又要求输入密码？ 生产环境（HTTPS）下 Cookie 为 Secure，用 HTTP 访问">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="FAQ - LibreTV 文档">
+    <meta name="twitter:description" content="Q: 打开站点一直提示&quot;需要配置密码&quot;？ 服务器未设置 PASSWORD 环境变量。Docker 部署检查 .env；手动部署确认启动命令中带 PASSWORD=...。设置后需重启服务。 Q: 登录后刷新又要求输入密码？ 生产环境（HTTPS）下 Cookie 为 Secure，用 HTTP 访问">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/logo-black.png">
+    <link rel="apple-touch-icon" href="../assets/logo-black.png">
+
+    <link rel="stylesheet" href="../styles/wiki.css">
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+<body class="wiki-page">
+    <a class="skip-link" href="#wiki-main">跳到主要内容</a>
+
+    
+
+    <!-- Navigation -->
+    <nav class="navbar" aria-label="文档导航">
+        <div class="nav-container">
+            <a class="nav-logo" href="../index.html" aria-label="返回 LibreTV 首页">
+                <img src="../assets/logo-black.png" alt="LibreTV Logo" class="logo-img">
+                <span class="logo-text">LibreTV</span>
+            </a>
+            <div class="nav-menu" id="nav-menu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="index.html" class="nav-link active">文档</a>
+                <a href="https://github.com/LibreSpark/LibreTV" class="nav-link github-link" target="_blank" rel="noopener noreferrer">
+                    <svg class="github-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M12 0C5.374 0 0 5.373 0 12 0 17.302 3.438 21.8 8.207 23.387c.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    <span>GitHub</span>
+                </a>
+            </div>
+            <button class="nav-toggle" id="nav-toggle" aria-label="切换菜单" aria-expanded="false" aria-controls="nav-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+    </nav>
+
+    <main id="wiki-main" class="wiki-main">
+        <div class="wiki-container">
+            <!-- Sidebar -->
+            <aside class="wiki-sidebar" id="wiki-sidebar" aria-label="文档目录">
+                <div class="wiki-sidebar-close"><button type="button" id="sidebarClose" aria-label="关闭文档目录">✕</button></div>
+                <div class="wiki-sidebar-inner">
+                    <div class="wiki-sidebar-title">📖 文档</div>
+                    <nav class="wiki-nav">
+                        <ul>
+                            <li><a href="index.html">首页</a></li>
+                            <li><a href="Architecture.html">架构</a></li>
+                            <li><a href="Deployment.html">部署</a></li>
+                            <li><a href="Configuration.html">配置</a></li>
+                            <li><a href="Data-Sources.html">数据源</a></li>
+                            <li><a href="Recommendations.html">首页推荐</a></li>
+                            <li><a href="Player.html">播放器</a></li>
+                            <li><a href="Proxy-Security.html">代理与安全</a></li>
+                            <li><a href="FAQ.html" class="active">FAQ</a></li>
+                            <li><a class="nav-external" href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">GitHub 仓库 ↗</a></li>
+                        </ul>
+                    </nav>
+                    <div class="wiki-sidebar-meta">
+                        <a href="https://github.com/LibreSpark/LibreTV/wiki/FAQ" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页 ↗</a>
+                    </div>
+                </div>
+            </aside>
+            <div class="wiki-sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
+            <button class="wiki-sidebar-toggle" id="sidebarToggle" type="button" aria-controls="wiki-sidebar" aria-expanded="false">☰ 文档目录</button>
+
+            <!-- Content -->
+            <article class="wiki-content">
+                <div class="wiki-breadcrumb">
+                    <a href="index.html">文档</a><span aria-hidden="true">/</span><span>FAQ</span>
+                </div>
+                <h1 class="wiki-title gradient-text">FAQ</h1>
+                <div class="wiki-body markdown-body">
+<h2 id="部署相关">部署相关</h2>
+<p><strong>Q: 打开站点一直提示&quot;需要配置密码&quot;？</strong>
+服务器未设置 <code>PASSWORD</code> 环境变量。Docker 部署检查 <code>.env</code>；手动部署确认启动命令中带 <code>PASSWORD=...</code>。设置后需重启服务。</p>
+<p><strong>Q: 登录后刷新又要求输入密码？</strong></p>
+<ul>
+<li>生产环境（HTTPS）下 Cookie 为 <code>Secure</code>，用 HTTP 访问生产构建会导致 Cookie 无法保存——请配置 HTTPS 或以开发模式运行；</li>
+<li>多实例部署未设置 <code>PROXY_SECRET</code>：各实例派生密钥不同，会话互不认账。</li>
+</ul>
+<p><strong>Q: 忘记密码怎么办？</strong>
+修改 <code>PASSWORD</code> 环境变量并重启。旧会话立即全部失效（密钥随之改变）。</p>
+<h2 id="搜索相关">搜索相关</h2>
+<p><strong>Q: 搜索提示&quot;请先添加数据源&quot; / &quot;尚未勾选数据源&quot;？</strong>
+本项目不内置采集站。到「设置 → 数据源」添加 Apple CMS 采集站地址并勾选。</p>
+<p><strong>Q: 某个源一直搜索失败？</strong>
+结果区顶部会列出失败源名称。直接浏览器访问 <code>{api}?ac=videolist&amp;wd=test</code> 判断是源挂了还是网络不通；不用的源可以取消勾选或删除。</p>
+<p><strong>Q: 搜索结果为什么按名称排序？</strong>
+跨源聚合后按影片名（zh-CN locale）排序、同名片按源名排序，便于对比同一影片在不同源的画质/集数。</p>
+<p><strong>Q: 从播放页返回搜索页会重新搜索吗？</strong>
+通常不会。客户端缓存搜索结果 5 分钟、服务端缓存同一关键词+源组合的结果 60 秒：返回时直接呈现缓存，不重复请求上游。需要强制刷新时重新提交一次搜索即可。</p>
+<p><strong>Q: 详情为什么有缓存？会不会导致新剧集看不到？</strong>
+详情接口有 60 秒服务端缓存（同一影片 + 同一源），用于换源测速等场景避免重复打上游。剧集更新以源站为准，60 秒后即取到最新。</p>
+<h2 id="播放相关">播放相关</h2>
+<p><strong>Q: 视频一直&quot;正在加载&quot;？</strong>
+按顺序尝试：① 点「切换资源」换其他源；② 设置中切换封面/直连相关配置确认网络；③ 该源分片可能仅允许特定地区/Referer，代理回退通常能自动解决，若仍失败请换源。</p>
+<p><strong>Q: 出现&quot;直连失败，改用代理重试&quot;后播放正常，但快进卡顿？</strong>
+代理播放的带宽受限于服务器。属预期行为，建议优先寻找可直连的源。</p>
+<p><strong>Q: 自动跳到下一集后从头播放了？</strong>
+确认「自动连播」开关已打开（播放页操作栏或设置中）。</p>
+<p><strong>Q: 换源后集数对不上？</strong>
+换源按集数索引对齐，目标源集数少于当前集数时会回到第 1 集。</p>
+<h2 id="推荐相关">推荐相关</h2>
+<p><strong>Q: 首页推荐区不显示 / 加载失败？</strong>
+先确认「设置 → 首页推荐」开关已打开。加载失败按来源区分：豆瓣多为上游限流（可配置 <code>FALLBACK_CORS_PROXY</code> 降级）；影视榜单多为官方 60s 公共实例限流或被墙（可自部署后用 <code>60S_API_BASE</code> 指向），详见 <a href="Recommendations.html">Recommendations</a>。</p>
+<p><strong>Q: 推荐内容点开后搜不到片源？</strong>
+推荐只提供片名与封面，实际播放依赖你在「设置 → 数据源」里配置的采集站覆盖范围。换标题关键词重搜或补充更多采集源。</p>
+<h2 id="数据相关">数据相关</h2>
+<p><strong>Q: 换浏览器/设备后历史和进度还在吗？</strong>
+不在。历史与进度保存在本机 IndexedDB，不上传服务器。可用「设置 → 导出配置」手动迁移。</p>
+<p><strong>Q: 观看历史里某条记录播放时提示&quot;数据源不存在&quot;？</strong>
+该记录的来源源已被删除。重新在设置中添加同名 API 地址（key 一致即可恢复），或删除该历史。</p>
+<p><strong>Q: IndexedDB 数据会占多少空间？</strong>
+仅存定位信息（不含全集 URL），100 条历史通常 &lt; 100KB。</p>
+<h2 id="安全相关">安全相关</h2>
+<p><strong>Q: 密码是明文传输吗？</strong>
+登录请求把密码放在 POST body 中，生产环境务必启用 HTTPS 防止传输层被窃听。</p>
+<p><strong>Q: 代理会被滥用吗？</strong>
+代理需要登录会话；未登录仅放行图片类目标且同样受 SSRF 校验约束。公网部署建议在反代层再加 IP 级限流。</p>
+<p><strong>Q: 为什么不给站点加注册/多用户？</strong>
+LibreTV 定位为轻量自托管工具，单密码门禁 + 本机数据即可满足场景；多用户会引入服务端存储与隐私复杂度。</p>
+
+                </div>
+                <nav class="wiki-pager" aria-label="上一篇 / 下一篇">
+                    <a href="Proxy-Security.html"><span class="pager-label">← 上一篇</span><span class="pager-title">代理与安全</span></a>
+                </nav>
+            </article>
+
+            <!-- Page TOC -->
+            <aside class="wiki-toc" aria-label="本页目录">
+                <div class="wiki-toc-title">本页目录</div>
+                <ul>
+            <li class="toc-h2"><a href="#部署相关">部署相关</a></li>
+            <li class="toc-h2"><a href="#搜索相关">搜索相关</a></li>
+            <li class="toc-h2"><a href="#播放相关">播放相关</a></li>
+            <li class="toc-h2"><a href="#推荐相关">推荐相关</a></li>
+            <li class="toc-h2"><a href="#数据相关">数据相关</a></li>
+            <li class="toc-h2"><a href="#安全相关">安全相关</a></li>
+            </ul>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="wiki-footer">
+        <div class="wiki-container" style="display:block;">
+            <div>
+                <a href="../index.html">LibreTV 门户首页</a> ·
+                <a href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">GitHub 仓库</a> ·
+                <a href="https://github.com/LibreSpark/LibreTV/wiki" target="_blank" rel="noopener noreferrer">Wiki 源</a>
+            </div>
+            <div class="footer-copyright">&copy; <span id="currentYear"></span> LibreTV · 基于 AGPL-3.0 许可证开源 · 文档内容同步自主仓库 Wiki</div>
+        </div>
+    </footer>
+
+    <button class="back-to-top" id="backToTop" aria-label="回到顶部">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+            <path d="M18 15l-6-6-6 6"/>
+        </svg>
+    </button>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="../scripts/wiki.js" defer></script>
+</body>
+</html>

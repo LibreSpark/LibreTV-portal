@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>配置 - LibreTV 文档</title>
+    <meta name="description" content="| 变量 | 必填 | 默认 | 说明 | | | | | | | PASSWORD | 是 | — | 访问密码。未设置时站点可用但所有功能接口返回 503，并提示管理员配置 | | PROXY SECRET | 否 | 从 PASSWORD 派生 | 会话与代理签名密钥。单实例可不设；多实例/负">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="author" content="LibreTV Team">
+    <link rel="canonical" href="https://libretv.is-an.org/wiki/Configuration.html">
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://libretv.is-an.org/wiki/Configuration.html">
+    <meta property="og:title" content="配置 - LibreTV 文档">
+    <meta property="og:description" content="| 变量 | 必填 | 默认 | 说明 | | | | | | | PASSWORD | 是 | — | 访问密码。未设置时站点可用但所有功能接口返回 503，并提示管理员配置 | | PROXY SECRET | 否 | 从 PASSWORD 派生 | 会话与代理签名密钥。单实例可不设；多实例/负">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="配置 - LibreTV 文档">
+    <meta name="twitter:description" content="| 变量 | 必填 | 默认 | 说明 | | | | | | | PASSWORD | 是 | — | 访问密码。未设置时站点可用但所有功能接口返回 503，并提示管理员配置 | | PROXY SECRET | 否 | 从 PASSWORD 派生 | 会话与代理签名密钥。单实例可不设；多实例/负">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/logo-black.png">
+    <link rel="apple-touch-icon" href="../assets/logo-black.png">
+
+    <link rel="stylesheet" href="../styles/wiki.css">
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+<body class="wiki-page">
+    <a class="skip-link" href="#wiki-main">跳到主要内容</a>
+
+    
+
+    <!-- Navigation -->
+    <nav class="navbar" aria-label="文档导航">
+        <div class="nav-container">
+            <a class="nav-logo" href="../index.html" aria-label="返回 LibreTV 首页">
+                <img src="../assets/logo-black.png" alt="LibreTV Logo" class="logo-img">
+                <span class="logo-text">LibreTV</span>
+            </a>
+            <div class="nav-menu" id="nav-menu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="index.html" class="nav-link active">文档</a>
+                <a href="https://github.com/LibreSpark/LibreTV" class="nav-link github-link" target="_blank" rel="noopener noreferrer">
+                    <svg class="github-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M12 0C5.374 0 0 5.373 0 12 0 17.302 3.438 21.8 8.207 23.387c.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    <span>GitHub</span>
+                </a>
+            </div>
+            <button class="nav-toggle" id="nav-toggle" aria-label="切换菜单" aria-expanded="false" aria-controls="nav-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+    </nav>
+
+    <main id="wiki-main" class="wiki-main">
+        <div class="wiki-container">
+            <!-- Sidebar -->
+            <aside class="wiki-sidebar" id="wiki-sidebar" aria-label="文档目录">
+                <div class="wiki-sidebar-close"><button type="button" id="sidebarClose" aria-label="关闭文档目录">✕</button></div>
+                <div class="wiki-sidebar-inner">
+                    <div class="wiki-sidebar-title">📖 文档</div>
+                    <nav class="wiki-nav">
+                        <ul>
+                            <li><a href="index.html">首页</a></li>
+                            <li><a href="Architecture.html">架构</a></li>
+                            <li><a href="Deployment.html">部署</a></li>
+                            <li><a href="Configuration.html" class="active">配置</a></li>
+                            <li><a href="Data-Sources.html">数据源</a></li>
+                            <li><a href="Recommendations.html">首页推荐</a></li>
+                            <li><a href="Player.html">播放器</a></li>
+                            <li><a href="Proxy-Security.html">代理与安全</a></li>
+                            <li><a href="FAQ.html">FAQ</a></li>
+                            <li><a class="nav-external" href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">GitHub 仓库 ↗</a></li>
+                        </ul>
+                    </nav>
+                    <div class="wiki-sidebar-meta">
+                        <a href="https://github.com/LibreSpark/LibreTV/wiki/Configuration" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页 ↗</a>
+                    </div>
+                </div>
+            </aside>
+            <div class="wiki-sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
+            <button class="wiki-sidebar-toggle" id="sidebarToggle" type="button" aria-controls="wiki-sidebar" aria-expanded="false">☰ 文档目录</button>
+
+            <!-- Content -->
+            <article class="wiki-content">
+                <div class="wiki-breadcrumb">
+                    <a href="index.html">文档</a><span aria-hidden="true">/</span><span>配置</span>
+                </div>
+                <h1 class="wiki-title gradient-text">配置</h1>
+                <div class="wiki-body markdown-body">
+<h2 id="环境变量">环境变量</h2>
+<table>
+<thead>
+<tr>
+<th>变量</th>
+<th>必填</th>
+<th>默认</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>PASSWORD</code></td>
+<td><strong>是</strong></td>
+<td>—</td>
+<td>访问密码。未设置时站点可用但所有功能接口返回 503，并提示管理员配置</td>
+</tr>
+<tr>
+<td><code>PROXY_SECRET</code></td>
+<td>否</td>
+<td>从 PASSWORD 派生</td>
+<td>会话与代理签名密钥。单实例可不设；多实例/负载均衡部署必须显式设置，否则各实例会话互不认账</td>
+</tr>
+<tr>
+<td><code>REQUEST_TIMEOUT</code></td>
+<td>否</td>
+<td><code>8000</code></td>
+<td>代理上游请求超时（毫秒）</td>
+</tr>
+<tr>
+<td><code>MAX_RETRIES</code></td>
+<td>否</td>
+<td><code>1</code></td>
+<td>代理请求重试次数</td>
+</tr>
+<tr>
+<td><code>SEARCH_MAX_PAGES</code></td>
+<td>否</td>
+<td><code>5</code></td>
+<td>每个搜索源最多抓取的页数（1-50）。第一页响应携带源站真实总页数 <code>pagecount</code>，实际抓取页数取两者较小值；后续页并行请求，单页失败仅丢弃该页。调大会显著增加上游请求量（约等于 源数 × 页数），搜索延迟与源站压力随之上升</td>
+</tr>
+<tr>
+<td><code>USER_AGENT</code></td>
+<td>否</td>
+<td>Chrome UA</td>
+<td>代理请求使用的 UA（豆瓣防盗链等场景）</td>
+</tr>
+<tr>
+<td><code>DEFAULT_SOURCES</code></td>
+<td>否</td>
+<td>—</td>
+<td>预置采集站，JSON 数组，见下文 <a href="#预置采集站default_sources">预置采集站</a></td>
+</tr>
+<tr>
+<td><code>60S_API_BASE</code></td>
+<td>否</td>
+<td><code>https://60s.viki.moe</code></td>
+<td>影视榜单推荐源（豆瓣周榜/百度热播）使用的 <a href="https://github.com/vikiboss/60s" target="_blank" rel="noopener noreferrer">60s API</a> 实例地址。服务端每类榜单缓存 1 小时，官方公共实例限流下通常够用；高频使用可用 <code>docker run -d -p 4399:4399 vikiboss/60s:latest</code> 自部署后指向它</td>
+</tr>
+<tr>
+<td><code>DEBUG</code></td>
+<td>否</td>
+<td><code>false</code></td>
+<td>调试日志</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>旧版的 <code>CORS_ORIGIN</code>、<code>CACHE_MAX_AGE</code>、<code>BLOCKED_HOSTS</code>、<code>BLOCKED_IP_PREFIXES</code>、<code>FILTERED_HEADERS</code> 在重构版中已内化为安全默认值，不再需要配置。</p>
+</blockquote>
+<h3 id="预置采集站default_sources">预置采集站（DEFAULT_SOURCES）</h3>
+<p>部署者可通过环境变量为所有用户预置数据源，用户无需手动添加即可搜索：</p>
+<pre><code class="language-bash">DEFAULT_SOURCES=[{&quot;name&quot;:&quot;示例源&quot;,&quot;url&quot;:&quot;https://example.com/api.php/provide/vod&quot;,&quot;detail&quot;:&quot;https://example.com&quot;,&quot;isAdult&quot;:false}]
+</code></pre>
+<ul>
+<li>格式为 JSON 数组，每项支持 <code>name</code>（必填）、<code>url</code>（必填，http/https）、<code>detail</code>（可选详情页地址）、<code>isAdult</code>（可选成人标记）；</li>
+<li>解析失败会在服务端日志告警并<strong>整体忽略</strong>，不影响站点运行，最多生效 50 个（与搜索接口上限一致）；</li>
+<li>预置源由服务端经 <code>/api/status</code> 下发，展示在设置抽屉顶部并带「部署者预置」标记，用户可勾选/取消但<strong>不可编辑或删除</strong>；</li>
+<li>预置源首次出现时自动勾选（开箱即搜）；用户取消勾选后刷新页面不会被反复勾回；</li>
+<li>预置源不参与用户侧的配置导出（导出文件只含用户自建源），部署者变更环境变量即可全站生效。</li>
+</ul>
+<h2 id="运行时设置用户级">运行时设置（用户级）</h2>
+<p>以下设置保存在每个用户浏览器的 localStorage（键 <code>libretv-settings</code>），通过「设置」抽屉修改：</p>
+<h3 id="数据源">数据源</h3>
+<ul>
+<li><strong>自定义 API 列表</strong>：名称、API 地址、详情页地址（可选）、成人标记；</li>
+<li><strong>勾选参与搜索的源</strong>：仅勾选的源会参与聚合搜索与换源；</li>
+<li><strong>源订阅</strong>：远程源列表地址与上次同步时间，格式与行为见 <a href="Data-Sources.html">Data-Sources · 源订阅</a>。同步为手动操作（订阅条目 <strong>⟳</strong>），远端列表更新后需手动刷新。</li>
+</ul>
+<h3 id="播放与过滤">播放与过滤</h3>
+<table>
+<thead>
+<tr>
+<th>开关</th>
+<th>默认</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>成人内容过滤</td>
+<td>开</td>
+<td>服务端按分类关键词过滤（伦理片/福利片等）</td>
+</tr>
+<tr>
+<td>广告过滤</td>
+<td>开</td>
+<td>hls.js loader 剔除 m3u8 中的 <code>#EXT-X-DISCONTINUITY</code> 广告片段</td>
+</tr>
+<tr>
+<td>自动连播</td>
+<td>开</td>
+<td>单集结束自动播放下一集</td>
+</tr>
+<tr>
+<td>豆瓣推荐</td>
+<td>开</td>
+<td>首页展示豆瓣热门影视</td>
+</tr>
+</tbody></table>
+<h3 id="封面图加载方式">封面图加载方式</h3>
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>内置代理（默认）</td>
+<td>经 <code>/api/proxy/</code> 转发（带豆瓣 Referer 伪装），规避豆瓣防盗链与图床直连失败</td>
+</tr>
+<tr>
+<td>直连</td>
+<td>浏览器直接加载豆瓣/采集站封面，最快；部分网络下豆瓣图会 418</td>
+</tr>
+<tr>
+<td>自定义代理</td>
+<td>模板字符串，<code>{url}</code> 为编码后的原图地址；不含占位符则直接拼接</td>
+</tr>
+</tbody></table>
+<h3 id="主题">主题</h3>
+<ul>
+<li>头部太阳/月亮/显示器图标，点击在 <strong>浅色 → 深色 → 跟随系统</strong> 间循环；</li>
+<li>存储于 <code>localStorage[&#39;libretv-theme&#39;]</code>；</li>
+<li>页面 HTML 内有同步脚本，刷新无闪烁；</li>
+<li>跟随系统模式下监听 <code>prefers-color-scheme</code> 变化实时切换。</li>
+</ul>
+<h3 id="配置导入导出">配置导入导出</h3>
+<ul>
+<li><strong>导出</strong>：生成 <code>LibreTV-Settings_&lt;时间戳&gt;.json</code>（数据源、播放设置、观看历史、搜索历史）；</li>
+<li><strong>导入</strong>：兼容旧版 LibreTV 导出的配置文件；旧版观看历史（含全集 URL 列表）会自动迁移为定位信息格式。</li>
+</ul>
+<h2 id="存储结构indexeddb-libretv">存储结构（IndexedDB <code>libretv</code>）</h2>
+<table>
+<thead>
+<tr>
+<th>表</th>
+<th>主键</th>
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>history</code></td>
+<td><code>id = sourceKey_vodId</code></td>
+<td>title, pic, episodeIndex, totalEpisodes, playbackPosition, duration, timestamp</td>
+<td>上限 100 条，超出淘汰最旧</td>
+</tr>
+<tr>
+<td><code>progress</code></td>
+<td><code>key = sourceKey_vodId_index</code></td>
+<td>position, duration, updatedAt</td>
+<td>每集一条，看完清除</td>
+</tr>
+<tr>
+<td><code>searchHistory</code></td>
+<td><code>text</code></td>
+<td>timestamp</td>
+<td>上限 10 条</td>
+</tr>
+</tbody></table>
+
+                </div>
+                <nav class="wiki-pager" aria-label="上一篇 / 下一篇">
+                    <a href="Deployment.html"><span class="pager-label">← 上一篇</span><span class="pager-title">部署</span></a>
+                    <a class="pager-next" href="Data-Sources.html"><span class="pager-label">下一篇 →</span><span class="pager-title">数据源</span></a>
+                </nav>
+            </article>
+
+            <!-- Page TOC -->
+            <aside class="wiki-toc" aria-label="本页目录">
+                <div class="wiki-toc-title">本页目录</div>
+                <ul>
+            <li class="toc-h2"><a href="#环境变量">环境变量</a></li>
+            <li class="toc-h3"><a href="#预置采集站default_sources">预置采集站（DEFAULT_SOURCES）</a></li>
+            <li class="toc-h2"><a href="#运行时设置用户级">运行时设置（用户级）</a></li>
+            <li class="toc-h3"><a href="#数据源">数据源</a></li>
+            <li class="toc-h3"><a href="#播放与过滤">播放与过滤</a></li>
+            <li class="toc-h3"><a href="#封面图加载方式">封面图加载方式</a></li>
+            <li class="toc-h3"><a href="#主题">主题</a></li>
+            <li class="toc-h3"><a href="#配置导入导出">配置导入导出</a></li>
+            <li class="toc-h2"><a href="#存储结构indexeddb-libretv">存储结构（IndexedDB libretv）</a></li>
+            </ul>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="wiki-footer">
+        <div class="wiki-container" style="display:block;">
+            <div>
+                <a href="../index.html">LibreTV 门户首页</a> ·
+                <a href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">GitHub 仓库</a> ·
+                <a href="https://github.com/LibreSpark/LibreTV/wiki" target="_blank" rel="noopener noreferrer">Wiki 源</a>
+            </div>
+            <div class="footer-copyright">&copy; <span id="currentYear"></span> LibreTV · 基于 AGPL-3.0 许可证开源 · 文档内容同步自主仓库 Wiki</div>
+        </div>
+    </footer>
+
+    <button class="back-to-top" id="backToTop" aria-label="回到顶部">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+            <path d="M18 15l-6-6-6 6"/>
+        </svg>
+    </button>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="../scripts/wiki.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>代理与安全 - LibreTV 文档</title>
+    <meta name="description" content="本项目的服务端承担三类安全职责： 访问鉴权 、 代理防护（SSRF） 、 上游伪装（防盗链） 。 登录：POST /api/auth，body 携带明文密码（ 不走 URL ，避免进访问日志）； 服务端用 SHA 256 摘要做 恒定时间比较 （crypto.timingSafeEqual），不暴露">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="author" content="LibreTV Team">
+    <link rel="canonical" href="https://libretv.is-an.org/wiki/Proxy-Security.html">
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://libretv.is-an.org/wiki/Proxy-Security.html">
+    <meta property="og:title" content="代理与安全 - LibreTV 文档">
+    <meta property="og:description" content="本项目的服务端承担三类安全职责： 访问鉴权 、 代理防护（SSRF） 、 上游伪装（防盗链） 。 登录：POST /api/auth，body 携带明文密码（ 不走 URL ，避免进访问日志）； 服务端用 SHA 256 摘要做 恒定时间比较 （crypto.timingSafeEqual），不暴露">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="代理与安全 - LibreTV 文档">
+    <meta name="twitter:description" content="本项目的服务端承担三类安全职责： 访问鉴权 、 代理防护（SSRF） 、 上游伪装（防盗链） 。 登录：POST /api/auth，body 携带明文密码（ 不走 URL ，避免进访问日志）； 服务端用 SHA 256 摘要做 恒定时间比较 （crypto.timingSafeEqual），不暴露">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/logo-black.png">
+    <link rel="apple-touch-icon" href="../assets/logo-black.png">
+
+    <link rel="stylesheet" href="../styles/wiki.css">
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+<body class="wiki-page">
+    <a class="skip-link" href="#wiki-main">跳到主要内容</a>
+
+    
+
+    <!-- Navigation -->
+    <nav class="navbar" aria-label="文档导航">
+        <div class="nav-container">
+            <a class="nav-logo" href="../index.html" aria-label="返回 LibreTV 首页">
+                <img src="../assets/logo-black.png" alt="LibreTV Logo" class="logo-img">
+                <span class="logo-text">LibreTV</span>
+            </a>
+            <div class="nav-menu" id="nav-menu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="index.html" class="nav-link active">文档</a>
+                <a href="https://github.com/LibreSpark/LibreTV" class="nav-link github-link" target="_blank" rel="noopener noreferrer">
+                    <svg class="github-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M12 0C5.374 0 0 5.373 0 12 0 17.302 3.438 21.8 8.207 23.387c.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    <span>GitHub</span>
+                </a>
+            </div>
+            <button class="nav-toggle" id="nav-toggle" aria-label="切换菜单" aria-expanded="false" aria-controls="nav-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+    </nav>
+
+    <main id="wiki-main" class="wiki-main">
+        <div class="wiki-container">
+            <!-- Sidebar -->
+            <aside class="wiki-sidebar" id="wiki-sidebar" aria-label="文档目录">
+                <div class="wiki-sidebar-close"><button type="button" id="sidebarClose" aria-label="关闭文档目录">✕</button></div>
+                <div class="wiki-sidebar-inner">
+                    <div class="wiki-sidebar-title">📖 文档</div>
+                    <nav class="wiki-nav">
+                        <ul>
+                            <li><a href="index.html">首页</a></li>
+                            <li><a href="Architecture.html">架构</a></li>
+                            <li><a href="Deployment.html">部署</a></li>
+                            <li><a href="Configuration.html">配置</a></li>
+                            <li><a href="Data-Sources.html">数据源</a></li>
+                            <li><a href="Recommendations.html">首页推荐</a></li>
+                            <li><a href="Player.html">播放器</a></li>
+                            <li><a href="Proxy-Security.html" class="active">代理与安全</a></li>
+                            <li><a href="FAQ.html">FAQ</a></li>
+                            <li><a class="nav-external" href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">GitHub 仓库 ↗</a></li>
+                        </ul>
+                    </nav>
+                    <div class="wiki-sidebar-meta">
+                        <a href="https://github.com/LibreSpark/LibreTV/wiki/Proxy-Security" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页 ↗</a>
+                    </div>
+                </div>
+            </aside>
+            <div class="wiki-sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
+            <button class="wiki-sidebar-toggle" id="sidebarToggle" type="button" aria-controls="wiki-sidebar" aria-expanded="false">☰ 文档目录</button>
+
+            <!-- Content -->
+            <article class="wiki-content">
+                <div class="wiki-breadcrumb">
+                    <a href="index.html">文档</a><span aria-hidden="true">/</span><span>代理与安全</span>
+                </div>
+                <h1 class="wiki-title gradient-text">代理与安全</h1>
+                <div class="wiki-body markdown-body">
+<p>本项目的服务端承担三类安全职责：<strong>访问鉴权</strong>、<strong>代理防护（SSRF）</strong>、<strong>上游伪装（防盗链）</strong>。</p>
+<h2 id="鉴权模型">鉴权模型</h2>
+<h3 id="会话">会话</h3>
+<ul>
+<li>登录：<code>POST /api/auth</code>，body 携带明文密码（<strong>不走 URL</strong>，避免进访问日志）；</li>
+<li>服务端用 SHA-256 摘要做<strong>恒定时间比较</strong>（<code>crypto.timingSafeEqual</code>），不暴露时序信息；</li>
+<li>通过后签发会话 Cookie：<code>ltv_session = &lt;过期时间戳&gt;.&lt;HMAC-SHA256(密钥, 时间戳)&gt;</code>；<ul>
+<li><code>httpOnly</code>（JS 不可读）、<code>SameSite=Lax</code>、生产环境 <code>Secure</code>、有效期 90 天；</li>
+<li>密钥 = <code>PROXY_SECRET</code>，未设置时从 <code>PASSWORD</code> 派生；</li>
+</ul>
+</li>
+<li>所有 <code>/api/*</code>（除 status/登录外）通过 <code>guardRequest</code> 校验会话，未登录返回 401，客户端全局弹出登录框。</li>
+</ul>
+<h3 id="速率限制">速率限制</h3>
+<p>登录接口按 IP 限流：<strong>10 次 / 10 分钟</strong>，超限返回 429。内存实现，适合单实例部署。</p>
+<h3 id="与旧版的安全差异">与旧版的安全差异</h3>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>旧版</th>
+<th>本版</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>密码哈希下发</td>
+<td>页面源码含 <code>sha256(PASSWORD)</code></td>
+<td>服务端独享，前端零凭证</td>
+</tr>
+<tr>
+<td>哈希即凭证</td>
+<td><code>?auth=&lt;哈希&gt;</code> 可无限重放代理请求</td>
+<td>已移除该兼容模式</td>
+</tr>
+<tr>
+<td>明文密码上 URL</td>
+<td><code>GET /api/proxy-token?password=...</code></td>
+<td><code>POST /api/auth</code> body</td>
+</tr>
+<tr>
+<td>登录限流</td>
+<td>无</td>
+<td>10 次 / 10 分钟</td>
+</tr>
+<tr>
+<td>token 轮换</td>
+<td>10 分钟短时效 token（需手工附参）</td>
+<td>会话 Cookie，m3u8 分片同源自动携带</td>
+</tr>
+</tbody></table>
+<h2 id="代理get-apiproxyltencoded-urlgt">代理（<code>GET /api/proxy/&lt;encoded-url&gt;</code>）</h2>
+<h3 id="访问规则">访问规则</h3>
+<ul>
+<li><strong>已登录</strong>：可代理任意符合 SSRF 校验的目标（视频分片、key、JSON、图片）；</li>
+<li><strong>未登录</strong>：仅放行豆瓣域（<code>douban.com</code> / <code>doubanio.com</code> 及其子域）下的图片类目标，用于登录页前的封面展示；其余一律 401。<blockquote>
+<p>判定按<strong>完整域名</strong>匹配（<code>host === &#39;douban.com&#39; || host.endsWith(&#39;.douban.com&#39;)</code>），
+避免 <code>evil-douban.com</code> 这类后缀伪装绕过鉴权。</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="ssrf-防护双层">SSRF 防护（双层）</h3>
+<p>所有<strong>由用户输入驱动的服务端出网请求</strong>都走同一套校验（<code>checkUpstreamAllowed</code>）：
+<code>/api/proxy</code>、<code>/api/search</code>（采集站 API 地址）、<code>/api/detail</code>（采集站 API 地址与详情页根地址）。
+用户可填写的采集站地址同样是攻击面，只校验代理而放过搜索/详情会留下内网探测跳板。</p>
+<ol>
+<li><strong>字面量校验</strong>（请求前）：协议白名单 http/https；主机名黑名单（localhost 等）；IPv4/IPv6 字面量直接比对私有段；</li>
+<li><strong>DNS 解析校验</strong>（请求前）：域名解析出的所有地址逐一检查，拦截解析到内网的域名（防 DNS rebinding 基础形态）。</li>
+</ol>
+<p>被拦截的地址段：回环（127.0.0.0/8, ::1）、私有（10/8, 172.16/12, 192.168/16）、链路本地（169.254/16，含云元数据 169.254.169.254）、CGNAT（100.64/10）、协议保留（192.0.0.0/24）、唯一本地（fc00::/7）、链路本地 v6（fe80::/10）。</p>
+<h3 id="行为">行为</h3>
+<ul>
+<li><strong>流式透传</strong>：视频分片 / 图片 / key 不落盘，直接 pipe；</li>
+<li><strong>m3u8 重写</strong>：manifest/level 文本中的分片、<code>#EXT-X-KEY</code>、<code>#EXT-X-MAP</code> 地址全部改写为 <code>/api/proxy/&lt;encoded&gt;</code>（递归深度 ≤5），嵌套播放列表同样经代理，规避上游 CORS 限制；</li>
+<li><strong>响应头净化</strong>：剔除 CSP/Cookie/Set-Cookie/X-Frame-Options/CORS 头与 Content-Encoding/Length（fetch 已解压，防止二次解压乱码）；</li>
+<li><strong>Range 透传</strong>：保留 <code>Range</code>/<code>Content-Range</code>，支持拖动；</li>
+<li><strong>重试</strong>：上游失败按 <code>MAX_RETRIES</code> 重试。</li>
+</ul>
+<h3 id="上游伪装">上游伪装</h3>
+<ul>
+<li>目标为 <code>doubanio.com</code> 时自动携带 <code>Referer: https://movie.douban.com/</code>，绕过豆瓣图片 418 防盗链；</li>
+<li>统一携带 Chrome UA。</li>
+</ul>
+<h2 id="已知边界">已知边界</h2>
+<ul>
+<li>速率限制为内存实现，多实例部署需换共享存储（Redis）；</li>
+<li>SSRF 的 DNS 校验存在理论上的 TOCTOU 窗口（校验后、请求前 DNS 记录变更）；对公网部署建议叠加网络层出口限制；</li>
+<li>上游请求目前跟随 30x 跳转（<code>redirect: &#39;follow&#39;</code>），SSRF 校验只覆盖首跳：目标域名若 301/302 到内网地址仍可绕过。改造为 <code>redirect: &#39;manual&#39;</code> + 逐跳校验可彻底闭合；</li>
+<li>私有/保留地址一律拒绝，因此<strong>部署在内网或本机（<code>localhost</code>、<code>192.168.x.x</code>）的采集站无法作为数据源使用</strong>；</li>
+<li>会话无法服务端主动吊销（无状态签名）；更换 <code>PROXY_SECRET</code> 或 <code>PASSWORD</code> 可使全部会话失效。</li>
+</ul>
+
+                </div>
+                <nav class="wiki-pager" aria-label="上一篇 / 下一篇">
+                    <a href="Player.html"><span class="pager-label">← 上一篇</span><span class="pager-title">播放器</span></a>
+                    <a class="pager-next" href="FAQ.html"><span class="pager-label">下一篇 →</span><span class="pager-title">FAQ</span></a>
+                </nav>
+            </article>
+
+            <!-- Page TOC -->
+            <aside class="wiki-toc" aria-label="本页目录">
+                <div class="wiki-toc-title">本页目录</div>
+                <ul>
+            <li class="toc-h2"><a href="#鉴权模型">鉴权模型</a></li>
+            <li class="toc-h3"><a href="#会话">会话</a></li>
+            <li class="toc-h3"><a href="#速率限制">速率限制</a></li>
+            <li class="toc-h3"><a href="#与旧版的安全差异">与旧版的安全差异</a></li>
+            <li class="toc-h2"><a href="#代理get-apiproxyltencoded-urlgt">代理（GET /api/proxy/&amp;lt;encoded-url&amp;gt;）</a></li>
+            <li class="toc-h3"><a href="#访问规则">访问规则</a></li>
+            <li class="toc-h3"><a href="#ssrf-防护双层">SSRF 防护（双层）</a></li>
+            <li class="toc-h3"><a href="#行为">行为</a></li>
+            <li class="toc-h3"><a href="#上游伪装">上游伪装</a></li>
+            <li class="toc-h2"><a href="#已知边界">已知边界</a></li>
+            </ul>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="wiki-footer">
+        <div class="wiki-container" style="display:block;">
+            <div>
+                <a href="../index.html">LibreTV 门户首页</a> ·
+                <a href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">GitHub 仓库</a> ·
+                <a href="https://github.com/LibreSpark/LibreTV/wiki" target="_blank" rel="noopener noreferrer">Wiki 源</a>
+            </div>
+            <div class="footer-copyright">&copy; <span id="currentYear"></span> LibreTV · 基于 AGPL-3.0 许可证开源 · 文档内容同步自主仓库 Wiki</div>
+        </div>
+    </footer>
+
+    <button class="back-to-top" id="backToTop" aria-label="回到顶部">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+            <path d="M18 15l-6-6-6 6"/>
+        </svg>
+    </button>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="../scripts/wiki.js" defer></script>
+</body>
+</html>

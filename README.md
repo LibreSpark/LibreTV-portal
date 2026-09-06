@@ -1,8 +1,8 @@
 # LibreTV Portal
 
-LibreTV 的官方门户网站 —— 一个美观、现代、**零外部依赖**的静态落地页，用于介绍 LibreTV（v2.x Next.js 全栈版）项目与提供部署指南。
+LibreTV 的官方门户网站 —— 一个美观、现代、**零外部依赖**的静态落地页，用于介绍 LibreTV（v2.x Next.js 全栈版）项目与提供部署指南，并内置与主仓库 Wiki 自动同步的文档站。
 
-🌐 **在线访问**: [https://libretv.is-an.org/](https://libretv.is-an.org/)
+🌐 **在线访问**: [https://libretv.is-an.org/](https://libretv.is-an.org/) · 📖 **使用文档**: [https://libretv.is-an.org/wiki/](https://libretv.is-an.org/wiki/)
 
 ## ✨ 特性
 
@@ -20,14 +20,22 @@ LibreTV 的官方门户网站 —— 一个美观、现代、**零外部依赖**
 ```
 LibreTV-portal/
 ├── index.html          # 主页面（语义化、单入口、无重复脚本）
+├── wiki/               # 文档站（由 scripts/build-wiki.mjs 自动生成，勿手改）
+│   └── _template.html  #   文档页模板（下划线开头，Jekyll 不发布）
 ├── styles/
-│   └── main.css        # 主样式（CSS 变量 / Grid / Flexbox / 响应式）
+│   ├── main.css        # 主样式（CSS 变量 / Grid / Flexbox / 响应式）
+│   └── wiki.css        # 文档站样式（与 main.css 同一套设计令牌）
 ├── scripts/
-│   └── main.js         # 主脚本（IIFE 模块化，无外部依赖）
+│   ├── main.js         # 主脚本（IIFE 模块化，无外部依赖）
+│   ├── wiki.js         # 文档页交互（侧栏抽屉 / TOC scrollspy / 复制）
+│   └── build-wiki.mjs  # Wiki 同步构建脚本（唯一 devDependency：marked）
 ├── assets/
 │   ├── logo.png / logo-black.png
 │   ├── nomedia.png
 │   └── logos/          # Docker 图标
+├── .github/workflows/
+│   ├── static.yml      # GitHub Pages 部署
+│   └── wiki-sync.yml   # 每日同步主仓库 Wiki
 ├── sw.js               # Service Worker
 ├── vercel.json         # 部署平台配置（含安全响应头与缓存策略）
 ├── sitemap.xml / robots.txt
@@ -35,6 +43,15 @@ LibreTV-portal/
 ├── package.json
 └── README.md
 ```
+
+## 📖 文档站（Wiki 同步）
+
+文档站的内容**维护在主仓库 [LibreSpark/LibreTV 的 Wiki](https://github.com/LibreSpark/LibreTV/wiki)**（9 个页面 + `_Sidebar.md` 导航），本仓库不手写文档内容：
+
+- **自动同步**：`.github/workflows/wiki-sync.yml` 每日定时（UTC 3:00，可手动触发）执行 `scripts/build-wiki.mjs`，shallow clone `LibreTV.wiki.git`，将 markdown 渲染为套用本站样式的静态 HTML 写入 `wiki/`，有变更时提交到 `main`，随后 Pages / Vercel 自动部署。
+- **手动同步**：本地运行 `npm run wiki:sync`。
+- **构建期转换**：`marked` 仅为 devDependency，线上产物仍是纯静态 HTML，运行时零依赖。脚本会改写 wiki 内部链接为站内链接、图片指向 `raw.githubusercontent.com`、将 GitHub `[!NOTE]` 等 alert 语法转换为提示卡片，并自动生成页内目录、上一篇/下一篇与 `sitemap.xml`。
+- **注意**：`wiki/*.html` 均为生成产物，请勿手改；改内容请去主仓库 Wiki。
 
 ## 🛠️ 技术栈
 
