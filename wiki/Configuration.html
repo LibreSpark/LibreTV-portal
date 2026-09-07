@@ -69,11 +69,13 @@
                             <li><a href="Deployment.html">部署</a></li>
                             <li><a href="Configuration.html" class="active">配置</a></li>
                             <li><a href="Data-Sources.html">数据源</a></li>
+                            <li><a href="Live-IPTV.html">直播 / IPTV</a></li>
                             <li><a href="Recommendations.html">首页推荐</a></li>
                             <li><a href="Player.html">播放器</a></li>
                             <li><a href="Proxy-Security.html">代理与安全</a></li>
                             <li><a href="FAQ.html">FAQ</a></li>
-                            <li><a class="nav-external" href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">GitHub 仓库 ↗</a></li>
+                            <li><a class="nav-external" href="https://github.com/bestZwei/LibreTV-Next" target="_blank" rel="noopener noreferrer">GitHub 仓库 ↗</a></li>
+                            <li><a class="nav-external" href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">LibreSpark 上游 ↗</a></li>
                         </ul>
                     </nav>
                     <div class="wiki-sidebar-meta">
@@ -144,6 +146,18 @@
 <td>预置采集站，JSON 数组，见下文 <a href="#预置采集站default_sources">预置采集站</a></td>
 </tr>
 <tr>
+<td><code>DEFAULT_LIVE_SOURCES</code></td>
+<td>否</td>
+<td>—</td>
+<td>预置直播源（M3U 订阅），JSON 数组，见下文 <a href="#预置直播源default_live_sources">预置直播源</a></td>
+</tr>
+<tr>
+<td><code>LIVE_ALLOW_PRIVATE</code></td>
+<td>否</td>
+<td><code>false</code></td>
+<td>设为 <code>1</code> 时允许直播流代理访问内网/保留地址（自建 IPTV 场景，如 <code>http://192.168.x.x</code>），默认关闭以维持 SSRF 防护</td>
+</tr>
+<tr>
 <td><code>60S_API_BASE</code></td>
 <td>否</td>
 <td><code>https://60s.viki.moe</code></td>
@@ -170,6 +184,16 @@
 <li>预置源首次出现时自动勾选（开箱即搜）；用户取消勾选后刷新页面不会被反复勾回；</li>
 <li>预置源不参与用户侧的配置导出（导出文件只含用户自建源），部署者变更环境变量即可全站生效。</li>
 </ul>
+<h3 id="预置直播源default_live_sources">预置直播源（DEFAULT_LIVE_SOURCES）</h3>
+<p>为所有用户预置直播（M3U 订阅）源，格式与行为对齐 <code>DEFAULT_SOURCES</code>：</p>
+<pre><code class="language-bash">DEFAULT_LIVE_SOURCES=[{&quot;name&quot;:&quot;示例直播源&quot;,&quot;url&quot;:&quot;https://example.com/list.m3u&quot;,&quot;epg&quot;:&quot;https://example.com/epg.xml.gz&quot;}]
+</code></pre>
+<ul>
+<li>每项支持 <code>name</code>（必填）、<code>url</code>（必填，M3U 订阅地址）、<code>epg</code>（可选 XMLTV 节目单地址）；</li>
+<li>经 <code>/api/status</code> 下发，展示在设置 → 直播源顶部并带「部署者预置」标记，用户可勾选启用/停用但<strong>不可编辑或删除</strong>；</li>
+<li>首次出现时自动启用；用户停用后不会被反复勾回；</li>
+<li>解析失败告警并整体忽略。功能详见 <a href="Live-IPTV.html">Live-IPTV</a>。</li>
+</ul>
 <h2 id="运行时设置用户级">运行时设置（用户级）</h2>
 <p>以下设置保存在每个用户浏览器的 localStorage（键 <code>libretv-settings</code>），通过「设置」抽屉修改：</p>
 <h3 id="数据源">数据源</h3>
@@ -177,6 +201,11 @@
 <li><strong>自定义 API 列表</strong>：名称、API 地址、详情页地址（可选）、成人标记；</li>
 <li><strong>勾选参与搜索的源</strong>：仅勾选的源会参与聚合搜索与换源；</li>
 <li><strong>源订阅</strong>：远程源列表地址与上次同步时间，格式与行为见 <a href="Data-Sources.html">Data-Sources · 源订阅</a>。同步为手动操作（订阅条目 <strong>⟳</strong>），远端列表更新后需手动刷新。</li>
+</ul>
+<h3 id="直播源">直播源</h3>
+<ul>
+<li><strong>直播订阅列表</strong>：M3U 订阅地址、名称（可选）、EPG 节目单地址（可选），支持探活与导出 .m3u；</li>
+<li><strong>勾选启用的源</strong>：仅启用的源会在「直播」页聚合频道；详见 <a href="Live-IPTV.html">Live-IPTV</a>。</li>
 </ul>
 <h3 id="播放与过滤">播放与过滤</h3>
 <table>
@@ -284,8 +313,10 @@
                 <ul>
             <li class="toc-h2"><a href="#环境变量">环境变量</a></li>
             <li class="toc-h3"><a href="#预置采集站default_sources">预置采集站（DEFAULT_SOURCES）</a></li>
+            <li class="toc-h3"><a href="#预置直播源default_live_sources">预置直播源（DEFAULT_LIVE_SOURCES）</a></li>
             <li class="toc-h2"><a href="#运行时设置用户级">运行时设置（用户级）</a></li>
             <li class="toc-h3"><a href="#数据源">数据源</a></li>
+            <li class="toc-h3"><a href="#直播源">直播源</a></li>
             <li class="toc-h3"><a href="#播放与过滤">播放与过滤</a></li>
             <li class="toc-h3"><a href="#封面图加载方式">封面图加载方式</a></li>
             <li class="toc-h3"><a href="#主题">主题</a></li>

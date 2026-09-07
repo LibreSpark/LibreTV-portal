@@ -69,11 +69,13 @@
                             <li><a href="Deployment.html">部署</a></li>
                             <li><a href="Configuration.html">配置</a></li>
                             <li><a href="Data-Sources.html">数据源</a></li>
+                            <li><a href="Live-IPTV.html">直播 / IPTV</a></li>
                             <li><a href="Recommendations.html">首页推荐</a></li>
                             <li><a href="Player.html">播放器</a></li>
                             <li><a href="Proxy-Security.html">代理与安全</a></li>
                             <li><a href="FAQ.html">FAQ</a></li>
-                            <li><a class="nav-external" href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">GitHub 仓库 ↗</a></li>
+                            <li><a class="nav-external" href="https://github.com/bestZwei/LibreTV-Next" target="_blank" rel="noopener noreferrer">GitHub 仓库 ↗</a></li>
+                            <li><a class="nav-external" href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">LibreSpark 上游 ↗</a></li>
                         </ul>
                     </nav>
                     <div class="wiki-sidebar-meta">
@@ -142,30 +144,41 @@
 │   ├── app/
 │   │   ├── page.tsx                # 首页：搜索 + 推荐区（?s= URL 驱动）
 │   │   ├── watch/page.tsx          # 播放页（唯一入口，URL 即状态）
+│   │   ├── live/page.tsx           # 直播页（?url=&amp;name=&amp;tvgId=&amp;epg= 深链）
 │   │   ├── about/page.tsx
 │   │   ├── layout.tsx              # 主题无闪烁内联脚本 + Providers
 │   │   ├── manifest.ts             # PWA manifest
 │   │   └── api/                    # 服务端 Route Handlers
 │   │       ├── auth/route.ts       # 登录/登出/会话状态
-│   │       ├── status/route.ts     # 站点状态（客户端据此弹登录框）
+│   │       ├── status/route.ts     # 站点状态（含预置采集站/直播源下发）
 │   │       ├── search/route.ts     # 聚合搜索（并行 + 失败隔离 + 过滤）
 │   │       ├── detail/route.ts     # 详情（列表接口 → 详情页 HTML 降级）
 │   │       ├── douban/route.ts     # 豆瓣推荐（直连 + 缓存 + 代理降级）
 │   │       ├── bangumi/calendar/   # Bangumi 每日放送（免 key）
 │   │       ├── hot-list/route.ts   # 影视榜单（60s API：豆瓣周榜 + 百度热播）
-│   │       └── proxy/[url]/route.ts# 流式代理（SSRF 防护 + m3u8 重写）
+│   │       ├── proxy/[url]/route.ts# 点播流式代理（SSRF 防护 + m3u8 重写）
+│   │       └── live/               # 直播模块 API
+│   │           ├── playlist/       # M3U 订阅拉取解析（缓存 10min + format=m3u 导出）
+│   │           ├── epg/            # XMLTV 节目单（gzip、24h 窗口、缓存 6h）
+│   │           ├── probe/          # 分片级批量测活（单批 50、并发 8）
+│   │           └── stream/[url]/   # 直播流长连接代理（响应头 15s 超时，body 不限时长）
 │   ├── components/                 # UI 组件（见下）
 │   └── lib/                        # 纯逻辑库（可单元测试）
 │       ├── cms-parser.ts           # Apple CMS 解析（列表/详情/详情页爬取）
+│       ├── m3u-parser.ts           # M3U 直播播放列表解析（tvg-id/logo/分组、去重）
+│       ├── xmltv.ts                # XMLTV 解析（gzip、时区、时间窗裁剪、当前/下一档）
+│       ├── live-cache.ts           # 直播大对象 TTL 缓存（EPG，独立于通用缓存）
+│       ├── env-sources.ts          # DEFAULT_SOURCES 环境变量解析
+│       ├── env-live-sources.ts     # DEFAULT_LIVE_SOURCES 环境变量解析
 │       ├── m3u8.ts                 # m3u8 重写与广告过滤
 │       ├── ssrf.ts                 # 内网地址识别与 DNS 校验
 │       ├── auth.ts                 # 会话签名/校验、登录限流
 │       ├── douban.ts               # 豆瓣数据获取（降级链 + TTL 缓存）
 │       ├── bangumi.ts              # Bangumi 每日放送（免 key，星期分组）
 │       ├── douban-weekly.ts        # 影视榜单聚合（60s API，六个榜单归一化）
-│       ├── fetch-utils.ts          # 超时/重试/内存缓存
+│       ├── fetch-utils.ts          # 超时/重试/内存缓存/最终重定向 URL
 │       ├── db.ts                   # Dexie schema 与历史/进度 CRUD
-│       ├── store.ts                # Zustand 全局设置
+│       ├── store.ts                # Zustand 全局设置（含直播订阅/收藏/最近）
 │       ├── client-api.ts           # 客户端 API 封装（401 → 全局登录框）
 │       └── utils.ts                # 时间格式化、图片代理 URL、sha256 等
 ├── docs/                           # 本 Wiki
@@ -225,6 +238,22 @@
 <td>ArtPlayer/HLS 封装：广告过滤、快捷键、长按倍速、代理回退</td>
 </tr>
 <tr>
+<td><code>live-player.tsx</code></td>
+<td>直播播放器（独立于点播）：协议分发（hls.js/mpegts.js 动态加载）、代理回退、H.265 提示</td>
+</tr>
+<tr>
+<td><code>live-channel-list.tsx</code></td>
+<td>直播频道侧栏：分组标签条、搜索、收藏/最近、批量测活状态点与筛选</td>
+</tr>
+<tr>
+<td><code>live-epg-panel.tsx</code></td>
+<td>节目单面板：当前节目进度、接下来列表、按需查询</td>
+</tr>
+<tr>
+<td><code>live-source-manager.tsx</code></td>
+<td>设置抽屉「直播源」分区：订阅增删、探活、启用勾选、导出 .m3u</td>
+</tr>
+<tr>
 <td><code>switch-source.tsx</code></td>
 <td>换源面板：跨源搜索 → 同名匹配 → 测速排序 → 切换</td>
 </tr>
@@ -259,6 +288,18 @@
 历史：进入播放页 2s 后 upsert，仅存定位信息（<code>sourceKey + vodId + episodeIndex</code>），不存全集 URL。</p>
 <h3 id="换源">换源</h3>
 <p><code>switch-source.tsx</code> → <code>POST /api/search</code>（按标题）→ 每源取完全同名结果（否则第一条）→ <code>GET /api/detail</code> 并发测速（接口耗时）→ 按速度排序展示 → 切换时保留集数索引。</p>
+<h3 id="直播">直播</h3>
+<pre><code>/live?url=..&amp;name=..&amp;tvgId=..&amp;epg=..
+  │
+  ├─ GET /api/live/playlist?url=&lt;m3u&gt;   （服务端拉取解析，缓存 10min）
+  │     └─ m3u-parser → LiveChannel[] → 分组合并去重
+  ├─ LivePlayer
+  │     ├─ m3u8 → hls.js（直播参数）/ .flv → mpegts.js（动态 import）
+  │     └─ 直连失败 → /api/live/stream/&lt;url&gt; 重试（响应头 15s 超时，body 长连接透传）
+  ├─ GET /api/live/probe                （批量分片级测活：manifest → variant → 分片）
+  └─ GET /api/live/epg?url=&lt;xmltv&gt;&amp;channel=&lt;tvgId&gt;   （服务端缓存 6h，按需查询）
+</code></pre>
+<p>直播订阅/启用/收藏/最近观看存于 zustand persist；频道列表不落库。详见 <a href="Live-IPTV.html">Live-IPTV</a>。</p>
 <h2 id="与旧版的架构差异">与旧版的架构差异</h2>
 <table>
 <thead>
@@ -328,6 +369,7 @@
             <li class="toc-h3"><a href="#搜索">搜索</a></li>
             <li class="toc-h3"><a href="#播放">播放</a></li>
             <li class="toc-h3"><a href="#换源">换源</a></li>
+            <li class="toc-h3"><a href="#直播">直播</a></li>
             <li class="toc-h2"><a href="#与旧版的架构差异">与旧版的架构差异</a></li>
             </ul>
             </aside>

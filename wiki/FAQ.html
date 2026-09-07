@@ -69,11 +69,13 @@
                             <li><a href="Deployment.html">部署</a></li>
                             <li><a href="Configuration.html">配置</a></li>
                             <li><a href="Data-Sources.html">数据源</a></li>
+                            <li><a href="Live-IPTV.html">直播 / IPTV</a></li>
                             <li><a href="Recommendations.html">首页推荐</a></li>
                             <li><a href="Player.html">播放器</a></li>
                             <li><a href="Proxy-Security.html">代理与安全</a></li>
                             <li><a href="FAQ.html" class="active">FAQ</a></li>
-                            <li><a class="nav-external" href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">GitHub 仓库 ↗</a></li>
+                            <li><a class="nav-external" href="https://github.com/bestZwei/LibreTV-Next" target="_blank" rel="noopener noreferrer">GitHub 仓库 ↗</a></li>
+                            <li><a class="nav-external" href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">LibreSpark 上游 ↗</a></li>
                         </ul>
                     </nav>
                     <div class="wiki-sidebar-meta">
@@ -113,6 +115,21 @@
 <p><strong>Q: 详情为什么有缓存？会不会导致新剧集看不到？</strong>
 详情接口有 60 秒服务端缓存（同一影片 + 同一源），用于换源测速等场景避免重复打上游。剧集更新以源站为准，60 秒后即取到最新。</p>
 <h2 id="播放相关">播放相关</h2>
+<h2 id="直播-iptv-相关">直播 / IPTV 相关</h2>
+<p><strong>Q: 直播页提示&quot;请先在设置中添加直播源&quot;？</strong>
+本项目不内置任何频道。到「设置 → 直播源」添加 M3U 订阅地址（如 <code>https://iptv-org.github.io/iptv/countries/cn.m3u</code>），或部署者通过 <code>DEFAULT_LIVE_SOURCES</code> 预置。</p>
+<p><strong>Q: 同一订阅里一部分频道能播、一部分不能？</strong>
+公共 IPTV 源的正常现象。原因按频率排序：源已失效、H.265 编码（Chromium 无法软解，用 Edge/Safari）、Geo-block、非全天信号、防盗链。先在侧栏对当前分组「⚡ 测活」，红色频道直接跳过；详细排查见 <a href="Live-IPTV.html">Live-IPTV · 播放不了？</a>。</p>
+<p><strong>Q: 测活绿色但仍播不出来？</strong>
+测活验证到分片级（网络可达），但编码解码只能在播放阶段暴露——黑屏且测活绿色多半是 H.265，播放器会提示换用 Edge/Safari。另外部分源限制服务器 IP 访问，直连与代理都无法绕过。</p>
+<p><strong>Q: 直播有进度条吗？能倍速吗？</strong>
+没有。直播态隐藏进度条/倍速/截图/自动连播等点播专属控件；直播播放器与点播播放器是独立实现，互不影响。</p>
+<p><strong>Q: 节目单（EPG）不显示？</strong>
+需要同时满足：订阅配置了 EPG 地址（XMLTV 格式）且频道带 <code>tvg-id</code>。不同源的 <code>tvg-id</code> 命名规则不一致会导致匹配率低，属列表质量问题。</p>
+<p><strong>Q: 内网自建的 IPTV 源无法播放？</strong>
+默认被 SSRF 防护拦截。自部署者可显式设置 <code>LIVE_ALLOW_PRIVATE=1</code> 放行内网直播流地址。</p>
+<p><strong>Q: 想用 PotPlayer/VLC 看怎么办？</strong>
+设置 → 直播源 → 条目上的 <strong>⇩</strong> 按钮可把订阅导出为标准 M3U 文件，直接导入外部播放器。</p>
 <p><strong>Q: 视频一直&quot;正在加载&quot;？</strong>
 按顺序尝试：① 点「切换资源」换其他源；② 设置中切换封面/直连相关配置确认网络；③ 该源分片可能仅允许特定地区/Referer，代理回退通常能自动解决，若仍失败请换源。</p>
 <p><strong>Q: 出现&quot;直连失败，改用代理重试&quot;后播放正常，但快进卡顿？</strong>
@@ -154,6 +171,7 @@ LibreTV 定位为轻量自托管工具，单密码门禁 + 本机数据即可满
             <li class="toc-h2"><a href="#部署相关">部署相关</a></li>
             <li class="toc-h2"><a href="#搜索相关">搜索相关</a></li>
             <li class="toc-h2"><a href="#播放相关">播放相关</a></li>
+            <li class="toc-h2"><a href="#直播-iptv-相关">直播 / IPTV 相关</a></li>
             <li class="toc-h2"><a href="#推荐相关">推荐相关</a></li>
             <li class="toc-h2"><a href="#数据相关">数据相关</a></li>
             <li class="toc-h2"><a href="#安全相关">安全相关</a></li>

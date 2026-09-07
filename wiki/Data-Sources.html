@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>数据源 - LibreTV 文档</title>
-    <meta name="description" content="LibreTV 采用 空壳设计 ：不内置任何采集站，由部署者/用户自行添加，避免内置源失效与合规风险。 搜索用的 采集源 与首页的 推荐源 （豆瓣 / Bangumi / 影视榜单）是两套独立配置：前者决定&quot;能搜到什么&quot;，后者决定首页展示什么，见 Recommendations。 部署者预置 ：通过">
+    <meta name="description" content="LibreTV 采用 空壳设计 ：不内置任何采集站，由部署者/用户自行添加，避免内置源失效与合规风险。 搜索用的 采集源 与首页的 推荐源 （豆瓣 / Bangumi / 影视榜单）是两套独立配置：前者决定&quot;能搜到什么&quot;，后者决定首页展示什么，见 Recommendations。 直播 / IPTV">
     <meta name="theme-color" content="#0a0a0a">
     <meta name="author" content="LibreTV Team">
     <link rel="canonical" href="https://libretv.is-an.org/wiki/Data-Sources.html">
@@ -13,10 +13,10 @@
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://libretv.is-an.org/wiki/Data-Sources.html">
     <meta property="og:title" content="数据源 - LibreTV 文档">
-    <meta property="og:description" content="LibreTV 采用 空壳设计 ：不内置任何采集站，由部署者/用户自行添加，避免内置源失效与合规风险。 搜索用的 采集源 与首页的 推荐源 （豆瓣 / Bangumi / 影视榜单）是两套独立配置：前者决定&quot;能搜到什么&quot;，后者决定首页展示什么，见 Recommendations。 部署者预置 ：通过">
+    <meta property="og:description" content="LibreTV 采用 空壳设计 ：不内置任何采集站，由部署者/用户自行添加，避免内置源失效与合规风险。 搜索用的 采集源 与首页的 推荐源 （豆瓣 / Bangumi / 影视榜单）是两套独立配置：前者决定&quot;能搜到什么&quot;，后者决定首页展示什么，见 Recommendations。 直播 / IPTV">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="数据源 - LibreTV 文档">
-    <meta name="twitter:description" content="LibreTV 采用 空壳设计 ：不内置任何采集站，由部署者/用户自行添加，避免内置源失效与合规风险。 搜索用的 采集源 与首页的 推荐源 （豆瓣 / Bangumi / 影视榜单）是两套独立配置：前者决定&quot;能搜到什么&quot;，后者决定首页展示什么，见 Recommendations。 部署者预置 ：通过">
+    <meta name="twitter:description" content="LibreTV 采用 空壳设计 ：不内置任何采集站，由部署者/用户自行添加，避免内置源失效与合规风险。 搜索用的 采集源 与首页的 推荐源 （豆瓣 / Bangumi / 影视榜单）是两套独立配置：前者决定&quot;能搜到什么&quot;，后者决定首页展示什么，见 Recommendations。 直播 / IPTV">
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="../assets/logo-black.png">
@@ -69,11 +69,13 @@
                             <li><a href="Deployment.html">部署</a></li>
                             <li><a href="Configuration.html">配置</a></li>
                             <li><a href="Data-Sources.html" class="active">数据源</a></li>
+                            <li><a href="Live-IPTV.html">直播 / IPTV</a></li>
                             <li><a href="Recommendations.html">首页推荐</a></li>
                             <li><a href="Player.html">播放器</a></li>
                             <li><a href="Proxy-Security.html">代理与安全</a></li>
                             <li><a href="FAQ.html">FAQ</a></li>
-                            <li><a class="nav-external" href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">GitHub 仓库 ↗</a></li>
+                            <li><a class="nav-external" href="https://github.com/bestZwei/LibreTV-Next" target="_blank" rel="noopener noreferrer">GitHub 仓库 ↗</a></li>
+                            <li><a class="nav-external" href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">LibreSpark 上游 ↗</a></li>
                         </ul>
                     </nav>
                     <div class="wiki-sidebar-meta">
@@ -94,6 +96,7 @@
 <p>LibreTV 采用<strong>空壳设计</strong>：不内置任何采集站，由部署者/用户自行添加，避免内置源失效与合规风险。</p>
 <blockquote>
 <p>搜索用的<strong>采集源</strong>与首页的<strong>推荐源</strong>（豆瓣 / Bangumi / 影视榜单）是两套独立配置：前者决定&quot;能搜到什么&quot;，后者决定首页展示什么，见 <a href="Recommendations.html">Recommendations</a>。</p>
+<p><strong>直播 / IPTV</strong>（M3U 订阅）是另一套独立体系，不与采集站混用，见 <a href="Live-IPTV.html">Live-IPTV</a>。</p>
 </blockquote>
 <ul>
 <li><strong>部署者预置</strong>：通过 <code>DEFAULT_SOURCES</code> 环境变量下发（JSON 数组），所有用户开箱即搜，详见<a href="Configuration.html">配置文档</a>；</li>
@@ -267,7 +270,7 @@
                 </div>
                 <nav class="wiki-pager" aria-label="上一篇 / 下一篇">
                     <a href="Configuration.html"><span class="pager-label">← 上一篇</span><span class="pager-title">配置</span></a>
-                    <a class="pager-next" href="Recommendations.html"><span class="pager-label">下一篇 →</span><span class="pager-title">首页推荐</span></a>
+                    <a class="pager-next" href="Live-IPTV.html"><span class="pager-label">下一篇 →</span><span class="pager-title">直播 / IPTV</span></a>
                 </nav>
             </article>
 

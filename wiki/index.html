@@ -69,11 +69,13 @@
                             <li><a href="Deployment.html">部署</a></li>
                             <li><a href="Configuration.html">配置</a></li>
                             <li><a href="Data-Sources.html">数据源</a></li>
+                            <li><a href="Live-IPTV.html">直播 / IPTV</a></li>
                             <li><a href="Recommendations.html">首页推荐</a></li>
                             <li><a href="Player.html">播放器</a></li>
                             <li><a href="Proxy-Security.html">代理与安全</a></li>
                             <li><a href="FAQ.html">FAQ</a></li>
-                            <li><a class="nav-external" href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">GitHub 仓库 ↗</a></li>
+                            <li><a class="nav-external" href="https://github.com/bestZwei/LibreTV-Next" target="_blank" rel="noopener noreferrer">GitHub 仓库 ↗</a></li>
+                            <li><a class="nav-external" href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">LibreSpark 上游 ↗</a></li>
                         </ul>
                     </nav>
                     <div class="wiki-sidebar-meta">
@@ -117,6 +119,10 @@
 <td>采集站（Apple CMS）接入说明、自定义 API 格式、源订阅与分享</td>
 </tr>
 <tr>
+<td><a href="Live-IPTV.html">Live-IPTV</a></td>
+<td>直播 / IPTV：M3U 订阅、频道浏览、HLS/FLV 播放、节目单、批量测活</td>
+</tr>
+<tr>
 <td><a href="Recommendations.html">Recommendations</a></td>
 <td>首页推荐源（豆瓣 / Bangumi / 影视榜单）、切换与自部署</td>
 </tr>
@@ -147,6 +153,7 @@ PASSWORD=dev-password npm run dev   # http://localhost:8080
 <li><strong>聚合搜索</strong>：多采集站服务端并行搜索，单源失败不影响整体，用户 IP 不暴露给第三方</li>
 <li><strong>跨源同名聚合</strong>：同名影片合并为一张卡片，展开即可比较和选择各来源</li>
 <li><strong>HLS 播放</strong>：ArtPlayer + hls.js，广告分片过滤、自动连播、倍速、快捷键、移动端长按 3 倍速</li>
+<li><strong>直播 / IPTV</strong>：M3U 订阅解析，<code>/live</code> 页面按分组浏览、搜索频道并站内播放（HLS + HTTP-FLV），支持 XMLTV 节目单（EPG）与分片级批量测活</li>
 <li><strong>智能回退</strong>：视频直连失败（CORS / 防盗链）时自动改走内置代理重试</li>
 <li><strong>进度同步</strong>：播放进度与观看历史存于本机 IndexedDB，精确到秒的续播</li>
 <li><strong>换源测速</strong>：跨源搜索同名资源并测速排序，一键切换保留集数位置</li>

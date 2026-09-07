@@ -2,61 +2,67 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
         <loc>https://libretv.is-an.org/</loc>
-        <lastmod>2026-09-06</lastmod>
+        <lastmod>2026-09-07</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
     </url>
     <url>
         <loc>https://libretv.is-an.org/wiki/</loc>
-        <lastmod>2026-09-06</lastmod>
+        <lastmod>2026-09-07</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://libretv.is-an.org/wiki/Architecture.html</loc>
-        <lastmod>2026-09-06</lastmod>
+        <lastmod>2026-09-07</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://libretv.is-an.org/wiki/Configuration.html</loc>
-        <lastmod>2026-09-06</lastmod>
+        <lastmod>2026-09-07</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://libretv.is-an.org/wiki/Data-Sources.html</loc>
-        <lastmod>2026-09-06</lastmod>
+        <lastmod>2026-09-07</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://libretv.is-an.org/wiki/Deployment.html</loc>
-        <lastmod>2026-09-06</lastmod>
+        <lastmod>2026-09-07</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://libretv.is-an.org/wiki/FAQ.html</loc>
-        <lastmod>2026-09-06</lastmod>
+        <lastmod>2026-09-07</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://libretv.is-an.org/wiki/Live-IPTV.html</loc>
+        <lastmod>2026-09-07</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://libretv.is-an.org/wiki/Player.html</loc>
-        <lastmod>2026-09-06</lastmod>
+        <lastmod>2026-09-07</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://libretv.is-an.org/wiki/Proxy-Security.html</loc>
-        <lastmod>2026-09-06</lastmod>
+        <lastmod>2026-09-07</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://libretv.is-an.org/wiki/Recommendations.html</loc>
-        <lastmod>2026-09-06</lastmod>
+        <lastmod>2026-09-07</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
