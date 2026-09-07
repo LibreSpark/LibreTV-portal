@@ -103,3 +103,12 @@ jspm_packages/
 
 # ZCode session files
 .zcode/
+
+# AI 工具产物（会话状态 / 缓存，勿提交）
+.mimosa/
+.codebuddy/
+.cursor/
+.augment/
+.continue/
+.aider*
+*.ai-baseline
