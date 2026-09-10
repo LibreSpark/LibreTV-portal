@@ -103,8 +103,8 @@
 <p><strong>Q: 忘记密码怎么办？</strong>
 修改 <code>PASSWORD</code> 环境变量并重启。旧会话立即全部失效（密钥随之改变）。</p>
 <h2 id="搜索相关">搜索相关</h2>
-<p><strong>Q: 搜索提示&quot;请先添加数据源&quot; / &quot;尚未勾选数据源&quot;？</strong>
-本项目不内置采集站。到「设置 → 数据源」添加 Apple CMS 采集站地址并勾选。</p>
+<p><strong>Q: 搜索提示&quot;请先添加点播源&quot; / &quot;尚未勾选点播源&quot;？</strong>
+本项目不内置采集站。到「设置 → 点播源」添加 Apple CMS 采集站地址并勾选；想一次导入多个源可用「设置 → 订阅与配置 → 数据源订阅」。</p>
 <p><strong>Q: 某个源一直搜索失败？</strong>
 结果区顶部会列出失败源名称。直接浏览器访问 <code>{api}?ac=videolist&amp;wd=test</code> 判断是源挂了还是网络不通；不用的源可以取消勾选或删除。</p>
 <p><strong>Q: 搜索结果为什么按名称排序？</strong>
@@ -125,8 +125,8 @@
 没有。直播态隐藏进度条/倍速/截图/自动连播等点播专属控件；直播播放器与点播播放器是独立实现，互不影响。</p>
 <p><strong>Q: 节目单（EPG）不显示？</strong>
 需要同时满足：订阅配置了 EPG 地址（XMLTV 格式）且频道带 <code>tvg-id</code>。不同源的 <code>tvg-id</code> 命名规则不一致会导致匹配率低，属列表质量问题。</p>
-<p><strong>Q: 内网自建的 IPTV 源无法播放？</strong>
-默认被 SSRF 防护拦截。自部署者可显式设置 <code>LIVE_ALLOW_PRIVATE=1</code> 放行内网直播流地址。</p>
+<p><strong>Q: 内网自建的 IPTV 源无法播放 / 无法拉取？</strong>
+默认被 SSRF 防护拦截。自部署者可显式设置 <code>LIVE_ALLOW_PRIVATE=1</code>，该开关对「M3U 列表拉取」与「直播流代理」两个阶段同时生效。</p>
 <p><strong>Q: 想用 PotPlayer/VLC 看怎么办？</strong>
 设置 → 直播源 → 条目上的 <strong>⇩</strong> 按钮可把订阅导出为标准 M3U 文件，直接导入外部播放器。</p>
 <p><strong>Q: 视频一直&quot;正在加载&quot;？</strong>
@@ -141,12 +141,12 @@
 <p><strong>Q: 首页推荐区不显示 / 加载失败？</strong>
 先确认「设置 → 首页推荐」开关已打开。加载失败按来源区分：豆瓣多为上游限流（可配置 <code>FALLBACK_CORS_PROXY</code> 降级）；影视榜单多为官方 60s 公共实例限流或被墙（可自部署后用 <code>60S_API_BASE</code> 指向），详见 <a href="Recommendations.html">Recommendations</a>。</p>
 <p><strong>Q: 推荐内容点开后搜不到片源？</strong>
-推荐只提供片名与封面，实际播放依赖你在「设置 → 数据源」里配置的采集站覆盖范围。换标题关键词重搜或补充更多采集源。</p>
+推荐只提供片名与封面，实际播放依赖你在「设置 → 点播源」里配置的采集站覆盖范围。换标题关键词重搜或补充更多采集源。</p>
 <h2 id="数据相关">数据相关</h2>
 <p><strong>Q: 换浏览器/设备后历史和进度还在吗？</strong>
 不在。历史与进度保存在本机 IndexedDB，不上传服务器。可用「设置 → 导出配置」手动迁移。</p>
-<p><strong>Q: 观看历史里某条记录播放时提示&quot;数据源不存在&quot;？</strong>
-该记录的来源源已被删除。重新在设置中添加同名 API 地址（key 一致即可恢复），或删除该历史。</p>
+<p><strong>Q: 观看历史里某条记录播放时提示&quot;点播源不存在&quot;？</strong>
+该记录的来源点播源已被删除。重新在设置中添加同名 API 地址（key 一致即可恢复），或删除该历史。</p>
 <p><strong>Q: IndexedDB 数据会占多少空间？</strong>
 仅存定位信息（不含全集 URL），100 条历史通常 &lt; 100KB。</p>
 <h2 id="安全相关">安全相关</h2>

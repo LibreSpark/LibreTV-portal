@@ -151,6 +151,12 @@
 <td>预置直播源（M3U 订阅），JSON 数组，见下文 <a href="#预置直播源default_live_sources">预置直播源</a></td>
 </tr>
 <tr>
+<td><code>DEFAULT_SUBSCRIPTIONS</code></td>
+<td>否</td>
+<td>—</td>
+<td>预置数据源订阅（LibreTV-SourceList JSON 链接），JSON 数组，见下文 <a href="#预置数据源订阅default_subscriptions">预置数据源订阅</a></td>
+</tr>
+<tr>
 <td><code>LIVE_ALLOW_PRIVATE</code></td>
 <td>否</td>
 <td><code>false</code></td>
@@ -173,7 +179,7 @@
 <p>旧版的 <code>CORS_ORIGIN</code>、<code>CACHE_MAX_AGE</code>、<code>BLOCKED_HOSTS</code>、<code>BLOCKED_IP_PREFIXES</code>、<code>FILTERED_HEADERS</code> 在重构版中已内化为安全默认值，不再需要配置。</p>
 </blockquote>
 <h3 id="预置采集站default_sources">预置采集站（DEFAULT_SOURCES）</h3>
-<p>部署者可通过环境变量为所有用户预置数据源，用户无需手动添加即可搜索：</p>
+<p>部署者可通过环境变量为所有用户预置点播源，用户无需手动添加即可搜索：</p>
 <pre><code class="language-bash">DEFAULT_SOURCES=[{&quot;name&quot;:&quot;示例源&quot;,&quot;url&quot;:&quot;https://example.com/api.php/provide/vod&quot;,&quot;detail&quot;:&quot;https://example.com&quot;,&quot;isAdult&quot;:false}]
 </code></pre>
 <ul>
@@ -193,18 +199,37 @@
 <li>首次出现时自动启用；用户停用后不会被反复勾回；</li>
 <li>解析失败告警并整体忽略。功能详见 <a href="Live-IPTV.html">Live-IPTV</a>。</li>
 </ul>
+<h3 id="预置数据源订阅default_subscriptions">预置数据源订阅（DEFAULT_SUBSCRIPTIONS）</h3>
+<p>部署者无需把源列表内联进环境变量，只填 LibreTV-SourceList JSON 链接即可，首次访问自动为所有用户导入点播源与直播源：</p>
+<pre><code class="language-bash">DEFAULT_SUBSCRIPTIONS=[&quot;https://example.com/sources.json&quot;,{&quot;url&quot;:&quot;https://example.com/other.json&quot;,&quot;name&quot;:&quot;备用清单&quot;}]
+</code></pre>
+<ul>
+<li>数组元素为订阅 URL 字符串，或 <code>{url, name}</code> 对象（name 作为订阅条目显示名，可选）；</li>
+<li>自动导入走与手动订阅完全相同的流程：点播源默认勾选（成人过滤开启时跳过成人源）、直播源自动启用，均带「订阅」标识；</li>
+<li><strong>同步时机</strong>：首次自动导入后，超过 24 小时未同步的预置订阅会在启动阶段静默刷新一次；也可随时在设置中手动同步（⟳）；</li>
+<li><strong>失败回退</strong>：拉取失败时保留上次成功导入的数据，下次启动自动重试，不影响站点运行；</li>
+<li><strong>用户删除</strong>：同步成功过的预置订阅被用户删除后，不会被自动加回；从未同步成功的则会持续重试直至成功；</li>
+<li>远端清单由部署者自行托管（gist / 私有仓库 raw 均可），更新源列表无需修改容器配置或重启。</li>
+</ul>
 <h2 id="运行时设置用户级">运行时设置（用户级）</h2>
 <p>以下设置保存在每个用户浏览器的 localStorage（键 <code>libretv-settings</code>），通过「设置」抽屉修改：</p>
-<h3 id="数据源">数据源</h3>
+<h3 id="点播源">点播源</h3>
 <ul>
 <li><strong>自定义 API 列表</strong>：名称、API 地址、详情页地址（可选）、成人标记；</li>
-<li><strong>勾选参与搜索的源</strong>：仅勾选的源会参与聚合搜索与换源；</li>
-<li><strong>源订阅</strong>：远程源列表地址与上次同步时间，格式与行为见 <a href="Data-Sources.html">Data-Sources · 源订阅</a>。同步为手动操作（订阅条目 <strong>⟳</strong>），远端列表更新后需手动刷新。</li>
+<li><strong>勾选参与搜索的源</strong>：仅勾选的源会参与聚合搜索与换源。</li>
 </ul>
 <h3 id="直播源">直播源</h3>
 <ul>
-<li><strong>直播订阅列表</strong>：M3U 订阅地址、名称（可选）、EPG 节目单地址（可选），支持探活与导出 .m3u；</li>
+<li><strong>直播源列表</strong>：M3U 地址、名称（可选）、EPG 节目单地址（可选），支持探活与导出 .m3u；</li>
+<li><strong>来自订阅的源</strong>带归属标记，由订阅统一管理，不可单独删除；</li>
 <li><strong>勾选启用的源</strong>：仅启用的源会在「直播」页聚合频道；详见 <a href="Live-IPTV.html">Live-IPTV</a>。</li>
+</ul>
+<h3 id="数据源订阅">数据源订阅</h3>
+<ul>
+<li>入口：设置 → 订阅与配置 → 数据源订阅；保存订阅地址、名称、上次同步时间；</li>
+<li>一份订阅可同时下发点播源与直播源，格式与行为见 <a href="Data-Sources.html#数据源订阅--分享">Data-Sources · 数据源订阅</a>；</li>
+<li>同步为手动操作（订阅条目 <strong>⟳</strong>），远端列表更新后需手动刷新；部署者可通过 <code>DEFAULT_SUBSCRIPTIONS</code> 预置订阅，首次访问自动导入、超 24h 静默刷新，见上文 <a href="#预置数据源订阅default_subscriptions">预置数据源订阅</a>；</li>
+<li>删除订阅会移除其导入的两类源（含启用状态与最近观看），但<strong>保留已收藏的频道</strong>。</li>
 </ul>
 <h3 id="播放与过滤">播放与过滤</h3>
 <table>
@@ -266,7 +291,7 @@
 </ul>
 <h3 id="配置导入导出">配置导入导出</h3>
 <ul>
-<li><strong>导出</strong>：生成 <code>LibreTV-Settings_&lt;时间戳&gt;.json</code>（数据源、播放设置、观看历史、搜索历史）；</li>
+<li><strong>导出</strong>：生成 <code>LibreTV-Settings_&lt;时间戳&gt;.json</code>（点播源与直播源、播放设置、观看历史、搜索历史）；</li>
 <li><strong>导入</strong>：兼容旧版 LibreTV 导出的配置文件；旧版观看历史（含全集 URL 列表）会自动迁移为定位信息格式。</li>
 </ul>
 <h2 id="存储结构indexeddb-libretv">存储结构（IndexedDB <code>libretv</code>）</h2>
@@ -313,9 +338,11 @@
             <li class="toc-h2"><a href="#环境变量">环境变量</a></li>
             <li class="toc-h3"><a href="#预置采集站default_sources">预置采集站（DEFAULT_SOURCES）</a></li>
             <li class="toc-h3"><a href="#预置直播源default_live_sources">预置直播源（DEFAULT_LIVE_SOURCES）</a></li>
+            <li class="toc-h3"><a href="#预置数据源订阅default_subscriptions">预置数据源订阅（DEFAULT_SUBSCRIPTIONS）</a></li>
             <li class="toc-h2"><a href="#运行时设置用户级">运行时设置（用户级）</a></li>
-            <li class="toc-h3"><a href="#数据源">数据源</a></li>
+            <li class="toc-h3"><a href="#点播源">点播源</a></li>
             <li class="toc-h3"><a href="#直播源">直播源</a></li>
+            <li class="toc-h3"><a href="#数据源订阅">数据源订阅</a></li>
             <li class="toc-h3"><a href="#播放与过滤">播放与过滤</a></li>
             <li class="toc-h3"><a href="#封面图加载方式">封面图加载方式</a></li>
             <li class="toc-h3"><a href="#主题">主题</a></li>

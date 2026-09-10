@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>数据源 - LibreTV 文档</title>
-    <meta name="description" content="LibreTV 采用 空壳设计 ：不内置任何采集站，由部署者/用户自行添加，避免内置源失效与合规风险。 搜索用的 采集源 与首页的 推荐源 （豆瓣 / Bangumi / 影视榜单）是两套独立配置：前者决定&quot;能搜到什么&quot;，后者决定首页展示什么，见 Recommendations。 直播 / IPTV">
+    <meta name="description" content="数据源 是上位概念，包含两类相互独立的体系： | 类别 | 说明 | 管理入口 | | | | | | 点播源 | Apple CMS 采集站 API，决定&quot;能搜到什么&quot;（本文主体） | 设置 → 点播源 | | 直播源 | M3U 播放列表，用于 /live 页看电视 | 设置 → 直播源（见 L">
     <meta name="theme-color" content="#0a0a0a">
     <meta name="author" content="LibreTV Team">
     <link rel="canonical" href="https://libretv.is-an.org/wiki/Data-Sources.html">
@@ -13,10 +13,10 @@
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://libretv.is-an.org/wiki/Data-Sources.html">
     <meta property="og:title" content="数据源 - LibreTV 文档">
-    <meta property="og:description" content="LibreTV 采用 空壳设计 ：不内置任何采集站，由部署者/用户自行添加，避免内置源失效与合规风险。 搜索用的 采集源 与首页的 推荐源 （豆瓣 / Bangumi / 影视榜单）是两套独立配置：前者决定&quot;能搜到什么&quot;，后者决定首页展示什么，见 Recommendations。 直播 / IPTV">
+    <meta property="og:description" content="数据源 是上位概念，包含两类相互独立的体系： | 类别 | 说明 | 管理入口 | | | | | | 点播源 | Apple CMS 采集站 API，决定&quot;能搜到什么&quot;（本文主体） | 设置 → 点播源 | | 直播源 | M3U 播放列表，用于 /live 页看电视 | 设置 → 直播源（见 L">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="数据源 - LibreTV 文档">
-    <meta name="twitter:description" content="LibreTV 采用 空壳设计 ：不内置任何采集站，由部署者/用户自行添加，避免内置源失效与合规风险。 搜索用的 采集源 与首页的 推荐源 （豆瓣 / Bangumi / 影视榜单）是两套独立配置：前者决定&quot;能搜到什么&quot;，后者决定首页展示什么，见 Recommendations。 直播 / IPTV">
+    <meta name="twitter:description" content="数据源 是上位概念，包含两类相互独立的体系： | 类别 | 说明 | 管理入口 | | | | | | 点播源 | Apple CMS 采集站 API，决定&quot;能搜到什么&quot;（本文主体） | 设置 → 点播源 | | 直播源 | M3U 播放列表，用于 /live 页看电视 | 设置 → 直播源（见 L">
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="../assets/logo-black.png">
@@ -92,22 +92,44 @@
                 </div>
                 <h1 class="wiki-title gradient-text">数据源</h1>
                 <div class="wiki-body markdown-body">
-<p>LibreTV 采用<strong>空壳设计</strong>：不内置任何采集站，由部署者/用户自行添加，避免内置源失效与合规风险。</p>
+<p><strong>数据源</strong>是上位概念，包含两类相互独立的体系：</p>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>说明</th>
+<th>管理入口</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>点播源</strong></td>
+<td>Apple CMS 采集站 API，决定&quot;能搜到什么&quot;（本文主体）</td>
+<td>设置 → 点播源</td>
+</tr>
+<tr>
+<td><strong>直播源</strong></td>
+<td>M3U 播放列表，用于 <code>/live</code> 页看电视</td>
+<td>设置 → 直播源（见 <a href="Live-IPTV.html">Live-IPTV</a>）</td>
+</tr>
+</tbody></table>
+<p>两者数据模型独立，但可以用<strong>一份订阅 JSON 同时下发</strong>（见<a href="#数据源订阅--分享">数据源订阅 / 分享</a>）。</p>
+<p>LibreTV 采用<strong>空壳设计</strong>：不内置任何采集站与频道源，由部署者/用户自行添加，避免内置源失效与合规风险。</p>
 <blockquote>
-<p>搜索用的<strong>采集源</strong>与首页的<strong>推荐源</strong>（豆瓣 / Bangumi / 影视榜单）是两套独立配置：前者决定&quot;能搜到什么&quot;，后者决定首页展示什么，见 <a href="Recommendations.html">Recommendations</a>。</p>
-<p><strong>直播 / IPTV</strong>（M3U 订阅）是另一套独立体系，不与采集站混用，见 <a href="Live-IPTV.html">Live-IPTV</a>。</p>
+<p>首页的<strong>推荐源</strong>（豆瓣 / Bangumi / 影视榜单）是另一套独立配置，只决定首页展示什么，与点播源无关，见 <a href="Recommendations.html">Recommendations</a>。</p>
 </blockquote>
+<p>点播源有三种来源：</p>
 <ul>
 <li><strong>部署者预置</strong>：通过 <code>DEFAULT_SOURCES</code> 环境变量下发（JSON 数组），所有用户开箱即搜，详见<a href="Configuration.html">配置文档</a>；</li>
-<li><strong>用户自建</strong>：设置抽屉「+ 添加 API」手动添加，保存在浏览器 localStorage。</li>
+<li><strong>用户自建</strong>：设置 → 点播源 → 「+ 添加 API」手动添加，保存在浏览器 localStorage；</li>
+<li><strong>订阅导入</strong>：设置 → 订阅与配置 → 数据源订阅，一次可同时导入点播源与直播源。</li>
 </ul>
-<h2 id="支持的数据源类型">支持的数据源类型</h2>
+<h2 id="支持的点播源类型">支持的点播源类型</h2>
 <p>Apple CMS（苹果CMS）标准采集接口，即提供以下接口的资源站：</p>
 <pre><code>搜索：{api}?ac=videolist&amp;wd={关键词}
 详情：{api}?ac=videolist&amp;ids={vod_id}
 </code></pre>
-<h2 id="添加数据源">添加数据源</h2>
-<p>设置 → 数据源 → 「+ 添加 API」：</p>
+<h2 id="添加点播源">添加点播源</h2>
+<p>设置 → 点播源 → 「+ 添加 API」：</p>
 <table>
 <thead>
 <tr>
@@ -154,24 +176,31 @@
 <li>成人过滤在服务端执行，关键词包括：伦理片、福利、里番动漫、无码、SWAG 等。</li>
 </ul>
 <h2 id="源可用性测试">源可用性测试</h2>
-<p>设置 → 数据源，每个源右侧的 <strong>⚡</strong> 按钮触发服务端探活：</p>
+<p>设置 → 点播源，每个源右侧的 <strong>⚡</strong> 按钮触发服务端探活：</p>
 <ul>
 <li>以搜索 <code>test</code> 的完整往返衡量：返回响应耗时（ms）与结果条数；</li>
 <li>结果以徽章内联展示（<code>✓ 610ms</code> 绿色 / <code>✗ 超时</code> 红色）；</li>
 <li>探活请求与搜索一样经过 SSRF 校验，仅支持公网 http(s) 地址。</li>
 </ul>
-<h2 id="源订阅-分享">源订阅 / 分享</h2>
-<p>源列表可以脱离单台设备流转：导出为 JSON 文件 → 托管到任意公开 URL → 他人在「设置」里填入该 URL 订阅。</p>
+<h2 id="数据源订阅-分享">数据源订阅 / 分享</h2>
+<p>一份订阅可同时下发<strong>点播源</strong>与<strong>直播源</strong>：导出为 JSON 文件 → 托管到任意公开 URL → 他人在「设置 → 订阅与配置 → 数据源订阅」里填入该 URL 订阅。</p>
 <h3 id="订阅格式libretv-sourcelist-json">订阅格式（LibreTV-SourceList JSON）</h3>
 <pre><code class="language-json">{
   &quot;name&quot;: &quot;我的源列表&quot;,
-  &quot;version&quot;: 1,
+  &quot;version&quot;: 2,
   &quot;sources&quot;: [
     {
-      &quot;name&quot;: &quot;暴风资源&quot;,
+      &quot;name&quot;: &quot;示例点播源&quot;,
       &quot;url&quot;: &quot;https://bfzyapi.com/api.php/provide/vod&quot;,
       &quot;detail&quot;: &quot;https://bfzyapi.com&quot;,
       &quot;isAdult&quot;: false
+    }
+  ],
+  &quot;liveSources&quot;: [
+    {
+      &quot;name&quot;: &quot;示例直播源&quot;,
+      &quot;url&quot;: &quot;https://example.com/list.m3u&quot;,
+      &quot;epg&quot;: &quot;https://example.com/epg.xml.gz&quot;
     }
   ]
 }
@@ -199,14 +228,14 @@
 <td>顶层</td>
 <td>number</td>
 <td>否</td>
-<td>格式版本，当前为 <code>1</code>；导入端目前忽略该字段</td>
+<td>格式版本，当前为 <code>2</code>（新增 <code>liveSources</code>）；导入端目前忽略该字段</td>
 </tr>
 <tr>
 <td><code>sources</code></td>
 <td>顶层</td>
 <td>array</td>
-<td><strong>是</strong></td>
-<td>源数组，最多 100 个，超出部分截断</td>
+<td>否</td>
+<td><strong>点播源</strong>数组，最多 100 个，超出部分截断</td>
 </tr>
 <tr>
 <td><code>sources[].name</code></td>
@@ -236,26 +265,57 @@
 <td>否</td>
 <td>成人内容标记，默认 <code>false</code>；受「成人内容过滤」开关控制</td>
 </tr>
+<tr>
+<td><code>liveSources</code></td>
+<td>顶层</td>
+<td>array</td>
+<td>否</td>
+<td><strong>直播源</strong>数组，最多 50 个，超出部分截断</td>
+</tr>
+<tr>
+<td><code>liveSources[].name</code></td>
+<td>项</td>
+<td>string</td>
+<td>否</td>
+<td>源显示名；缺省时使用 URL 主机名</td>
+</tr>
+<tr>
+<td><code>liveSources[].url</code></td>
+<td>项</td>
+<td>string</td>
+<td><strong>是</strong></td>
+<td>M3U 播放列表地址（http/https）</td>
+</tr>
+<tr>
+<td><code>liveSources[].epg</code></td>
+<td>项</td>
+<td>string</td>
+<td>否</td>
+<td>XMLTV 节目单地址（<code>xml</code> / <code>xml.gz</code>），用于 <code>/live</code> 页展示节目单</td>
+</tr>
 </tbody></table>
 <p><strong>兼容与限制</strong>：</p>
 <ul>
-<li>也接受<strong>裸数组</strong>格式 <code>[{ &quot;name&quot;: &quot;...&quot;, &quot;url&quot;: &quot;...&quot; }, ...]</code>（此时列表名显示为主机名）；</li>
-<li>按 <code>url</code> 去重（先到先得）；非公网 http(s) 地址（内网/回环/保留地址）会被<strong>静默过滤</strong>；</li>
+<li>只写 <code>sources</code> 的老订阅（含 <code>version: 1</code>）照常可用，等同于纯点播订阅；只写 <code>liveSources</code> 则为纯直播订阅；两者都缺时提示&quot;订阅内容格式不正确&quot;；</li>
+<li>也接受<strong>裸数组</strong>格式 <code>[{ &quot;name&quot;: &quot;...&quot;, &quot;url&quot;: &quot;...&quot; }, ...]</code>（视为点播源，列表名显示为主机名）；</li>
+<li>按 <code>url</code> 去重（先到先得）；非 http(s) 地址会被过滤；<strong>点播源</strong>另需为公网地址（内网/回环/保留地址会被<strong>静默过滤</strong>），<strong>直播源</strong>在部署者设置 <code>LIVE_ALLOW_PRIVATE=1</code> 时可使用内网地址；</li>
+<li>直播源的 EPG 地址同样按上述规则校验，非法时只丢弃该字段、保留整条源；</li>
 <li>订阅由<strong>服务端</strong>拉取（拉取前经过 SSRF 校验），因此订阅地址<strong>无需配置 CORS</strong>，Gist、对象存储、任意静态托管均可。</li>
 </ul>
 <h3 id="订阅行为">订阅行为</h3>
 <ul>
-<li><strong>导入</strong>：设置 → 源订阅 / 分享 → 填入订阅地址 → 「订阅」；导入的源自动勾选（成人过滤开启时跳过成人源），并在列表中带「订阅」标识；</li>
-<li><strong>手动同步</strong>：订阅条目上的 <strong>⟳</strong> 随时强制同步——整体替换该订阅名下的源（与订阅 URL 相同的手动源会被去重合并），成功/失败均以提示反馈；</li>
+<li><strong>导入</strong>：设置 → 订阅与配置 → 数据源订阅 → 填入订阅地址 → 「订阅」；点播源自动勾选（成人过滤开启时跳过成人源）、直播源自动启用，两者都带「订阅」标识；订阅条目上显示「点播 N · 直播 M」计数与上次同步时间；</li>
+<li><strong>部署者预置订阅</strong>：通过 <code>DEFAULT_SUBSCRIPTIONS</code> 环境变量填入订阅链接，用户首次访问自动完成导入，超 24 小时静默刷新，失败保留旧数据下次重试，详见 <a href="Configuration.html#预置数据源订阅default_subscriptions">Configuration · 预置数据源订阅</a>；</li>
+<li><strong>手动同步</strong>：订阅条目上的 <strong>⟳</strong> 随时强制同步——整体替换该订阅名下的点播源与直播源（与订阅 URL 相同的手动源会被去重合并），结果以提示反馈（如&quot;已同步 8 个点播源、3 个直播源&quot;）；</li>
 <li><strong>订阅源的管理边界</strong>：订阅源以远端列表为准——单独编辑会在下次同步时被覆盖，单独移除会在重新同步时恢复；如需调整请修改远端列表后同步，或直接删除整个订阅；</li>
-<li><strong>删除订阅</strong>：同时移除其导入的所有源。</li>
+<li><strong>删除订阅</strong>：同时移除其导入的点播源与直播源（含启用状态与最近观看记录），但<strong>保留已收藏的频道</strong>——收藏是用户主动留存的数据，不随订阅删除而清空。</li>
 </ul>
 <h3 id="分享导出">分享（导出）</h3>
-<p>设置 → 源订阅 / 分享 → 「导出源列表」：把当前全部来源（部署者预置 + 手动添加 + 订阅导入，按 URL 去重）导出为上述格式的 JSON 文件。托管后即可被他人订阅。</p>
-<h2 id="自定义源的数据流">自定义源的数据流</h2>
-<p>数据源配置<strong>只保存在用户浏览器</strong>（localStorage），服务端不存储。每次搜索/详情请求会把用到的源配置随请求上传，因此：</p>
+<p>设置 → 订阅与配置 → 「导出数据源」：把当前全部点播源与直播源（部署者预置 + 手动添加 + 订阅导入，按 URL 去重）导出为上述格式的 JSON 文件（<code>version: 2</code>）。托管后即可被他人一次订阅全部导入。</p>
+<h2 id="点播源配置的数据流">点播源配置的数据流</h2>
+<p>点播源配置<strong>只保存在用户浏览器</strong>（localStorage），服务端不存储。每次搜索/详情请求会把用到的源配置随请求上传，因此：</p>
 <ul>
-<li>同一部署的不同用户可以有不同的数据源集合；</li>
+<li>同一部署的不同用户可以有不同的点播源集合；</li>
 <li>分享播放链接时 URL 会携带 <code>sourceUrl</code> 参数，接收者即使未配置同名的源也能播放（见 <a href="Player.html">Player</a>）。</li>
 </ul>
 <h2 id="常见问题">常见问题</h2>
@@ -264,7 +324,7 @@
 <p><strong>Q: 搜索成功但详情提示&quot;未找到播放资源&quot;？</strong>
 该源的播放地址可能需要详情页爬取，请补填「详情页地址」；或该影片在源内本身无 m3u8 地址。</p>
 <p><strong>Q: 可以批量导入吗？</strong>
-旧版支持逗号分隔的多个 API 地址一次性导入（<code>?urls=</code> 参数）。重构版暂未移植该入口，可通过「导出/导入配置」迁移。</p>
+可以：把点播源（必要时连同直播源）写成一份 LibreTV-SourceList JSON 并托管，在「设置 → 订阅与配置 → 数据源订阅」中填入地址即可一次导入，之后还能一键同步。旧版逗号分隔 <code>?urls=</code> 的入口未移植，也可用「导出/导入配置」整机迁移。</p>
 
                 </div>
                 <nav class="wiki-pager" aria-label="上一篇 / 下一篇">
@@ -277,16 +337,16 @@
             <aside class="wiki-toc" aria-label="本页目录">
                 <div class="wiki-toc-title">本页目录</div>
                 <ul>
-            <li class="toc-h2"><a href="#支持的数据源类型">支持的数据源类型</a></li>
-            <li class="toc-h2"><a href="#添加数据源">添加数据源</a></li>
+            <li class="toc-h2"><a href="#支持的点播源类型">支持的点播源类型</a></li>
+            <li class="toc-h2"><a href="#添加点播源">添加点播源</a></li>
             <li class="toc-h2"><a href="#详情页爬取特殊源">详情页爬取（特殊源）</a></li>
             <li class="toc-h2"><a href="#服务端聚合行为">服务端聚合行为</a></li>
             <li class="toc-h2"><a href="#源可用性测试">源可用性测试</a></li>
-            <li class="toc-h2"><a href="#源订阅-分享">源订阅 / 分享</a></li>
+            <li class="toc-h2"><a href="#数据源订阅-分享">数据源订阅 / 分享</a></li>
             <li class="toc-h3"><a href="#订阅格式libretv-sourcelist-json">订阅格式（LibreTV-SourceList JSON）</a></li>
             <li class="toc-h3"><a href="#订阅行为">订阅行为</a></li>
             <li class="toc-h3"><a href="#分享导出">分享（导出）</a></li>
-            <li class="toc-h2"><a href="#自定义源的数据流">自定义源的数据流</a></li>
+            <li class="toc-h2"><a href="#点播源配置的数据流">点播源配置的数据流</a></li>
             <li class="toc-h2"><a href="#常见问题">常见问题</a></li>
             </ul>
             </aside>

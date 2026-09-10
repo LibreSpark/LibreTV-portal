@@ -111,15 +111,15 @@
 </tr>
 <tr>
 <td><a href="Configuration.html">Configuration</a></td>
-<td>环境变量详解、主题系统、数据源管理、配置导入导出</td>
+<td>环境变量详解、主题系统、点播源/直播源管理、数据源订阅、配置导入导出</td>
 </tr>
 <tr>
 <td><a href="Data-Sources.html">Data-Sources</a></td>
-<td>采集站（Apple CMS）接入说明、自定义 API 格式、源订阅与分享</td>
+<td>点播源（Apple CMS）接入说明、自定义 API 格式、数据源订阅与分享（一份 JSON 同时下发点播源与直播源）</td>
 </tr>
 <tr>
 <td><a href="Live-IPTV.html">Live-IPTV</a></td>
-<td>直播 / IPTV：M3U 订阅、频道浏览、HLS/FLV 播放、节目单、批量测活</td>
+<td>直播 / IPTV：M3U 源（手动 / 订阅导入 / 预置）、频道浏览、HLS/FLV 播放、节目单、批量测活</td>
 </tr>
 <tr>
 <td><a href="Recommendations.html">Recommendations</a></td>
@@ -156,7 +156,7 @@ PASSWORD=dev-password npm run dev   # http://localhost:8080
 <li><strong>智能回退</strong>：视频直连失败（CORS / 防盗链）时自动改走内置代理重试</li>
 <li><strong>进度同步</strong>：播放进度与观看历史存于本机 IndexedDB，精确到秒的续播</li>
 <li><strong>换源测速</strong>：跨源搜索同名资源并测速排序，一键切换保留集数位置</li>
-<li><strong>源测试与订阅</strong>：一键探活数据源；订阅远程源列表（LibreTV-SourceList JSON），可导出分享</li>
+<li><strong>源测试与订阅</strong>：一键探活点播源与直播源；一份订阅 JSON 可同时下发点播源与直播源，可导出分享</li>
 <li><strong>首页推荐</strong>：豆瓣 / Bangumi 新番 / 影视榜单三源可选，服务端直连 + 缓存，免 key 免配置</li>
 <li><strong>亮暗主题</strong>：跟随系统 / 手动切换，无首屏闪烁</li>
 <li><strong>PWA</strong>：可安装到桌面 / 主屏幕</li>

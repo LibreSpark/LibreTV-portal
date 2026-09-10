@@ -103,7 +103,13 @@
 <li>状态由 URL 驱动：<code>/live?url=&lt;流地址&gt;&amp;name=&lt;频道名&gt;&amp;group=&lt;分组&gt;&amp;tvgId=&lt;EPG id&gt;&amp;epg=&lt;EPG 地址&gt;</code>，刷新 / 分享深链无损。</li>
 </ul>
 <h2 id="添加直播源">添加直播源</h2>
-<p>设置 → 直播源 → 「添加直播源」：</p>
+<p>直播源有三个来源：</p>
+<ol>
+<li><strong>手动添加</strong>：设置 → 直播源 → 填入 M3U 地址 → 「添加直播源」；</li>
+<li><strong>订阅导入</strong>：设置 → 订阅与配置 → 数据源订阅，订阅 JSON 里的 <code>liveSources</code> 会与点播源一起导入，见 <a href="Data-Sources.html#数据源订阅--分享">Data-Sources</a>；</li>
+<li><strong>部署者预置</strong>：<code>DEFAULT_LIVE_SOURCES</code> 环境变量，行为对齐点播源的 <code>DEFAULT_SOURCES</code>（首次自动启用、用户可停用、不可删除），见 <a href="Configuration.html">Configuration</a>。</li>
+</ol>
+<p>手动添加的字段：</p>
 <table>
 <thead>
 <tr>
@@ -113,14 +119,14 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>M3U 订阅地址</td>
+<td>M3U 地址</td>
 <td>是</td>
 <td>形如 <code>https://example.com/list.m3u</code>，服务端拉取并解析</td>
 </tr>
 <tr>
 <td>名称</td>
 <td>否</td>
-<td>显示用名称，缺省时用订阅地址主机名</td>
+<td>显示用名称，缺省时用地址主机名</td>
 </tr>
 <tr>
 <td>EPG 节目单地址</td>
@@ -131,8 +137,8 @@
 <ul>
 <li>添加后自动<strong>探活</strong>：拉取解析并显示频道数量（<code>✓ 143 频道</code> / <code>✗ 失败</code>）；</li>
 <li>每个源前的 <strong>勾选框</strong> 控制启用/停用：停用后 <code>/live</code> 页不再聚合该源的频道（无需删除）；</li>
-<li><strong>⇩</strong> 导出：把该订阅解析后的内容导出为标准 M3U 文件，供 PotPlayer / VLC / TiMiMate 等外部播放器使用；</li>
-<li>预置：部署者可通过 <code>DEFAULT_LIVE_SOURCES</code> 环境变量下发，行为对齐采集站的 <code>DEFAULT_SOURCES</code>（首次自动启用、用户可停用、不可删除），见 <a href="Configuration.html">Configuration</a>。</li>
+<li><strong>⇩</strong> 导出：把该源解析后的内容导出为标准 M3U 文件，供 PotPlayer / VLC / TiMiMate 等外部播放器使用；</li>
+<li>来自订阅的源带 <strong>「订阅」</strong> 标识：以远端列表为准，不可单独删除（点击会提示去订阅区操作），同步时整体替换其名称/地址/EPG；只有删除整个订阅才会移除该源，且<strong>已收藏的频道会保留</strong>。</li>
 </ul>
 <h3 id="公开测试源">公开测试源</h3>
 <p><a href="https://github.com/iptv-org/iptv" target="_blank" rel="noopener noreferrer">iptv-org</a>（全球最大公开 IPTV 索引，社区维护）：</p>
@@ -211,7 +217,8 @@
 <li>直播流代理 <code>/api/live/stream/[url]</code> 与点播 <code>/api/proxy</code> 分离：<strong>仅对响应头设 15s 超时</strong>，body 无限时长流式透传（HTTP-FLV 是单一长连接，点播代理的全局 8s 超时会切断它）；不重试；<code>Cache-Control: no-store, no-transform</code>；客户端断开即 abort 上游；</li>
 <li>m3u8 重写以<strong>重定向后的最终 URL</strong> 为 base（gslb 调度源 302 后路径会变，用入口 URL 解析相对分片地址会 404）；</li>
 <li>每一跳强制 SSRF 校验；<code>LIVE_ALLOW_PRIVATE=1</code> 可显式放行内网自建源（默认关闭），见 <a href="Proxy-Security.html">Proxy-Security</a>；</li>
-<li>状态存储：直播订阅 / 启用状态 / 收藏 / 最近观看在 zustand persist（localStorage <code>libretv-settings</code>）；频道列表不落库，每次进入页面从服务端缓存拉取。</li>
+<li>状态存储：直播源（含 <code>fromSubscription</code> 归属字段）、启用状态、收藏、最近观看（含 <code>sourceUrl</code>）在 zustand persist（localStorage <code>libretv-settings</code>）；频道列表不落库，每次进入页面从服务端缓存拉取；</li>
+<li>SSRF：M3U 列表拉取与流代理统一走直播策略 <code>checkLiveUrlAllowed</code>，<code>LIVE_ALLOW_PRIVATE=1</code> 对<strong>拉列表与拉流两个阶段</strong>同时生效（此前仅拉流阶段生效），见 <a href="Proxy-Security.html">Proxy-Security</a>。</li>
 </ul>
 
                 </div>

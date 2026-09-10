@@ -124,7 +124,7 @@
 <tr>
 <td>客户端状态</td>
 <td>Zustand（persist → localStorage）</td>
-<td>数据源列表与播放设置</td>
+<td>点播源/直播源列表、订阅与播放设置</td>
 </tr>
 <tr>
 <td>持久化</td>
@@ -226,7 +226,7 @@
 </tr>
 <tr>
 <td><code>source-manager.tsx</code></td>
-<td>设置抽屉：数据源 CRUD、过滤开关、封面加载方式、配置导入导出</td>
+<td>设置抽屉：点播源 CRUD、数据源订阅（点播源 + 直播源）、过滤开关、封面加载方式、配置导入导出</td>
 </tr>
 <tr>
 <td><code>history-panel.tsx</code></td>
@@ -270,14 +270,14 @@
   │← {list, failures[]} ──────│ 合并/去重/排序/成人过滤      │
 </code></pre>
 <ul>
-<li>客户端把自定义数据源配置随请求上传（数据源配置仅存于用户浏览器）；</li>
+<li>客户端把自定义点播源配置随请求上传（源配置仅存于用户浏览器）；</li>
 <li>单源失败进入 <code>failures</code>，不影响其他源结果；</li>
 <li>React Query 以 <code>[&#39;search&#39;, wd, selectedKeys, filter]</code> 为缓存键。</li>
 </ul>
 <h3 id="播放">播放</h3>
 <pre><code>/watch?source=key&amp;id=vodId&amp;index=n&amp;title=..&amp;sourceUrl=..
   │
-  ├─ resolveSource(): 从 Zustand store 取数据源配置（URL 参数兜底，支持分享链接）
+  ├─ resolveSource(): 从 Zustand store 取点播源配置（URL 参数兜底，支持分享链接）
   ├─ GET /api/detail → episodes[] → 当前集 URL
   └─ PlayerShell(ArtPlayer+hls)
        ├─ 直连 m3u8

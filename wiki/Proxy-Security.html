@@ -182,7 +182,7 @@
 <li>速率限制为内存实现，多实例部署需换共享存储（Redis）；</li>
 <li>SSRF 的 DNS 校验存在理论上的 TOCTOU 窗口（校验后、请求前 DNS 记录变更）；对公网部署建议叠加网络层出口限制；</li>
 <li>上游请求采用 <code>redirect: &#39;manual&#39;</code> 手动逐跳跟随，<strong>每一跳都重新执行 SSRF 校验</strong>（302 跳内网的绕过路径已闭合）；m3u8 重写以最终跳转 URL 为 base 解析相对地址；</li>
-<li>私有/保留地址一律拒绝，因此<strong>部署在内网或本机（<code>localhost</code>、<code>192.168.x.x</code>）的采集站无法作为数据源使用</strong>；直播流可显式设置 <code>LIVE_ALLOW_PRIVATE=1</code> 放行（自建 IPTV 场景），采集站无此开关；</li>
+<li>私有/保留地址一律拒绝，因此<strong>部署在内网或本机（<code>localhost</code>、<code>192.168.x.x</code>）的采集站无法作为点播源使用</strong>（点播无放行开关）；直播场景（M3U 列表拉取 + 流代理）可显式设置 <code>LIVE_ALLOW_PRIVATE=1</code> 放行自建 IPTV，两阶段共用同一开关；</li>
 <li>会话无法服务端主动吊销（无状态签名）；更换 <code>PROXY_SECRET</code> 或 <code>PASSWORD</code> 可使全部会话失效。</li>
 </ul>
 
