@@ -170,7 +170,7 @@
 </tr>
 <tr>
 <td>批量测活</td>
-<td><strong>⚡ 测活</strong>：分片级探测当前筛选范围的频道（见下文），频道名前显示状态点；探测完成后可点「仅可用 N」只看可用频道</td>
+<td><strong>⚡ 测活</strong>：分片级探测当前筛选范围的频道（见下文），频道名前显示状态点；结果 <strong>6 小时内有效</strong>，重复点击只补测失效/未测的频道；可点「仅可用 N」只看可用频道</td>
 </tr>
 </tbody></table>
 <p>大列表渐进渲染（每次 300 条），数千频道的全量列表不会卡顿。</p>
@@ -187,13 +187,31 @@
 <p>直播播放器（<code>live-player.tsx</code>）与点播播放器（<code>player-shell.tsx</code>）<strong>完全独立</strong>：直播没有进度恢复 / 历史记录 / 自动连播 / 广告过滤（<code>#EXT-X-DISCONTINUITY</code> 过滤对直播有误伤风险），参数也是直播调优值。修改点播行为不会影响直播，反之亦然。</p>
 <h2 id="批量测活分片级">批量测活（分片级）</h2>
 <p>侧栏「⚡ 测活」触发 <code>POST /api/live/probe</code>：</p>
+<h3 id="探测方式">探测方式</h3>
 <ul>
 <li><strong>单级探测（仅 manifest 可访问）不可信</strong>：大量源 manifest 正常但分片请求被拒（token/Referer 校验、源瞬断）。因此探测追到真实分片：
 <code>m3u8 →（master 则穿透第一个 variant）→ media playlist → 第一个分片</code>，分片以 <code>Range: bytes=0-1</code> 轻量请求，拿到响应头即断开；</li>
-<li>状态点含义：🟢 绿 = 分片级可达（最可信；悬浮显示延迟）；🔴 红 = 不可达（悬浮显示原因）；无点 = 未探测；</li>
-<li>空播放列表（直播源刚启动）降级为「manifest 可用」；FLV 直链为单级 <code>head</code> 探测；</li>
-<li>限制：单批 50 条、服务端并发 8、单条 5s 超时；客户端每批 10 条顺序发送（前端单轮上限 400 条）；</li>
-<li>结果为 best-effort：网络可达 ≠ 一定能播（H.265 编码、Geo-block 只能在播放阶段暴露）。结果不持久化，公共源波动大，建议观看前对目标分组重新测活。</li>
+<li>请求携带<strong>源站 Referer</strong>，避免源校验 Referer 时把可播的频道误判为不可用；</li>
+<li>校验 <code>#EXTM3U</code> 前缀与直链 <code>content-type</code>：返回 200 的 HTML/JSON 错误页不会被判为可用；</li>
+<li><code>LIVE_ALLOW_PRIVATE=1</code> 时自建内网 IPTV 同样能测通（与播放代理同一套 SSRF 口径）。</li>
+</ul>
+<h3 id="结果含义">结果含义</h3>
+<ul>
+<li>状态点：🟢 绿 = 可达（最可信）；🔴 红 = 不可达；无点 = 未探测；</li>
+<li>悬浮 tooltip 显示探测深度与耗时：<code>分片可用 · 分片耗时 320ms</code> / <code>直链可达</code> / <code>manifest 可用</code>（空播放列表降级）；</li>
+<li><strong>H.265 徽章</strong>：master playlist 声明 <code>hvc1/hev1</code> 编码时，频道名旁显示琥珀色 <code>H.265</code> 标记——这类频道测活会通过，但 Chromium 内核通常无法解码，需用 Edge / Safari。</li>
+</ul>
+<h3 id="性能与缓存">性能与缓存</h3>
+<ul>
+<li>服务端：每个频道 6s <strong>整体时间预算</strong>（分片级上限 2.5s），并发 16；结果带短 TTL 缓存（成功 10 分钟 / 失败 2 分钟），多用户重复测活不重复请求上游；</li>
+<li>流式返回：<code>?stream=1</code> 以 NDJSON 逐条推送，命中缓存的立即回包，前端状态点<strong>边测边亮</strong>；不带该参数仍返回整批 JSON；</li>
+<li>客户端：每批 50 条、2 批并行（单轮上限 400 条），结果 200ms 节流合并写回；重新测活会中断在途请求；</li>
+<li>浏览器端结果<strong>持久化 6 小时</strong>（localStorage，随 <code>libretv-settings</code>）：刷新页面、重进直播页都直接显示上次状态；点「清除结果」可手动清空。</li>
+</ul>
+<h3 id="局限">局限</h3>
+<ul>
+<li>结果为 best-effort：网络可达 ≠ 一定能播，H.265 编码、Geo-block、播放器解码能力只能在播放阶段暴露（H.265 已尽量提前用徽章提示）；</li>
+<li>公共源波动大，超过 6 小时或源异常时重新测活即可。</li>
 </ul>
 <h2 id="节目单epg">节目单（EPG）</h2>
 <ul>
@@ -208,7 +226,7 @@
 <ol>
 <li><strong>测活</strong>：侧栏对当前分组「⚡ 测活」，红色频道直接跳过；</li>
 <li><strong>看状态码</strong>：播放失败提示中的 <code>HTTP 403</code> 多为 token/防盗链，<code>HTTP 404</code> 多为源瞬断，超时多为源已死；</li>
-<li><strong>换浏览器试 H.265</strong>：黑屏但测活绿色，多半是 HEVC 编码——用 Edge / Safari 或支持 HEVC 的环境打开；</li>
+<li><strong>看 H.265 徽章 / 换浏览器</strong>：黑屏但测活绿色，多半是 HEVC 编码（列表会显示 <code>H.265</code> 徽章）——用 Edge / Safari 或支持 HEVC 的环境打开；</li>
 <li><strong>代理回退</strong>：出现「直连失败，改用代理重试」说明源有 CORS/防盗链，代理通常可解；代理也失败时注意该源可能限制服务器 IP 访问；</li>
 <li><strong>确认编码与地区</strong>：<code>[Geo-blocked]</code> 频道跨地区无法播放；<code>[Not 24/7]</code> 频道仅在部分时段有信号。</li>
 </ol>
@@ -217,8 +235,9 @@
 <li>直播流代理 <code>/api/live/stream/[url]</code> 与点播 <code>/api/proxy</code> 分离：<strong>仅对响应头设 15s 超时</strong>，body 无限时长流式透传（HTTP-FLV 是单一长连接，点播代理的全局 8s 超时会切断它）；不重试；<code>Cache-Control: no-store, no-transform</code>；客户端断开即 abort 上游；</li>
 <li>m3u8 重写以<strong>重定向后的最终 URL</strong> 为 base（gslb 调度源 302 后路径会变，用入口 URL 解析相对分片地址会 404）；</li>
 <li>每一跳强制 SSRF 校验；<code>LIVE_ALLOW_PRIVATE=1</code> 可显式放行内网自建源（默认关闭），见 <a href="Proxy-Security.html">Proxy-Security</a>；</li>
-<li>状态存储：直播源（含 <code>fromSubscription</code> 归属字段）、启用状态、收藏、最近观看（含 <code>sourceUrl</code>）在 zustand persist（localStorage <code>libretv-settings</code>）；频道列表不落库，每次进入页面从服务端缓存拉取；</li>
-<li>SSRF：M3U 列表拉取与流代理统一走直播策略 <code>checkLiveUrlAllowed</code>，<code>LIVE_ALLOW_PRIVATE=1</code> 对<strong>拉列表与拉流两个阶段</strong>同时生效（此前仅拉流阶段生效），见 <a href="Proxy-Security.html">Proxy-Security</a>。</li>
+<li>测活复用同一 SSRF 口径：<code>fetch</code> 内部逐跳校验，测活不再重复预检；解析出的相对地址一律以重定向后的最终 URL 为 base；</li>
+<li>状态存储：直播源（含 <code>fromSubscription</code> 归属字段）、启用状态、收藏、最近观看（含 <code>sourceUrl</code>）、<strong>测活结果</strong>（6 小时 TTL）均在 zustand persist（localStorage <code>libretv-settings</code>）；频道列表不落库，每次进入页面从服务端缓存拉取；</li>
+<li>SSRF：M3U 列表拉取、测活与流代理统一走直播策略 <code>checkLiveUrlAllowed</code>，<code>LIVE_ALLOW_PRIVATE=1</code> 对<strong>拉列表、测活与拉流三个阶段</strong>同时生效，见 <a href="Proxy-Security.html">Proxy-Security</a>。</li>
 </ul>
 
                 </div>
@@ -239,6 +258,10 @@
             <li class="toc-h2"><a href="#播放">播放</a></li>
             <li class="toc-h3"><a href="#与点播播放器的关系">与点播播放器的关系</a></li>
             <li class="toc-h2"><a href="#批量测活分片级">批量测活（分片级）</a></li>
+            <li class="toc-h3"><a href="#探测方式">探测方式</a></li>
+            <li class="toc-h3"><a href="#结果含义">结果含义</a></li>
+            <li class="toc-h3"><a href="#性能与缓存">性能与缓存</a></li>
+            <li class="toc-h3"><a href="#局限">局限</a></li>
             <li class="toc-h2"><a href="#节目单epg">节目单（EPG）</a></li>
             <li class="toc-h2"><a href="#订阅导出">订阅导出</a></li>
             <li class="toc-h2"><a href="#播放不了排查顺序">播放不了？排查顺序</a></li>

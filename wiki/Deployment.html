@@ -149,12 +149,49 @@ docker compose pull &amp;&amp; docker compose up -d     # 拉取 ghcr.io/libresp
   libretv:
     build: .
     image: ${LIBRETV_IMAGE:-ghcr.io/librespark/libretv:latest}
+    container_name: libretv
     restart: unless-stopped
-    ports: [&quot;8080:8080&quot;]
+    ports:
+      - &quot;8080:8080&quot;
+    # 无状态服务：观看历史在浏览器 IndexedDB、设置在 localStorage，无需挂载卷
     environment:
+      # 必填：访问密码（在 .env 中设置，缺失时 compose 启动即报错提醒）
       - PASSWORD=${PASSWORD:?请在 .env 中设置 PASSWORD}
+      # 可选：会话/代理签名密钥（多实例部署建议显式设置：openssl rand -hex 32）
       # - PROXY_SECRET=your-secret
+      # 可选：预置采集站（JSON 数组），用户端自动出现且默认勾选
+      # - DEFAULT_SOURCES=[{&quot;name&quot;:&quot;示例源&quot;,&quot;url&quot;:&quot;https://example.com/api.php/provide/vod&quot;}]
+      # 可选：预置直播源（M3U 订阅，JSON 数组），epg 为可选节目单地址
+      # - DEFAULT_LIVE_SOURCES=[{&quot;name&quot;:&quot;示例直播源&quot;,&quot;url&quot;:&quot;https://example.com/list.m3u&quot;,&quot;epg&quot;:&quot;https://example.com/epg.xml.gz&quot;}]
+      # 可选：预置数据源订阅（SourceList JSON 链接，一次下发点播源 + 直播源，超 24h 静默刷新）
+      # - DEFAULT_SUBSCRIPTIONS=[&quot;https://example.com/sources.json&quot;]
+      # 可选：自建内网 IPTV 放行（对拉列表、测活、拉流三阶段同时生效，默认关闭以维持 SSRF 防护）
+      # - LIVE_ALLOW_PRIVATE=1
+      # 可选：代理上游请求超时（毫秒）与重试次数
+      # - REQUEST_TIMEOUT=8000
+      # - MAX_RETRIES=1
+      # 可选：每个搜索源最多抓取的页数（1-50，默认 5），调大会显著增加上游请求量
+      # - SEARCH_MAX_PAGES=5
+      # 可选：代理请求 UA（豆瓣防盗链等场景）
+      # - USER_AGENT=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/122.0.0.0 Safari/537.36
+      # 可选：影视榜单推荐源（60s API）实例地址，官方公共实例有限流
+      # - 60S_API_BASE=https://60s.viki.moe
+      # - DEBUG=false
 </code></pre>
+<p>配套的 <code>.env</code>（与 compose 同级）。<code>${PASSWORD:?...}</code> 在缺少该文件时会在启动时直接报错提醒：</p>
+<pre><code class="language-bash">PASSWORD=your-strong-password
+# 可选：会话/代理签名密钥，单实例可不设（不设时从 PASSWORD 派生）
+# PROXY_SECRET=            # openssl rand -hex 32
+# 可选：锁定镜像版本
+# LIBRETV_IMAGE=ghcr.io/librespark/libretv:2.7.0
+</code></pre>
+<p>几点说明：</p>
+<ul>
+<li>JSON 数组形式的变量（<code>DEFAULT_SOURCES</code> / <code>DEFAULT_LIVE_SOURCES</code> / <code>DEFAULT_SUBSCRIPTIONS</code>）必须是合法 JSON，解析失败只会告警并<strong>整体忽略</strong>，不影响站点启动；</li>
+<li><strong>无需挂载卷</strong>：服务无状态，升级即 <code>docker compose pull &amp;&amp; docker compose up -d</code>，用户数据留在浏览器端；</li>
+<li>生产环境需用反向代理（Nginx / Caddy）终结 HTTPS 后转发到 8080，否则会话 cookie（带 <code>Secure</code>）会被浏览器丢弃，表现为&quot;密码正确却无法登录&quot;；</li>
+<li>各变量含义与默认值见 <a href="Configuration.html">Configuration</a>。</li>
+</ul>
 <h2 id="手动部署">手动部署</h2>
 <p>要求 Node.js ≥ 20（推荐 22）：</p>
 <pre><code class="language-bash">npm ci
