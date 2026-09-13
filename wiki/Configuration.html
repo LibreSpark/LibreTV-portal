@@ -133,6 +133,12 @@
 <td>每个搜索源最多抓取的页数（1-50）。第一页响应携带源站真实总页数 <code>pagecount</code>，实际抓取页数取两者较小值；后续页并行请求，单页失败仅丢弃该页。调大会显著增加上游请求量（约等于 源数 × 页数），搜索延迟与源站压力随之上升</td>
 </tr>
 <tr>
+<td><code>SEARCH_SOURCE_TIMEOUT_MS</code></td>
+<td>否</td>
+<td><code>10000</code></td>
+<td>单个搜索源的<strong>总死线</strong>（毫秒，3s-60s）：该源所有分页请求须在时限内完成，到点中断在途请求并将该源标记为「超时」（<code>failures[].timedOut</code>）。避免慢源拖住首页流式搜索的整体等待；健康度自动停用也以此为超时判定依据</td>
+</tr>
+<tr>
 <td><code>USER_AGENT</code></td>
 <td>否</td>
 <td>Chrome UA</td>
@@ -216,7 +222,8 @@
 <h3 id="点播源">点播源</h3>
 <ul>
 <li><strong>自定义 API 列表</strong>：名称、API 地址、详情页地址（可选）、成人标记；</li>
-<li><strong>勾选参与搜索的源</strong>：仅勾选的源会参与聚合搜索与换源。</li>
+<li><strong>勾选参与搜索的源</strong>：仅勾选的源会参与聚合搜索与换源；</li>
+<li><strong>健康度与自动停用</strong>：每次真实搜索会按源记录结果（耗时 / 超时 / 错误，持久化保存）。同一源<strong>连续 2 次</strong>失败或超时会被自动停用 30 分钟（勾选保留，仅暂停参与搜索），到期自动恢复；期间首页结果区会显示停用提示，设置 → 点播源中该源显示琥珀色「已停用」徽章并可一键「恢复」。健康源显示绿色「上次搜索 Xms」徽章。</li>
 </ul>
 <h3 id="直播源">直播源</h3>
 <ul>
@@ -231,7 +238,27 @@
 <li>同步为手动操作（订阅条目 <strong>⟳</strong>），远端列表更新后需手动刷新；部署者可通过 <code>DEFAULT_SUBSCRIPTIONS</code> 预置订阅，首次访问自动导入、超 24h 静默刷新，见上文 <a href="#预置数据源订阅default_subscriptions">预置数据源订阅</a>；</li>
 <li>删除订阅会移除其导入的两类源（含启用状态与最近观看），但<strong>保留已收藏的频道</strong>。</li>
 </ul>
-<h3 id="播放与过滤">播放与过滤</h3>
+<h3 id="播放与过滤设置-播放设置">播放与过滤（设置 → 播放设置）</h3>
+<table>
+<thead>
+<tr>
+<th>开关</th>
+<th>默认</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>广告过滤</td>
+<td>开</td>
+<td>hls.js loader 剔除 m3u8 中的 <code>#EXT-X-DISCONTINUITY</code> 广告片段</td>
+</tr>
+<tr>
+<td>自动连播</td>
+<td>开</td>
+<td>单集结束自动播放下一集</td>
+</tr>
+</tbody></table>
+<h3 id="首页与内容过滤设置-订阅与配置">首页与内容过滤（设置 → 订阅与配置）</h3>
 <table>
 <thead>
 <tr>
@@ -246,22 +273,17 @@
 <td>服务端按分类关键词过滤（伦理片/福利片等）</td>
 </tr>
 <tr>
-<td>广告过滤</td>
+<td>首页推荐</td>
 <td>开</td>
-<td>hls.js loader 剔除 m3u8 中的 <code>#EXT-X-DISCONTINUITY</code> 广告片段</td>
+<td>首页展示推荐内容</td>
 </tr>
 <tr>
-<td>自动连播</td>
-<td>开</td>
-<td>单集结束自动播放下一集</td>
-</tr>
-<tr>
-<td>豆瓣推荐</td>
-<td>开</td>
-<td>首页展示豆瓣热门影视</td>
+<td>推荐数据源</td>
+<td>影视榜单</td>
+<td>豆瓣 / Bangumi / 影视榜单三选一，详见 <a href="Recommendations.html">Recommendations</a></td>
 </tr>
 </tbody></table>
-<h3 id="封面图加载方式">封面图加载方式</h3>
+<h3 id="封面图加载方式设置-播放设置">封面图加载方式（设置 → 播放设置）</h3>
 <table>
 <thead>
 <tr>
@@ -343,8 +365,9 @@
             <li class="toc-h3"><a href="#点播源">点播源</a></li>
             <li class="toc-h3"><a href="#直播源">直播源</a></li>
             <li class="toc-h3"><a href="#数据源订阅">数据源订阅</a></li>
-            <li class="toc-h3"><a href="#播放与过滤">播放与过滤</a></li>
-            <li class="toc-h3"><a href="#封面图加载方式">封面图加载方式</a></li>
+            <li class="toc-h3"><a href="#播放与过滤设置-播放设置">播放与过滤（设置 → 播放设置）</a></li>
+            <li class="toc-h3"><a href="#首页与内容过滤设置-订阅与配置">首页与内容过滤（设置 → 订阅与配置）</a></li>
+            <li class="toc-h3"><a href="#封面图加载方式设置-播放设置">封面图加载方式（设置 → 播放设置）</a></li>
             <li class="toc-h3"><a href="#主题">主题</a></li>
             <li class="toc-h3"><a href="#配置导入导出">配置导入导出</a></li>
             <li class="toc-h2"><a href="#存储结构indexeddb-libretv">存储结构（IndexedDB libretv）</a></li>

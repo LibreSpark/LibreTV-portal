@@ -149,10 +149,15 @@
 <h3 id="访问规则">访问规则</h3>
 <ul>
 <li><strong>已登录</strong>：可代理任意符合 SSRF 校验的目标（视频分片、key、JSON、图片）；</li>
-<li><strong>未登录</strong>：仅放行豆瓣域（<code>douban.com</code> / <code>doubanio.com</code> 及其子域）下的图片类目标，用于登录页前的封面展示；其余一律 401。<blockquote>
+<li><strong>未登录</strong>：仅放行公开图片 CDN 白名单内的图片类目标，用于登录页前的封面展示；其余一律 401。当前白名单：<ul>
+<li><code>douban.com</code> / <code>doubanio.com</code> 及其子域（豆瓣封面需 Referer 伪装，代理自动携带）；</li>
+<li><code>doubanio.viki.moe</code> 及其子域（影视榜单 cover_proxy 镜像，兜底用）；</li>
+<li><code>bgm.tv</code> 及其子域（Bangumi 封面，<code>lain.bgm.tv</code> 等）；<blockquote>
 <p>判定按<strong>完整域名</strong>匹配（<code>host === &#39;douban.com&#39; || host.endsWith(&#39;.douban.com&#39;)</code>），
 避免 <code>evil-douban.com</code> 这类后缀伪装绕过鉴权。</p>
 </blockquote>
+</li>
+</ul>
 </li>
 </ul>
 <h3 id="ssrf-防护双层">SSRF 防护（双层）</h3>

@@ -149,7 +149,8 @@ PASSWORD=dev-password npm run dev   # http://localhost:8080
 </code></pre>
 <h2 id="核心特性">核心特性</h2>
 <ul>
-<li><strong>聚合搜索</strong>：多采集站服务端并行搜索，单源失败不影响整体，用户 IP 不暴露给第三方</li>
+<li><strong>聚合搜索</strong>：多采集站服务端并行搜索，流式逐源呈现（健康源结果即时渲染，不等坏源超时），单源失败不影响整体，用户 IP 不暴露给第三方</li>
+<li><strong>异常源自动治理</strong>：按源记录搜索健康度，连续失败/超时的源自动停用 30 分钟并可在设置中一键恢复</li>
 <li><strong>跨源同名聚合</strong>：同名影片合并为一张卡片，展开即可比较和选择各来源</li>
 <li><strong>HLS 播放</strong>：ArtPlayer + hls.js，广告分片过滤、自动连播、倍速、快捷键、移动端长按 3 倍速</li>
 <li><strong>直播 / IPTV</strong>：M3U 订阅解析，<code>/live</code> 页面按分组浏览、搜索频道并站内播放（HLS + HTTP-FLV），支持 XMLTV 节目单（EPG）与分片级批量测活</li>
