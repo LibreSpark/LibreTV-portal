@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>首页推荐 - LibreTV 文档</title>
-    <meta name="description" content="首页在没有搜索关键词时展示推荐内容。推荐 数据源可在设置中切换 （设置 → 订阅与配置 → 「首页与内容过滤」分组的「首页推荐」开关 + 「推荐数据源」下拉），同一时间只展示一个来源： | 来源 | 内容 | 依赖 | | | | | | 豆瓣 | 电影/剧集分类 + 标签（热门、最新、高分等），分">
+    <meta name="description" content="首页在没有搜索关键词时展示推荐内容。推荐 数据源可在设置中切换 （设置 → 偏好设置 → 首页与内容 的「首页推荐」开关 + 「推荐数据源」下拉），同一时间只展示一个来源： | 来源 | 内容 | 依赖 | | | | | | 豆瓣 | 电影/剧集分类 + 标签（热门、最新、高分等），一次取 50 ">
     <meta name="theme-color" content="#0a0a0a">
     <meta name="author" content="LibreTV Team">
     <link rel="canonical" href="https://libretv.is-an.org/wiki/Recommendations.html">
@@ -13,10 +13,10 @@
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://libretv.is-an.org/wiki/Recommendations.html">
     <meta property="og:title" content="首页推荐 - LibreTV 文档">
-    <meta property="og:description" content="首页在没有搜索关键词时展示推荐内容。推荐 数据源可在设置中切换 （设置 → 订阅与配置 → 「首页与内容过滤」分组的「首页推荐」开关 + 「推荐数据源」下拉），同一时间只展示一个来源： | 来源 | 内容 | 依赖 | | | | | | 豆瓣 | 电影/剧集分类 + 标签（热门、最新、高分等），分">
+    <meta property="og:description" content="首页在没有搜索关键词时展示推荐内容。推荐 数据源可在设置中切换 （设置 → 偏好设置 → 首页与内容 的「首页推荐」开关 + 「推荐数据源」下拉），同一时间只展示一个来源： | 来源 | 内容 | 依赖 | | | | | | 豆瓣 | 电影/剧集分类 + 标签（热门、最新、高分等），一次取 50 ">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="首页推荐 - LibreTV 文档">
-    <meta name="twitter:description" content="首页在没有搜索关键词时展示推荐内容。推荐 数据源可在设置中切换 （设置 → 订阅与配置 → 「首页与内容过滤」分组的「首页推荐」开关 + 「推荐数据源」下拉），同一时间只展示一个来源： | 来源 | 内容 | 依赖 | | | | | | 豆瓣 | 电影/剧集分类 + 标签（热门、最新、高分等），分">
+    <meta name="twitter:description" content="首页在没有搜索关键词时展示推荐内容。推荐 数据源可在设置中切换 （设置 → 偏好设置 → 首页与内容 的「首页推荐」开关 + 「推荐数据源」下拉），同一时间只展示一个来源： | 来源 | 内容 | 依赖 | | | | | | 豆瓣 | 电影/剧集分类 + 标签（热门、最新、高分等），一次取 50 ">
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="../assets/logo-black.png">
@@ -92,7 +92,7 @@
                 </div>
                 <h1 class="wiki-title gradient-text">首页推荐</h1>
                 <div class="wiki-body markdown-body">
-<p>首页在没有搜索关键词时展示推荐内容。推荐<strong>数据源可在设置中切换</strong>（设置 → 订阅与配置 → 「首页与内容过滤」分组的「首页推荐」开关 + 「推荐数据源」下拉），同一时间只展示一个来源：</p>
+<p>首页在没有搜索关键词时展示推荐内容。推荐<strong>数据源可在设置中切换</strong>（设置 → 偏好设置 → 首页与内容 的「首页推荐」开关 + 「推荐数据源」下拉），同一时间只展示一个来源：</p>
 <table>
 <thead>
 <tr>
@@ -103,7 +103,7 @@
 </thead>
 <tbody><tr>
 <td>豆瓣</td>
-<td>电影/剧集分类 + 标签（热门、最新、高分等），分页加载</td>
+<td>电影/剧集分类 + 标签（热门、最新、高分等），一次取 50 条并全部渲染</td>
 <td>无</td>
 </tr>
 <tr>
@@ -123,7 +123,8 @@
 <ul>
 <li>上游 <code>movie.douban.com/j/search_subjects</code>，服务端伪装 UA/Referer 直连；</li>
 <li>直连被拒时降级到 <code>FALLBACK_CORS_PROXY</code> 环境变量指定的代理；</li>
-<li>缓存 10 分钟。</li>
+<li>缓存 10 分钟；</li>
+<li>一次取 50 条并<strong>全部渲染</strong>（卡片图片 <code>loading=&quot;lazy&quot;</code>，视口外的图不会请求）。此前有一个「加载更多」按钮，但它只是把本地数组的切片从 25 条加到 50 条——不发请求、不取数据，反倒打断浏览，已移除。</li>
 </ul>
 <h3 id="bangumiapibangumicalendar">Bangumi（<code>/api/bangumi/calendar</code>）</h3>
 <ul>
@@ -182,7 +183,7 @@
 <p>豆瓣搜索接口偶尔限流且封面有防盗链；影视榜单数据最完整（海报/评分/简介齐全）、60s 侧做了封面代理，且榜单内容与&quot;找片看&quot;的意图最匹配。旧部署升级后<strong>已保存过设置的用户不受影响</strong>，仍沿用其已持久化的选择。</p>
 <h2 id="常见问题">常见问题</h2>
 <p><strong>Q: 首页推荐区完全不显示？</strong>
-检查设置 → 订阅与配置 → 「首页与内容过滤」→ 「首页推荐」开关是否关闭。</p>
+检查设置 → 偏好设置 → 首页与内容 → 「首页推荐」开关是否关闭。</p>
 <p><strong>Q: 切换推荐源后没变化？</strong>
 来源选择保存在浏览器 localStorage，切换后立即生效；若被浏览器策略清除存储则回到默认。</p>
 <p><strong>Q: 影视榜单加载失败？</strong>

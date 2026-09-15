@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>数据源 - LibreTV 文档</title>
-    <meta name="description" content="数据源 是上位概念，包含两类相互独立的体系： | 类别 | 说明 | 管理入口 | | | | | | 点播源 | Apple CMS 采集站 API，决定&quot;能搜到什么&quot;（本文主体） | 设置 → 点播源 | | 直播源 | M3U 播放列表，用于 /live 页看电视 | 设置 → 直播源（见 L">
+    <meta name="description" content="数据源 是上位概念，包含两类相互独立的体系： | 类别 | 说明 | 管理入口 | | | | | | 点播源 | Apple CMS 采集站 API，决定&quot;能搜到什么&quot;（本文主体） | 设置 → 源管理 → 点播源 | | 直播源 | M3U 播放列表，用于 /live 页看电视 | 设置 → 源">
     <meta name="theme-color" content="#0a0a0a">
     <meta name="author" content="LibreTV Team">
     <link rel="canonical" href="https://libretv.is-an.org/wiki/Data-Sources.html">
@@ -13,10 +13,10 @@
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://libretv.is-an.org/wiki/Data-Sources.html">
     <meta property="og:title" content="数据源 - LibreTV 文档">
-    <meta property="og:description" content="数据源 是上位概念，包含两类相互独立的体系： | 类别 | 说明 | 管理入口 | | | | | | 点播源 | Apple CMS 采集站 API，决定&quot;能搜到什么&quot;（本文主体） | 设置 → 点播源 | | 直播源 | M3U 播放列表，用于 /live 页看电视 | 设置 → 直播源（见 L">
+    <meta property="og:description" content="数据源 是上位概念，包含两类相互独立的体系： | 类别 | 说明 | 管理入口 | | | | | | 点播源 | Apple CMS 采集站 API，决定&quot;能搜到什么&quot;（本文主体） | 设置 → 源管理 → 点播源 | | 直播源 | M3U 播放列表，用于 /live 页看电视 | 设置 → 源">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="数据源 - LibreTV 文档">
-    <meta name="twitter:description" content="数据源 是上位概念，包含两类相互独立的体系： | 类别 | 说明 | 管理入口 | | | | | | 点播源 | Apple CMS 采集站 API，决定&quot;能搜到什么&quot;（本文主体） | 设置 → 点播源 | | 直播源 | M3U 播放列表，用于 /live 页看电视 | 设置 → 直播源（见 L">
+    <meta name="twitter:description" content="数据源 是上位概念，包含两类相互独立的体系： | 类别 | 说明 | 管理入口 | | | | | | 点播源 | Apple CMS 采集站 API，决定&quot;能搜到什么&quot;（本文主体） | 设置 → 源管理 → 点播源 | | 直播源 | M3U 播放列表，用于 /live 页看电视 | 设置 → 源">
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="../assets/logo-black.png">
@@ -104,15 +104,15 @@
 <tbody><tr>
 <td><strong>点播源</strong></td>
 <td>Apple CMS 采集站 API，决定&quot;能搜到什么&quot;（本文主体）</td>
-<td>设置 → 点播源</td>
+<td>设置 → 源管理 → 点播源</td>
 </tr>
 <tr>
 <td><strong>直播源</strong></td>
 <td>M3U 播放列表，用于 <code>/live</code> 页看电视</td>
-<td>设置 → 直播源（见 <a href="Live-IPTV.html">Live-IPTV</a>）</td>
+<td>设置 → 源管理 → 直播源（见 <a href="Live-IPTV.html">Live-IPTV</a>）</td>
 </tr>
 </tbody></table>
-<p>两者数据模型独立，但可以用<strong>一份订阅 JSON 同时下发</strong>（见<a href="#数据源订阅--分享">数据源订阅 / 分享</a>）。</p>
+<p>两者数据模型独立，但可以用<strong>一份订阅 JSON 同时下发</strong>（见<a href="#数据源订阅--分享">数据源订阅 / 分享</a>）。订阅地址同时兼容 LibreTV-SourceList JSON 与 <strong>TVBOX 配置</strong>，由服务端自动识别格式。</p>
 <p>LibreTV 采用<strong>空壳设计</strong>：不内置任何采集站与频道源，由部署者/用户自行添加，避免内置源失效与合规风险。</p>
 <blockquote>
 <p>首页的<strong>推荐源</strong>（豆瓣 / Bangumi / 影视榜单）是另一套独立配置，只决定首页展示什么，与点播源无关，见 <a href="Recommendations.html">Recommendations</a>。</p>
@@ -120,8 +120,8 @@
 <p>点播源有三种来源：</p>
 <ul>
 <li><strong>部署者预置</strong>：通过 <code>DEFAULT_SOURCES</code> 环境变量下发（JSON 数组），所有用户开箱即搜，详见<a href="Configuration.html">配置文档</a>；</li>
-<li><strong>用户自建</strong>：设置 → 点播源 → 「+ 添加 API」手动添加，保存在浏览器 localStorage；</li>
-<li><strong>订阅导入</strong>：设置 → 订阅与配置 → 数据源订阅，一次可同时导入点播源与直播源。</li>
+<li><strong>用户自建</strong>：设置 → 源管理 → 点播源 → 「+ 添加 API」手动添加，保存在浏览器 localStorage；</li>
+<li><strong>订阅导入</strong>：设置 → 源管理 → 数据源订阅，一次可同时导入点播源与直播源（订阅地址兼容 LibreTV 源列表与 TVBOX 配置）。</li>
 </ul>
 <h2 id="支持的点播源类型">支持的点播源类型</h2>
 <p>Apple CMS（苹果CMS）标准采集接口，即提供以下接口的资源站：</p>
@@ -129,7 +129,7 @@
 详情：{api}?ac=videolist&amp;ids={vod_id}
 </code></pre>
 <h2 id="添加点播源">添加点播源</h2>
-<p>设置 → 点播源 → 「+ 添加 API」：</p>
+<p>设置 → 源管理 → 点播源 → 「+ 添加 API」：</p>
 <table>
 <thead>
 <tr>
@@ -179,21 +179,56 @@
 </ul>
 <h2 id="源可用性测试与自动停用">源可用性测试与自动停用</h2>
 <p>两层机制互不替代：</p>
-<p><strong>⚡ 手动探活</strong>（设置 → 点播源，每个源右侧）</p>
+<p><strong>⚡ 手动探活</strong>（设置 → 源管理 → 点播源，每个源右侧）</p>
 <ul>
 <li>以搜索 <code>test</code> 的完整往返衡量：返回响应耗时（ms）与结果条数；</li>
-<li>结果以徽章内联展示（<code>✓ 610ms</code> 绿色 / <code>✗ 超时</code> 红色），刷新页面后消失；</li>
+<li>结果以徽章内联展示（<code>✓ 610ms</code> 绿色 / <code>✗ 超时</code> 红色）；探活结果同样写入健康度记录，与真实搜索共用同一份数据，因此会持久化、不会刷新即失；</li>
+<li><strong>批量测活</strong>：工具栏的「⚡ 测活」可一次测完当前筛选出的全部源，带实时进度与「取消」按钮；</li>
 <li>探活请求与搜索一样经过 SSRF 校验，仅支持公网 http(s) 地址。</li>
 </ul>
 <p><strong>健康度记录与自动停用</strong>（随真实搜索自动进行，持久化保存）</p>
 <ul>
-<li>每次搜索按源记录结果与耗时，设置 → 点播源中常驻显示（绿色 <code>✓ Xms</code> = 上次搜索耗时）；</li>
-<li>同一源<strong>连续 2 次</strong>失败或超时自动停用 30 分钟：勾选保留、仅暂停参与搜索，到期自动恢复；</li>
-<li>停用期间首页结果区显示提示条，设置中该源显示琥珀色「已停用」徽章，可点「恢复」立即清除记录重新参与；</li>
-<li>目的：坏源不再拖慢每次搜索，也不需要用户手动排查剔除。</li>
+<li><p>每次搜索按源记录结果与耗时，设置 → 源管理 → 点播源中常驻显示（绿色 <code>✓ Xms</code> = 上次搜索耗时）；</p>
+</li>
+<li><p>同一源<strong>连续 2 次</strong>失败或超时即暂停参与搜索，<strong>停用时长按「第几次被停用」逐级加重</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>第几次被停用</th>
+<th>停用时长</th>
+<th>恢复方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第 1 次</td>
+<td>30 分钟</td>
+<td>到期自动</td>
+</tr>
+<tr>
+<td>第 2 次</td>
+<td>24 小时</td>
+<td>到期自动</td>
+</tr>
+<tr>
+<td>第 3 次及以后</td>
+<td>长期停用</td>
+<td>需手动（设置中的「恢复」按钮）</td>
+</tr>
+</tbody></table>
+</li>
+<li><p><strong>每成功一次降一级</strong>（而非清零）：偶尔抽风的源会自行回落并停在 30 分钟档，只有从未成功过的源才会一路升到长期停用；</p>
+</li>
+<li><p>全程<strong>勾选状态保留</strong>——只是暂停参与搜索，不改动你的勾选意图；</p>
+</li>
+<li><p>停用期间首页结果区显示提示条，设置中该源显示琥珀色「已停用」徽章（长期停用为红色），可点「恢复」立即清除记录重新参与；</p>
+</li>
+<li><p>超过 7 天未再参与搜索的源，其健康度记录与惩罚等级一并作废，不会因陈旧记录被长期重罚；</p>
+</li>
+<li><p>目的：坏源不再拖慢每次搜索，也不必手动排查剔除。之所以做成阶梯而不是固定时长——固定 30 分钟时，一个彻底挂掉的源会每隔半小时被重新试一次，每次都要白等一轮超时。</p>
+</li>
 </ul>
 <h2 id="数据源订阅-分享">数据源订阅 / 分享</h2>
-<p>一份订阅可同时下发<strong>点播源</strong>与<strong>直播源</strong>：导出为 JSON 文件 → 托管到任意公开 URL → 他人在「设置 → 订阅与配置 → 数据源订阅」里填入该 URL 订阅。</p>
+<p>一份订阅可同时下发<strong>点播源</strong>与<strong>直播源</strong>：导出为 JSON 文件 → 托管到任意公开 URL → 他人在「设置 → 源管理 → 数据源订阅」里填入该 URL 订阅。</p>
 <h3 id="订阅格式libretv-sourcelist-json">订阅格式（LibreTV-SourceList JSON）</h3>
 <pre><code class="language-json">{
   &quot;name&quot;: &quot;我的源列表&quot;,
@@ -312,16 +347,83 @@
 <li>直播源的 EPG 地址同样按上述规则校验，非法时只丢弃该字段、保留整条源；</li>
 <li>订阅由<strong>服务端</strong>拉取（拉取前经过 SSRF 校验），因此订阅地址<strong>无需配置 CORS</strong>，Gist、对象存储、任意静态托管均可。</li>
 </ul>
+<h3 id="兼容-tvbox-配置">兼容 TVBOX 配置</h3>
+<p>订阅地址也可以直接填 <strong>TVBOX 配置</strong>（形如 <code>{&quot;sites&quot;: [...], &quot;lives&quot;: [...], &quot;parses&quot;: [...], &quot;spider&quot;: &quot;...&quot;}</code>），服务端按内容结构自动识别格式，无需手动选择。</p>
+<table>
+<thead>
+<tr>
+<th>TVBOX 字段</th>
+<th>是否导入</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>sites[]</code> 中 <code>type: 1</code> 的条目</td>
+<td>✅</td>
+<td>Apple CMS JSON 接口，转为点播源</td>
+</tr>
+<tr>
+<td><code>sites[]</code> 省略 <code>type</code> / 写成 <code>0</code>，但地址含 <code>api.php/provide/vod</code></td>
+<td>✅</td>
+<td>共享配置常省略类型，按地址宽容识别（<code>/at/xml</code> 等 XML 通道除外）</td>
+</tr>
+<tr>
+<td><code>sites[]</code> 标记 <code>searchable: 0</code></td>
+<td>❌</td>
+<td>站点自身不提供搜索，本站只有搜索入口</td>
+</tr>
+<tr>
+<td><code>sites[]</code> 的 <code>type: 3</code> Spider（<code>csp_*</code> / <code>.jar</code> / <code>.js</code> / <code>.py</code>）</td>
+<td>❌</td>
+<td>需要 TVBOX 的 Spider 引擎，Node 侧无法运行</td>
+</tr>
+<tr>
+<td><code>sites[]</code> 的 XML 接口与普通外链 JSON</td>
+<td>❌</td>
+<td>本站只解析 Apple CMS JSON 接口</td>
+</tr>
+<tr>
+<td><code>lives[]</code> 中 <code>type: 0</code>（或省略）的 M3U 地址</td>
+<td>✅</td>
+<td>转为直播源，<code>epg</code> 字段一并导入</td>
+</tr>
+<tr>
+<td><code>lives[]</code> 的 txt 频道列表与单仓 JSON</td>
+<td>❌</td>
+<td>本站直播只支持 M3U</td>
+</tr>
+<tr>
+<td>顶层 <code>parses</code> / <code>spider</code> / <code>wallpaper</code> 等</td>
+<td>❌</td>
+<td>与本站能力无关，忽略</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>导入结果会如实提示</strong>：如「已同步 8 个点播源、2 个直播源（TVBOX 配置）；跳过 96 个不可用条目（Spider 引擎 92、XML 接口 4）」——TVBOX 配置常含上百条站点且以 Spider 为主，<strong>只导入个位数到十几个属正常现象</strong>；</li>
+<li>地址校验（点播源须为公网地址）、按 <code>url</code> 去重、数量上限（点播 100 / 直播 50）与 LibreTV-SourceList 完全一致，被服务端校验拦下的条目同样计入「跳过」；</li>
+<li><strong>格式容错</strong>：配置里的 <code>//</code> 注释、尾随逗号、字符串内未转义的换行会自动修正后再解析（共享配置中很常见，TVBOX 客户端用的 fastjson 同样容忍这些写法）；</li>
+<li>订阅地址需<strong>直接返回 JSON</strong>：Base64 / 压缩包装的分享链接不支持；TVBOX「多仓」配置（顶层为 <code>urls</code> 数组）也不支持，请填单仓配置（<code>sites</code> / <code>lives</code>）。</li>
+</ul>
 <h3 id="订阅行为">订阅行为</h3>
 <ul>
-<li><strong>导入</strong>：设置 → 订阅与配置 → 数据源订阅 → 填入订阅地址 → 「订阅」；点播源自动勾选（成人过滤开启时跳过成人源）、直播源自动启用，两者都带「订阅」标识；订阅条目上显示「点播 N · 直播 M」计数与上次同步时间；</li>
+<li><strong>导入</strong>：设置 → 源管理 → 数据源订阅 → 填入订阅地址 → 「订阅」；点播源自动勾选（成人过滤开启时跳过成人源）、直播源自动启用，两者都带「订阅」标识；订阅条目上显示「点播 N · 直播 M」计数与上次同步时间；</li>
 <li><strong>部署者预置订阅</strong>：通过 <code>DEFAULT_SUBSCRIPTIONS</code> 环境变量填入订阅链接，用户首次访问自动完成导入，超 24 小时静默刷新，失败保留旧数据下次重试，详见 <a href="Configuration.html#预置数据源订阅default_subscriptions">Configuration · 预置数据源订阅</a>；</li>
 <li><strong>手动同步</strong>：订阅条目上的 <strong>⟳</strong> 随时强制同步——整体替换该订阅名下的点播源与直播源（与订阅 URL 相同的手动源会被去重合并），结果以提示反馈（如&quot;已同步 8 个点播源、3 个直播源&quot;）；</li>
-<li><strong>订阅源的管理边界</strong>：订阅源以远端列表为准——单独编辑会在下次同步时被覆盖，单独移除会在重新同步时恢复；如需调整请修改远端列表后同步，或直接删除整个订阅；</li>
-<li><strong>删除订阅</strong>：同时移除其导入的点播源与直播源（含启用状态与最近观看记录），但<strong>保留已收藏的频道</strong>——收藏是用户主动留存的数据，不随订阅删除而清空。</li>
+<li><strong>整体启用 / 停用</strong>：每条订阅左侧的开关可临时停用它——停用后该订阅下的源不再参与搜索，但<strong>不改动任何源的勾选状态、也不删除数据</strong>，重新打开即完全恢复。停用期间该条目淡显并显示「已停用」徽章，点播源列表中它的源显示「订阅已停用」，搜索结果区也会说明有几个源因此未参与（不做静默过滤）；</li>
+<li><strong>订阅源的管理边界</strong>：订阅源以远端列表为准——单独编辑会在下次同步时被覆盖，单独移除会在重新同步时恢复；如需调整请修改远端列表后同步、或用上面的开关整体停用，或直接删除整个订阅；</li>
+<li><strong>删除订阅</strong>：点播源随订阅全部移除；直播源为<strong>多归属共享</strong>——同一 M3U 可被多个订阅引用（各订阅的「直播 N」计数按归属统计，名称/EPG 以首次导入为准），删除订阅只移除自己的引用，仅当不再被任何订阅引用时才移除该直播源（含启用状态与最近观看记录），<strong>收藏的频道始终保留</strong>；</li>
 </ul>
-<h3 id="分享导出">分享（导出）</h3>
-<p>设置 → 订阅与配置 → 「导出数据源」：把当前全部点播源与直播源（部署者预置 + 手动添加 + 订阅导入，按 URL 去重）导出为上述格式的 JSON 文件（<code>version: 2</code>）。托管后即可被他人一次订阅全部导入。</p>
+<h3 id="分享导出-发布链接">分享（导出 / 发布链接）</h3>
+<p>两种方式，区别在于「你手里拿到什么」：</p>
+<p><strong>导出 JSON 文件</strong>：设置 → 源管理 → 数据源订阅 → 「导出数据源」，把当前<strong>全部</strong>点播源与直播源（部署者预置 + 手动添加 + 订阅导入，按 URL 去重）导出为上述格式的 JSON 文件（<code>version: 2</code>）。托管到任意公开 URL 即可被他人订阅。</p>
+<p><strong>一键发布为订阅链接</strong>：同一处的「发布为链接」，把当前<strong>仅已勾选启用</strong>的源（未勾选的、以及被自动停用的都排除）上传到公开粘贴板，直接返回一个可填入订阅框的 URL——不需要自己准备托管。须知：</p>
+<ul>
+<li>上传走<strong>服务端代理</strong>（浏览器直连会被 CORS 拦住），目标域名固定为 <code>paste.rs</code>，失败时自动降级到 <code>0x0.st</code>；接口只透出白名单字段（名称/地址/EPG）并限制条数与体积，且需要登录会话；</li>
+<li><strong>内容是公开可读的</strong>——任何拿到链接的人都能看到你的源列表；</li>
+<li>免费粘贴板可能随时清理或失效，且每次发布都会生成<strong>新链接</strong>（不支持覆盖更新），改完源需重新发布并替换订阅地址；</li>
+<li>需要长期稳定请用「导出数据源」自行托管（Gist、对象存储、私有仓库 raw 均可）。</li>
+</ul>
+<p>发布成功后会显示链接，可直接「复制」或点「直接订阅」（自动填入订阅框并立即同步）自测。</p>
 <h2 id="点播源配置的数据流">点播源配置的数据流</h2>
 <p>点播源配置<strong>只保存在用户浏览器</strong>（localStorage），服务端不存储。每次搜索/详情请求会把用到的源配置随请求上传，因此：</p>
 <ul>
@@ -334,7 +436,9 @@
 <p><strong>Q: 搜索成功但详情提示&quot;未找到播放资源&quot;？</strong>
 该源的播放地址可能需要详情页爬取，请补填「详情页地址」；或该影片在源内本身无 m3u8 地址。</p>
 <p><strong>Q: 可以批量导入吗？</strong>
-可以：把点播源（必要时连同直播源）写成一份 LibreTV-SourceList JSON 并托管，在「设置 → 订阅与配置 → 数据源订阅」中填入地址即可一次导入，之后还能一键同步。旧版逗号分隔 <code>?urls=</code> 的入口未移植，也可用「导出/导入配置」整机迁移。</p>
+可以：把点播源（必要时连同直播源）写成一份 LibreTV-SourceList JSON 并托管，在「设置 → 源管理 → 数据源订阅」中填入地址即可一次导入，之后还能一键同步。旧版逗号分隔 <code>?urls=</code> 的入口未移植，也可用「导出/导入配置」整机迁移。</p>
+<p><strong>Q: 填入 TVBOX 配置后，为什么只导入了几个源？</strong>
+TVBOX 配置里绝大多数站点是 <code>type: 3</code> 的 Spider（<code>csp_*</code> / <code>jar</code> / <code>js</code> / <code>py</code>），需要 TVBOX 自身的 Spider 引擎才能运行；本站只导入可直接访问的直连接口（<code>type: 1</code> 的 Apple CMS）与 M3U 直播源，其余条目会在导入结果中按原因计数提示，属预期行为。详见<a href="#兼容-tvbox-配置">兼容 TVBOX 配置</a>。</p>
 
                 </div>
                 <nav class="wiki-pager" aria-label="上一篇 / 下一篇">
@@ -354,8 +458,9 @@
             <li class="toc-h2"><a href="#源可用性测试与自动停用">源可用性测试与自动停用</a></li>
             <li class="toc-h2"><a href="#数据源订阅-分享">数据源订阅 / 分享</a></li>
             <li class="toc-h3"><a href="#订阅格式libretv-sourcelist-json">订阅格式（LibreTV-SourceList JSON）</a></li>
+            <li class="toc-h3"><a href="#兼容-tvbox-配置">兼容 TVBOX 配置</a></li>
             <li class="toc-h3"><a href="#订阅行为">订阅行为</a></li>
-            <li class="toc-h3"><a href="#分享导出">分享（导出）</a></li>
+            <li class="toc-h3"><a href="#分享导出-发布链接">分享（导出 / 发布链接）</a></li>
             <li class="toc-h2"><a href="#点播源配置的数据流">点播源配置的数据流</a></li>
             <li class="toc-h2"><a href="#常见问题">常见问题</a></li>
             </ul>

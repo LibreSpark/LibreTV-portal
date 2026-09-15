@@ -201,12 +201,12 @@
 </code></pre>
 <ul>
 <li>每项支持 <code>name</code>（必填）、<code>url</code>（必填，M3U 订阅地址）、<code>epg</code>（可选 XMLTV 节目单地址）；</li>
-<li>经 <code>/api/status</code> 下发，展示在设置 → 直播源顶部并带「部署者预置」标记，用户可勾选启用/停用但<strong>不可编辑或删除</strong>；</li>
+<li>经 <code>/api/status</code> 下发，展示在设置 → 源管理 → 直播源顶部并带「部署者预置」标记，用户可勾选启用/停用但<strong>不可编辑或删除</strong>；</li>
 <li>首次出现时自动启用；用户停用后不会被反复勾回；</li>
 <li>解析失败告警并整体忽略。功能详见 <a href="Live-IPTV.html">Live-IPTV</a>。</li>
 </ul>
 <h3 id="预置数据源订阅default_subscriptions">预置数据源订阅（DEFAULT_SUBSCRIPTIONS）</h3>
-<p>部署者无需把源列表内联进环境变量，只填 LibreTV-SourceList JSON 链接即可，首次访问自动为所有用户导入点播源与直播源：</p>
+<p>部署者无需把源列表内联进环境变量，只填 LibreTV-SourceList JSON 链接即可，首次访问自动为所有用户导入点播源与直播源（也接受 TVBOX 配置地址，见 <a href="Data-Sources.html#兼容-tvbox-配置">Data-Sources · 兼容 TVBOX 配置</a>）：</p>
 <pre><code class="language-bash">DEFAULT_SUBSCRIPTIONS=[&quot;https://example.com/sources.json&quot;,{&quot;url&quot;:&quot;https://example.com/other.json&quot;,&quot;name&quot;:&quot;备用清单&quot;}]
 </code></pre>
 <ul>
@@ -221,9 +221,11 @@
 <p>以下设置保存在每个用户浏览器的 localStorage（键 <code>libretv-settings</code>），通过「设置」抽屉修改：</p>
 <h3 id="点播源">点播源</h3>
 <ul>
-<li><strong>自定义 API 列表</strong>：名称、API 地址、详情页地址（可选）、成人标记；</li>
-<li><strong>勾选参与搜索的源</strong>：仅勾选的源会参与聚合搜索与换源；</li>
-<li><strong>健康度与自动停用</strong>：每次真实搜索会按源记录结果（耗时 / 超时 / 错误，持久化保存）。同一源<strong>连续 2 次</strong>失败或超时会被自动停用 30 分钟（勾选保留，仅暂停参与搜索），到期自动恢复；期间首页结果区会显示停用提示，设置 → 点播源中该源显示琥珀色「已停用」徽章并可一键「恢复」。健康源显示绿色「上次搜索 Xms」徽章。</li>
+<li><strong>自定义 API 列表</strong>：名称、API 地址、详情页地址（可选）、成人标记；顶部工具栏支持按名称/地址搜索、按来源与状态筛选（全部 / 已启用 / 已停用 / 来自订阅 / 手动添加），以及批量勾选；</li>
+<li><strong>勾选参与搜索的源</strong>：仅勾选的源会参与聚合搜索与换源，支持「全选 / 全部启用」等批量操作；</li>
+<li><strong>⚡ 批量测活</strong>：一次测活当前筛选出的全部源，带实时进度与「取消」；结果写入健康度，与真实搜索共用同一份数据；</li>
+<li><strong>删除</strong>：删除单个源后 6 秒内可「撤销」；删除订阅会级联清理其导入的源（有影响面提示与二次确认）；</li>
+<li><strong>健康度与自动停用</strong>：每次真实搜索会按源记录结果（耗时 / 超时 / 错误，持久化保存）。同一源<strong>连续 2 次</strong>失败或超时会被暂停参与搜索（勾选保留），停用时长按「第几次被停用」逐级加重：<strong>30 分钟 → 24 小时 → 长期停用</strong>（长期停用需手动恢复）；每成功一次降一级，因此偶发抽风的源会自行回落，只有从未成功过的源才会升到长期停用。期间首页结果区会显示停用提示，设置 → 源管理 → 点播源中该源显示琥珀色「已停用」徽章（长期停用为红色）并可一键「恢复」。健康源显示绿色「上次搜索 Xms」徽章。详见 <a href="Data-Sources.html#源可用性测试与自动停用">Data-Sources · 源可用性测试与自动停用</a>。</li>
 </ul>
 <h3 id="直播源">直播源</h3>
 <ul>
@@ -233,12 +235,14 @@
 </ul>
 <h3 id="数据源订阅">数据源订阅</h3>
 <ul>
-<li>入口：设置 → 订阅与配置 → 数据源订阅；保存订阅地址、名称、上次同步时间；</li>
-<li>一份订阅可同时下发点播源与直播源，格式与行为见 <a href="Data-Sources.html#数据源订阅--分享">Data-Sources · 数据源订阅</a>；</li>
+<li>入口：设置 → 源管理 → 数据源订阅；保存订阅地址、名称、上次同步时间；</li>
+<li>一份订阅可同时下发点播源与直播源，订阅地址兼容 LibreTV-SourceList JSON 与 TVBOX 配置，格式与行为见 <a href="Data-Sources.html#数据源订阅--分享">Data-Sources · 数据源订阅</a>；</li>
+<li><strong>整体启用 / 停用</strong>：每条订阅的开关可临时停用它，其源不再参与搜索；<strong>不改各源勾选状态、不删数据</strong>，重新打开即完全恢复（无损可逆）；</li>
 <li>同步为手动操作（订阅条目 <strong>⟳</strong>），远端列表更新后需手动刷新；部署者可通过 <code>DEFAULT_SUBSCRIPTIONS</code> 预置订阅，首次访问自动导入、超 24h 静默刷新，见上文 <a href="#预置数据源订阅default_subscriptions">预置数据源订阅</a>；</li>
+<li><strong>分享</strong>：「导出数据源」导出全量 JSON 文件供自行托管；「发布为链接」把<strong>仅已勾选启用</strong>的源发布到公开粘贴板并直接返回订阅 URL（注意事项见 <a href="Data-Sources.html#分享导出--发布链接">Data-Sources · 分享</a>）；</li>
 <li>删除订阅会移除其导入的两类源（含启用状态与最近观看），但<strong>保留已收藏的频道</strong>。</li>
 </ul>
-<h3 id="播放与过滤设置-播放设置">播放与过滤（设置 → 播放设置）</h3>
+<h3 id="播放与过滤设置-偏好设置-播放与过滤">播放与过滤（设置 → 偏好设置 → 播放与过滤）</h3>
 <table>
 <thead>
 <tr>
@@ -258,7 +262,7 @@
 <td>单集结束自动播放下一集</td>
 </tr>
 </tbody></table>
-<h3 id="首页与内容过滤设置-订阅与配置">首页与内容过滤（设置 → 订阅与配置）</h3>
+<h3 id="首页与内容过滤设置-偏好设置-首页与内容">首页与内容过滤（设置 → 偏好设置 → 首页与内容）</h3>
 <table>
 <thead>
 <tr>
@@ -283,7 +287,14 @@
 <td>豆瓣 / Bangumi / 影视榜单三选一，详见 <a href="Recommendations.html">Recommendations</a></td>
 </tr>
 </tbody></table>
-<h3 id="封面图加载方式设置-播放设置">封面图加载方式（设置 → 播放设置）</h3>
+<h3 id="搜索历史">搜索历史</h3>
+<ul>
+<li><strong>交互</strong>：首页搜索框<strong>聚焦即展开下拉</strong>列出最近 10 条关键词（顶栏搜索框同样支持，两处共用同一套交互）；输入时按关键字实时过滤历史，<code>↑</code> <code>↓</code> 选择、<code>Enter</code> 采用、<code>Esc</code> 或点击外部收起；</li>
+<li><strong>管理</strong>：每条可单独删除（✕），也可一键「清空」——清空后 6 秒内可「撤销」恢复；</li>
+<li><strong>存储</strong>：本机 IndexedDB 的 <code>searchHistory</code> 表（主键为关键词，上限 10 条，按时间倒序），随「导出配置」一并迁移；</li>
+<li>早期版本把「最近搜索」常驻在搜索框下方，现已改为下拉：不占首屏，也消除了首次搜索后该行出现导致的布局跳动。</li>
+</ul>
+<h3 id="封面图加载方式设置-偏好设置-封面图加载">封面图加载方式（设置 → 偏好设置 → 封面图加载）</h3>
 <table>
 <thead>
 <tr>
@@ -365,9 +376,10 @@
             <li class="toc-h3"><a href="#点播源">点播源</a></li>
             <li class="toc-h3"><a href="#直播源">直播源</a></li>
             <li class="toc-h3"><a href="#数据源订阅">数据源订阅</a></li>
-            <li class="toc-h3"><a href="#播放与过滤设置-播放设置">播放与过滤（设置 → 播放设置）</a></li>
-            <li class="toc-h3"><a href="#首页与内容过滤设置-订阅与配置">首页与内容过滤（设置 → 订阅与配置）</a></li>
-            <li class="toc-h3"><a href="#封面图加载方式设置-播放设置">封面图加载方式（设置 → 播放设置）</a></li>
+            <li class="toc-h3"><a href="#播放与过滤设置-偏好设置-播放与过滤">播放与过滤（设置 → 偏好设置 → 播放与过滤）</a></li>
+            <li class="toc-h3"><a href="#首页与内容过滤设置-偏好设置-首页与内容">首页与内容过滤（设置 → 偏好设置 → 首页与内容）</a></li>
+            <li class="toc-h3"><a href="#搜索历史">搜索历史</a></li>
+            <li class="toc-h3"><a href="#封面图加载方式设置-偏好设置-封面图加载">封面图加载方式（设置 → 偏好设置 → 封面图加载）</a></li>
             <li class="toc-h3"><a href="#主题">主题</a></li>
             <li class="toc-h3"><a href="#配置导入导出">配置导入导出</a></li>
             <li class="toc-h2"><a href="#存储结构indexeddb-libretv">存储结构（IndexedDB libretv）</a></li>

@@ -111,11 +111,11 @@
 </tr>
 <tr>
 <td><a href="Configuration.html">Configuration</a></td>
-<td>环境变量详解、主题系统、点播源/直播源管理、数据源订阅、配置导入导出</td>
+<td>环境变量详解、主题系统、点播源/直播源管理、数据源订阅、搜索历史、配置导入导出</td>
 </tr>
 <tr>
 <td><a href="Data-Sources.html">Data-Sources</a></td>
-<td>点播源（Apple CMS）接入说明、自定义 API 格式、数据源订阅与分享（一份 JSON 同时下发点播源与直播源）</td>
+<td>点播源（Apple CMS）接入说明、自定义 API 格式、健康度与分级停用、数据源订阅与分享（导出文件 / 一键发布链接）</td>
 </tr>
 <tr>
 <td><a href="Live-IPTV.html">Live-IPTV</a></td>
@@ -150,14 +150,15 @@ PASSWORD=dev-password npm run dev   # http://localhost:8080
 <h2 id="核心特性">核心特性</h2>
 <ul>
 <li><strong>聚合搜索</strong>：多采集站服务端并行搜索，流式逐源呈现（健康源结果即时渲染，不等坏源超时），单源失败不影响整体，用户 IP 不暴露给第三方</li>
-<li><strong>异常源自动治理</strong>：按源记录搜索健康度，连续失败/超时的源自动停用 30 分钟并可在设置中一键恢复</li>
+<li><strong>异常源自动治理</strong>：按源记录搜索健康度，连续失败/超时的源逐级停用（30 分钟 → 24 小时 → 长期），每成功一次降一级，设置中可一键恢复</li>
 <li><strong>跨源同名聚合</strong>：同名影片合并为一张卡片，展开即可比较和选择各来源</li>
+<li><strong>搜索历史下拉</strong>：搜索框聚焦即展开最近关键词，输入时实时过滤、支持键盘选择与逐条删除，不占首屏</li>
 <li><strong>HLS 播放</strong>：ArtPlayer + hls.js，广告分片过滤、自动连播、倍速、快捷键、移动端长按 3 倍速</li>
 <li><strong>直播 / IPTV</strong>：M3U 订阅解析，<code>/live</code> 页面按分组浏览、搜索频道并站内播放（HLS + HTTP-FLV），支持 XMLTV 节目单（EPG）与分片级批量测活</li>
 <li><strong>智能回退</strong>：视频直连失败（CORS / 防盗链）时自动改走内置代理重试</li>
 <li><strong>进度同步</strong>：播放进度与观看历史存于本机 IndexedDB，精确到秒的续播</li>
 <li><strong>换源测速</strong>：跨源搜索同名资源并测速排序，一键切换保留集数位置</li>
-<li><strong>源测试与订阅</strong>：一键探活点播源与直播源；一份订阅 JSON 可同时下发点播源与直播源，可导出分享</li>
+<li><strong>源测试与订阅</strong>：单个探活与批量测活；订阅可整体启停（无损可逆）；一份订阅 JSON 可同时下发点播源与直播源，支持导出文件或一键发布为订阅链接</li>
 <li><strong>首页推荐</strong>：豆瓣 / Bangumi 新番 / 影视榜单三源可选，服务端直连 + 缓存，免 key 免配置</li>
 <li><strong>亮暗主题</strong>：跟随系统 / 手动切换，无首屏闪烁</li>
 <li><strong>PWA</strong>：可安装到桌面 / 主屏幕</li>

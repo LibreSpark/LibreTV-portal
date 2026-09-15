@@ -155,6 +155,8 @@
 │   │       ├── douban/route.ts     # 豆瓣推荐（直连 + 缓存 + 代理降级）
 │   │       ├── bangumi/calendar/   # Bangumi 每日放送（免 key）
 │   │       ├── hot-list/route.ts   # 影视榜单（60s API：豆瓣周榜 + 百度热播）
+│   │       ├── source-list/route.ts# 订阅拉取（自动识别 LibreTV 源列表 / TVBOX 配置）
+│   │       ├── publish/route.ts    # 源列表发布到公开粘贴板，返回订阅链接
 │   │       ├── proxy/[url]/route.ts# 点播流式代理（SSRF 防护 + m3u8 重写）
 │   │       └── live/               # 直播模块 API
 │   │           ├── playlist/       # M3U 订阅拉取解析（缓存 10min + format=m3u 导出）
@@ -169,6 +171,10 @@
 │       ├── live-cache.ts           # 直播大对象 TTL 缓存（EPG，独立于通用缓存）
 │       ├── env-sources.ts          # DEFAULT_SOURCES 环境变量解析
 │       ├── env-live-sources.ts     # DEFAULT_LIVE_SOURCES 环境变量解析
+│       ├── source-list.ts          # 订阅格式（LibreTV-SourceList）归一化与上限控制
+│       ├── tvbox-parser.ts         # TVBOX 配置兼容解析（sites/lives → 本站源结构）
+│       ├── subscription-sync.ts    # 订阅同步流程（拉取 → 归一化 → 写入 store 与同步状态）
+│       ├── source-list-publish.ts  # 源列表发布到公开粘贴板（多后端降级 + 超时控制）
 │       ├── m3u8.ts                 # m3u8 重写与广告过滤
 │       ├── ssrf.ts                 # 内网地址识别与 DNS 校验
 │       ├── auth.ts                 # 会话签名/校验、登录限流
@@ -206,11 +212,27 @@
 </tr>
 <tr>
 <td><code>header.tsx</code></td>
-<td>顶部导航 + 通用抽屉（Drawer）骨架</td>
+<td>顶部导航（Logo / 搜索 / 历史 / 设置入口）</td>
+</tr>
+<tr>
+<td><code>drawer.tsx</code></td>
+<td>通用右侧抽屉骨架：滚动锁、焦点圈闭、水平滑入/退出、单滚动区布局</td>
+</tr>
+<tr>
+<td><code>icon.tsx</code></td>
+<td>统一 SVG 图标集（替代散落各处的 Unicode 符号）</td>
+</tr>
+<tr>
+<td><code>confirm-dialog.tsx</code></td>
+<td>破坏性操作确认弹窗（分级确认中的「重操作」）</td>
 </tr>
 <tr>
 <td><code>search</code>（page.tsx 内联）</td>
-<td>搜索框、历史 chips、结果网格（流式逐源增量渲染 + 超时/失败源标识）、空态引导</td>
+<td>搜索框（聚焦展开历史下拉、与浮层拼成同一面板）、结果网格（流式逐源增量渲染 + 超时/失败源标识）、空态引导</td>
+</tr>
+<tr>
+<td><code>search-history.tsx</code></td>
+<td>最近搜索下拉：<code>useSearchHistory</code>（聚焦/过滤/键盘选择/外部点击收起/删除与可撤销清空）+ 浮层组件，首页与顶栏共用</td>
 </tr>
 <tr>
 <td><code>douban-section.tsx</code></td>
@@ -226,11 +248,23 @@
 </tr>
 <tr>
 <td><code>source-manager.tsx</code></td>
-<td>设置抽屉：点播源 CRUD 与健康徽章/自动停用恢复、数据源订阅（点播源 + 直播源）、首页与内容过滤、封面加载方式、配置导入导出</td>
+<td>设置抽屉：顶部两级导航（源管理：点播源 / 直播源 / 数据源订阅 · 偏好设置 · 数据：配置导入导出）；点播源面板含搜索、批量选择、批量测活与撤销删除；数据源订阅面板含整体启停开关、「导出数据源」与「发布为链接」；配置导入导出在导入前预览确认</td>
+</tr>
+<tr>
+<td><code>settings-shared.tsx</code></td>
+<td>设置面板共享件：标题/开关（<code>Switch</code>，设置项与订阅行共用）/下拉/空态/搜索框/探活徽章/健康度徽章（含「订阅已停用」提示）</td>
+</tr>
+<tr>
+<td><code>states.tsx</code></td>
+<td>状态占位组件：空态 / 加载 / 错误，统一图标与文案层级</td>
+</tr>
+<tr>
+<td><code>use-focus-trap.ts</code></td>
+<td>焦点圈闭 hook：抽屉与弹窗内的 Tab 循环与初始聚焦</td>
 </tr>
 <tr>
 <td><code>history-panel.tsx</code></td>
-<td>观看历史抽屉（Dexie liveQuery 实时刷新）</td>
+<td>观看历史抽屉（Dexie liveQuery 实时刷新；清空需确认、单条可撤销）</td>
 </tr>
 <tr>
 <td><code>player-shell.tsx</code></td>
@@ -250,7 +284,11 @@
 </tr>
 <tr>
 <td><code>live-source-manager.tsx</code></td>
-<td>设置抽屉「直播源」分区：订阅增删、探活、启用勾选、导出 .m3u</td>
+<td>设置抽屉「直播源」面板：订阅增删（删除支持撤销）、搜索/筛选、批量启用、探活、导出 .m3u</td>
+</tr>
+<tr>
+<td><code>use-source-probe.ts</code></td>
+<td>点播源批量测活 hook：受控并发、进度回传、可取消，结果写入统一健康度</td>
 </tr>
 <tr>
 <td><code>switch-source.tsx</code></td>
@@ -258,7 +296,7 @@
 </tr>
 <tr>
 <td><code>toast.tsx</code></td>
-<td>并行堆叠 Toast + 全局 Loading 遮罩</td>
+<td>并行堆叠 Toast + 全局 Loading 遮罩；支持「撤销」操作按钮与自定义时长</td>
 </tr>
 </tbody></table>
 <h2 id="数据流">数据流</h2>
@@ -276,7 +314,8 @@
 <li>每页请求 8s 超时；每个源另有总死线 <code>SEARCH_SOURCE_TIMEOUT_MS</code>（默认 10s），到点中断该源所有在途请求并标记 <code>timedOut: true</code>，坏源最多拖 10s；</li>
 <li>客户端把自定义点播源配置随请求上传（源配置仅存于用户浏览器）；</li>
 <li>单源失败进入 <code>failures</code>（带 <code>timedOut</code> 标识，前端以 ⏱ 超时 / ✗ 失败区分展示），不影响其他源结果；</li>
-<li>逐源结果同时滚动更新健康度（见 <a href="Data-Sources.html#源可用性测试与自动停用">Data-Sources · 源可用性</a>），连续失败的源自动停用；</li>
+<li>逐源结果同时滚动更新健康度（见 <a href="Data-Sources.html#源可用性测试与自动停用">Data-Sources · 源可用性</a>），连续失败的源按阶梯自动停用（30 分钟 → 24 小时 → 长期，成功一次降一级）；</li>
+<li>参与搜索的源会先剔除两类：处于自动停用期的、以及所属订阅被整体停用的（后者是无损过滤，不改动勾选状态）；</li>
 <li>React Query 以 <code>[&#39;search&#39;, wd, selectedKeys, filter]</code> 为缓存键。</li>
 </ul>
 <h3 id="播放">播放</h3>
