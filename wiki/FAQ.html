@@ -68,15 +68,16 @@
                     <nav class="wiki-nav">
                         <ul>
                             <li><a href="index.html">首页</a></li>
-                            <li><a href="Architecture.html">架构</a></li>
+                            <li><a href="FAQ.html" class="active">FAQ</a></li>
                             <li><a href="Deployment.html">部署</a></li>
                             <li><a href="Configuration.html">配置</a></li>
                             <li><a href="Data-Sources.html">数据源</a></li>
                             <li><a href="Live-IPTV.html">直播 / IPTV</a></li>
                             <li><a href="Recommendations.html">首页推荐</a></li>
                             <li><a href="Player.html">播放器</a></li>
+                            <li><a href="Architecture.html">架构</a></li>
+                            <li><a href="Development.html">开发</a></li>
                             <li><a href="Proxy-Security.html">代理与安全</a></li>
-                            <li><a href="FAQ.html" class="active">FAQ</a></li>
                             <li><a class="nav-external" href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">GitHub 仓库 ↗</a></li>
                         </ul>
                     </nav>
@@ -123,6 +124,14 @@
 <p><strong>Q: 最近搜索（搜索历史）怎么不见了？</strong>
 已从「常驻在搜索框下方」改为<strong>聚焦下拉</strong>：点一下搜索框即展开最近 10 条，输入时按关键字实时过滤，支持 <code>↑</code> <code>↓</code> 选择、逐条删除与一键清空（清空后可撤销）。这样首屏更干净，也消除了首次搜索后那一行出现导致的布局跳动。详见 <a href="Configuration.html#搜索历史">Configuration · 搜索历史</a>。</p>
 <h2 id="播放相关">播放相关</h2>
+<p><strong>Q: 视频一直&quot;正在加载&quot;？</strong>
+按顺序尝试：① 点「切换资源」换其他源；② 设置中切换封面/直连相关配置确认网络；③ 该源分片可能仅允许特定地区/Referer，代理回退通常能自动解决，若仍失败请换源。详细排查顺序见 <a href="Player.html">Player · 播放失败的排查顺序</a>。</p>
+<p><strong>Q: 出现&quot;直连失败，改用代理重试&quot;后播放正常，但快进卡顿？</strong>
+代理播放的带宽受限于服务器。属预期行为，建议优先寻找可直连的源。</p>
+<p><strong>Q: 自动跳到下一集后从头播放了？</strong>
+确认「自动连播」开关已打开（播放页操作栏或设置中）。</p>
+<p><strong>Q: 换源后集数对不上？</strong>
+换源按集数索引对齐，目标源集数少于当前集数时会回到第 1 集。</p>
 <h2 id="直播-iptv-相关">直播 / IPTV 相关</h2>
 <p><strong>Q: 直播页提示&quot;请先在设置中添加直播源&quot;？</strong>
 本项目不内置任何频道。到「设置 → 源管理 → 直播源」添加 M3U 订阅地址（如 <code>https://iptv-org.github.io/iptv/countries/cn.m3u</code>），或部署者通过 <code>DEFAULT_LIVE_SOURCES</code> 预置。</p>
@@ -138,14 +147,6 @@
 默认被 SSRF 防护拦截。自部署者可显式设置 <code>LIVE_ALLOW_PRIVATE=1</code>，该开关对「M3U 列表拉取」与「直播流代理」两个阶段同时生效。</p>
 <p><strong>Q: 想用 PotPlayer/VLC 看怎么办？</strong>
 设置 → 源管理 → 直播源 → 条目上的 <strong>⇩</strong> 按钮可把订阅导出为标准 M3U 文件，直接导入外部播放器。</p>
-<p><strong>Q: 视频一直&quot;正在加载&quot;？</strong>
-按顺序尝试：① 点「切换资源」换其他源；② 设置中切换封面/直连相关配置确认网络；③ 该源分片可能仅允许特定地区/Referer，代理回退通常能自动解决，若仍失败请换源。</p>
-<p><strong>Q: 出现&quot;直连失败，改用代理重试&quot;后播放正常，但快进卡顿？</strong>
-代理播放的带宽受限于服务器。属预期行为，建议优先寻找可直连的源。</p>
-<p><strong>Q: 自动跳到下一集后从头播放了？</strong>
-确认「自动连播」开关已打开（播放页操作栏或设置中）。</p>
-<p><strong>Q: 换源后集数对不上？</strong>
-换源按集数索引对齐，目标源集数少于当前集数时会回到第 1 集。</p>
 <h2 id="推荐相关">推荐相关</h2>
 <p><strong>Q: 首页推荐区不显示 / 加载失败？</strong>
 先确认「设置 → 偏好设置 → 首页与内容 → 首页推荐」开关已打开。加载失败按来源区分：豆瓣多为上游限流（可配置 <code>FALLBACK_CORS_PROXY</code> 降级）；影视榜单多为官方 60s 公共实例限流或被墙（可自部署后用 <code>60S_API_BASE</code> 指向），详见 <a href="Recommendations.html">Recommendations</a>。</p>
@@ -174,7 +175,8 @@ LibreTV 定位为轻量自托管工具，单密码门禁 + 本机数据即可满
 
                 </div>
                 <nav class="wiki-pager" aria-label="上一篇 / 下一篇">
-                    <a href="Proxy-Security.html"><span class="pager-label">← 上一篇</span><span class="pager-title">代理与安全</span></a>
+                    <a href="index.html"><span class="pager-label">← 上一篇</span><span class="pager-title">首页</span></a>
+                    <a class="pager-next" href="Deployment.html"><span class="pager-label">下一篇 →</span><span class="pager-title">部署</span></a>
                 </nav>
             </article>
 

@@ -68,15 +68,16 @@
                     <nav class="wiki-nav">
                         <ul>
                             <li><a href="index.html">首页</a></li>
-                            <li><a href="Architecture.html">架构</a></li>
+                            <li><a href="FAQ.html">FAQ</a></li>
                             <li><a href="Deployment.html" class="active">部署</a></li>
                             <li><a href="Configuration.html">配置</a></li>
                             <li><a href="Data-Sources.html">数据源</a></li>
                             <li><a href="Live-IPTV.html">直播 / IPTV</a></li>
                             <li><a href="Recommendations.html">首页推荐</a></li>
                             <li><a href="Player.html">播放器</a></li>
+                            <li><a href="Architecture.html">架构</a></li>
+                            <li><a href="Development.html">开发</a></li>
                             <li><a href="Proxy-Security.html">代理与安全</a></li>
-                            <li><a href="FAQ.html">FAQ</a></li>
                             <li><a class="nav-external" href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">GitHub 仓库 ↗</a></li>
                         </ul>
                     </nav>
@@ -148,6 +149,9 @@ docker compose pull &amp;&amp; docker compose up -d     # 拉取 ghcr.io/libresp
 <p>仓库含 <code>.dockerignore</code>，<code>node_modules</code>/<code>.next</code>/文档/日志不会进入构建上下文，
 <code>COPY . .</code> 不会把本地依赖或构建产物带进镜像，也不会因 <code>.git</code> 而使 context 膨胀。</p>
 <h3 id="docker-composeyml">docker-compose.yml</h3>
+<blockquote>
+<p>以下为快照，以仓库内 <a href="https://github.com/LibreSpark/LibreTV/blob/main/docker-compose.yml" target="_blank" rel="noopener noreferrer"><code>docker-compose.yml</code></a> 为准（含完整注释）。</p>
+</blockquote>
 <pre><code class="language-yaml">services:
   libretv:
     build: .
@@ -162,6 +166,8 @@ docker compose pull &amp;&amp; docker compose up -d     # 拉取 ghcr.io/libresp
       - PASSWORD=${PASSWORD:?请在 .env 中设置 PASSWORD}
       # 可选：会话/代理签名密钥（多实例部署建议显式设置：openssl rand -hex 32）
       # - PROXY_SECRET=your-secret
+      # 可选：Cookie Secure 策略覆盖（不设置时按请求协议自动推导）
+      # - COOKIE_SECURE=true
       # 可选：预置采集站（JSON 数组），用户端自动出现且默认勾选
       # - DEFAULT_SOURCES=[{&quot;name&quot;:&quot;示例源&quot;,&quot;url&quot;:&quot;https://example.com/api.php/provide/vod&quot;}]
       # 可选：预置直播源（M3U 订阅，JSON 数组），epg 为可选节目单地址
@@ -175,11 +181,12 @@ docker compose pull &amp;&amp; docker compose up -d     # 拉取 ghcr.io/libresp
       # - MAX_RETRIES=1
       # 可选：每个搜索源最多抓取的页数（1-50，默认 5），调大会显著增加上游请求量
       # - SEARCH_MAX_PAGES=5
+      # 可选：单个搜索源的总死线（毫秒，3s-60s，默认 10000），到点中断该源并标记超时
+      # - SEARCH_SOURCE_TIMEOUT_MS=10000
       # 可选：代理请求 UA（豆瓣防盗链等场景）
       # - USER_AGENT=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/122.0.0.0 Safari/537.36
       # 可选：影视榜单推荐源（60s API）实例地址，官方公共实例有限流
-      # - 60S_API_BASE=https://60s.viki.moe
-      # - DEBUG=false
+      # - 60S_API_BASE=https://60s.crystelf.top
 </code></pre>
 <p>配套的 <code>.env</code>（与 compose 同级）。<code>${PASSWORD:?...}</code> 在缺少该文件时会在启动时直接报错提醒：</p>
 <pre><code class="language-bash">PASSWORD=your-strong-password
@@ -237,16 +244,12 @@ curl -i &quot;http://localhost:8080/api/proxy/http%3A%2F%2F127.0.0.1%3A8080%2F&q
 <li>旧版 localStorage 各零散 key 不会被读取，仅识别标准导出 JSON；</li>
 <li>旧版的 <code>PASSWORD</code> 环境变量直接沿用（明文比对改为服务端恒定时间比较，用户无感知）。</li>
 </ul>
-<h2 id="开发">开发</h2>
-<pre><code class="language-bash">npm install
-PASSWORD=dev-password npm run dev    # http://localhost:8080
-npm run typecheck                    # TypeScript 检查
-npm test                             # 单元测试（cms-parser / m3u8 / ssrf）
-</code></pre>
+<h2 id="本地开发">本地开发</h2>
+<p>见 <a href="Development.html">Development</a>（开发环境、测试、发布流程与文档结构说明）。</p>
 
                 </div>
                 <nav class="wiki-pager" aria-label="上一篇 / 下一篇">
-                    <a href="Architecture.html"><span class="pager-label">← 上一篇</span><span class="pager-title">架构</span></a>
+                    <a href="FAQ.html"><span class="pager-label">← 上一篇</span><span class="pager-title">FAQ</span></a>
                     <a class="pager-next" href="Configuration.html"><span class="pager-label">下一篇 →</span><span class="pager-title">配置</span></a>
                 </nav>
             </article>
@@ -269,7 +272,7 @@ npm test                             # 单元测试（cms-parser / m3u8 / ssrf�
             <li class="toc-h2"><a href="#健康检查与验证">健康检查与验证</a></li>
             <li class="toc-h2"><a href="#升级">升级</a></li>
             <li class="toc-h2"><a href="#从旧版迁移">从旧版迁移</a></li>
-            <li class="toc-h2"><a href="#开发">开发</a></li>
+            <li class="toc-h2"><a href="#本地开发">本地开发</a></li>
             </ul>
             </aside>
         </div>

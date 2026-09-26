@@ -68,15 +68,16 @@
                     <nav class="wiki-nav">
                         <ul>
                             <li><a href="index.html">首页</a></li>
-                            <li><a href="Architecture.html" class="active">架构</a></li>
+                            <li><a href="FAQ.html">FAQ</a></li>
                             <li><a href="Deployment.html">部署</a></li>
                             <li><a href="Configuration.html">配置</a></li>
                             <li><a href="Data-Sources.html">数据源</a></li>
                             <li><a href="Live-IPTV.html">直播 / IPTV</a></li>
                             <li><a href="Recommendations.html">首页推荐</a></li>
                             <li><a href="Player.html">播放器</a></li>
+                            <li><a href="Architecture.html" class="active">架构</a></li>
+                            <li><a href="Development.html">开发</a></li>
                             <li><a href="Proxy-Security.html">代理与安全</a></li>
-                            <li><a href="FAQ.html">FAQ</a></li>
                             <li><a class="nav-external" href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">GitHub 仓库 ↗</a></li>
                         </ul>
                     </nav>
@@ -189,9 +190,8 @@
 │       ├── store.ts                # Zustand 全局设置（含直播订阅/收藏/最近、点播源健康度与自动停用）
 │       ├── client-api.ts           # 客户端 API 封装（401 → 全局登录框）
 │       └── utils.ts                # 时间格式化、图片代理 URL、sha256 等
-├── docs/                           # 本 Wiki
 ├── Dockerfile / docker-compose.yml
-└── README.md
+└── README.md                       # 精简版说明，细节指向本 Wiki（独立仓库 libretv-wiki）
 </code></pre>
 <h2 id="组件一览">组件一览</h2>
 <table>
@@ -399,8 +399,8 @@
 
                 </div>
                 <nav class="wiki-pager" aria-label="上一篇 / 下一篇">
-                    <a href="index.html"><span class="pager-label">← 上一篇</span><span class="pager-title">首页</span></a>
-                    <a class="pager-next" href="Deployment.html"><span class="pager-label">下一篇 →</span><span class="pager-title">部署</span></a>
+                    <a href="Player.html"><span class="pager-label">← 上一篇</span><span class="pager-title">播放器</span></a>
+                    <a class="pager-next" href="Development.html"><span class="pager-label">下一篇 →</span><span class="pager-title">开发</span></a>
                 </nav>
             </article>
 

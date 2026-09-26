@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>开发 - LibreTV 文档</title>
+    <meta name="description" content="面向参与本项目的开发者：环境搭建、测试、发布流程与文档结构。 要求 Node.js ≥ 20（推荐 22）： PASSWORD 本地必填（登录与会话签名依赖它）； 开发模式不启用 output: 'standalone'（仅 Docker 构建使用，见 Deployment）。 | 命令 | 说明 ">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="author" content="LibreTV Team">
+    <link rel="canonical" href="https://libretv.is-an.org/wiki/Development.html">
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://libretv.is-an.org/wiki/Development.html">
+    <meta property="og:title" content="开发 - LibreTV 文档">
+    <meta property="og:description" content="面向参与本项目的开发者：环境搭建、测试、发布流程与文档结构。 要求 Node.js ≥ 20（推荐 22）： PASSWORD 本地必填（登录与会话签名依赖它）； 开发模式不启用 output: 'standalone'（仅 Docker 构建使用，见 Deployment）。 | 命令 | 说明 ">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="开发 - LibreTV 文档">
+    <meta name="twitter:description" content="面向参与本项目的开发者：环境搭建、测试、发布流程与文档结构。 要求 Node.js ≥ 20（推荐 22）： PASSWORD 本地必填（登录与会话签名依赖它）； 开发模式不启用 output: 'standalone'（仅 Docker 构建使用，见 Deployment）。 | 命令 | 说明 ">
+
+    <!-- Favicon：与首页 / 主应用图标同一素材（logo-black.png）导出的多尺寸，
+         48 的整数倍 + 站点根目录 favicon.ico 兜底，避免被抓取端缩放后显示不全 -->
+    <link rel="icon" href="../favicon.ico" sizes="48x48">
+    <link rel="icon" type="image/png" sizes="96x96" href="../assets/icon-96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../assets/icon-192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+
+    <link rel="stylesheet" href="../styles/wiki.css">
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+<body class="wiki-page">
+    <a class="skip-link" href="#wiki-main">跳到主要内容</a>
+
+    
+
+    <!-- Navigation -->
+    <nav class="navbar" aria-label="文档导航">
+        <div class="nav-container">
+            <a class="nav-logo" href="../index.html" aria-label="返回 LibreTV 首页">
+                <img src="../assets/logo-black.png" alt="LibreTV Logo" class="logo-img">
+                <span class="logo-text">LibreTV</span>
+            </a>
+            <div class="nav-menu" id="nav-menu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="index.html" class="nav-link active">文档</a>
+                <a href="https://github.com/LibreSpark/LibreTV" class="nav-link github-link" target="_blank" rel="noopener noreferrer">
+                    <svg class="github-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M12 0C5.374 0 0 5.373 0 12 0 17.302 3.438 21.8 8.207 23.387c.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    <span>GitHub</span>
+                </a>
+            </div>
+            <button class="nav-toggle" id="nav-toggle" aria-label="切换菜单" aria-expanded="false" aria-controls="nav-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+    </nav>
+
+    <main id="wiki-main" class="wiki-main">
+        <div class="wiki-container">
+            <!-- Sidebar -->
+            <aside class="wiki-sidebar" id="wiki-sidebar" aria-label="文档目录">
+                <div class="wiki-sidebar-close"><button type="button" id="sidebarClose" aria-label="关闭文档目录">✕</button></div>
+                <div class="wiki-sidebar-inner">
+                    <div class="wiki-sidebar-title">📖 文档</div>
+                    <nav class="wiki-nav">
+                        <ul>
+                            <li><a href="index.html">首页</a></li>
+                            <li><a href="FAQ.html">FAQ</a></li>
+                            <li><a href="Deployment.html">部署</a></li>
+                            <li><a href="Configuration.html">配置</a></li>
+                            <li><a href="Data-Sources.html">数据源</a></li>
+                            <li><a href="Live-IPTV.html">直播 / IPTV</a></li>
+                            <li><a href="Recommendations.html">首页推荐</a></li>
+                            <li><a href="Player.html">播放器</a></li>
+                            <li><a href="Architecture.html">架构</a></li>
+                            <li><a href="Development.html" class="active">开发</a></li>
+                            <li><a href="Proxy-Security.html">代理与安全</a></li>
+                            <li><a class="nav-external" href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">GitHub 仓库 ↗</a></li>
+                        </ul>
+                    </nav>
+                    <div class="wiki-sidebar-meta">
+                        <a href="https://github.com/LibreSpark/LibreTV/wiki/Development" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页 ↗</a>
+                    </div>
+                </div>
+            </aside>
+            <div class="wiki-sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
+            <button class="wiki-sidebar-toggle" id="sidebarToggle" type="button" aria-controls="wiki-sidebar" aria-expanded="false">☰ 文档目录</button>
+
+            <!-- Content -->
+            <article class="wiki-content">
+                <div class="wiki-breadcrumb">
+                    <a href="index.html">文档</a><span aria-hidden="true">/</span><span>开发</span>
+                </div>
+                <h1 class="wiki-title gradient-text">开发</h1>
+                <div class="wiki-body markdown-body">
+<p>面向参与本项目的开发者：环境搭建、测试、发布流程与文档结构。</p>
+<h2 id="本地开发环境">本地开发环境</h2>
+<p>要求 Node.js ≥ 20（推荐 22）：</p>
+<pre><code class="language-bash">npm install
+PASSWORD=dev-password npm run dev   # http://localhost:8080
+</code></pre>
+<ul>
+<li><code>PASSWORD</code> 本地必填（登录与会话签名依赖它）；</li>
+<li>开发模式不启用 <code>output: &#39;standalone&#39;</code>（仅 Docker 构建使用，见 <a href="Deployment.html">Deployment</a>）。</li>
+</ul>
+<h2 id="常用命令">常用命令</h2>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>npm run dev</code></td>
+<td>开发服务器（8080 端口）</td>
+</tr>
+<tr>
+<td><code>npm run build</code> / <code>npm start</code></td>
+<td>生产构建与启动</td>
+</tr>
+<tr>
+<td><code>npm test</code></td>
+<td>Vitest 单元测试（纯逻辑库 + 部分 Route Handler）</td>
+</tr>
+<tr>
+<td><code>npm run typecheck</code></td>
+<td>TypeScript 全量检查</td>
+</tr>
+<tr>
+<td><code>npm version patch|minor|major</code></td>
+<td>升版本并打 tag（发布流程见下）</td>
+</tr>
+</tbody></table>
+<h2 id="测试">测试</h2>
+<p>单元测试集中在 <code>src/lib</code> 与部分 <code>src/app/api</code> 路由，覆盖核心纯逻辑：</p>
+<ul>
+<li><strong>解析层</strong>：<code>cms-parser</code>（Apple CMS 列表/详情/详情页爬取、成人内容过滤）、<code>m3u-parser</code> / <code>xmltv</code>（直播与节目单）、<code>source-list</code> / <code>tvbox-parser</code>（订阅格式与 TVBOX 兼容）、<code>env-sources</code> / <code>env-live-sources</code>（预置变量）；</li>
+<li><strong>安全层</strong>：<code>ssrf</code>（内网/保留地址识别、DNS 校验）、<code>auth</code>（会话签名、过期、限流）；</li>
+<li><strong>状态层</strong>：<code>store</code>（订阅同步、健康度自动停用、直播多归属共享）；</li>
+<li><strong>接口层</strong>：聚合搜索（跨源去重、置顶、流式）、直播测活等 Route Handler。</li>
+</ul>
+<p>约定：业务逻辑尽量下沉到 <code>src/lib</code> 纯函数（不依赖 DOM/网络），Route Handler 只做编排——这是可测试性的前提。新增解析或安全逻辑请同步补测试。</p>
+<h2 id="发布新版本">发布新版本</h2>
+<p>版本号以 <code>package.json</code> 为单一事实来源，镜像由 GitHub Actions 在 <code>v*</code> tag 上自动构建（双架构、GHCR + Docker Hub），详见 <a href="Deployment.html#镜像分发与版本管理">Deployment · 镜像分发与版本管理</a>：</p>
+<pre><code class="language-bash">npm version patch       # 或 minor / major；更新 package.json 并打 git tag
+git push &amp;&amp; git push --tags
+</code></pre>
+<blockquote>
+<p>CI 会校验 tag 与 <code>package.json</code> 版本一致，不一致直接失败。</p>
+</blockquote>
+<h2 id="文档本-wiki">文档（本 Wiki）</h2>
+<p>Wiki 独立成仓（<code>libretv-wiki</code>），与代码仓库同步演进；README 保持精简面向使用者，细节下沉到 Wiki。各页职责边界：</p>
+<table>
+<thead>
+<tr>
+<th>页面</th>
+<th>职责</th>
+<th>不写什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="index.html">Home</a></td>
+<td>导航枢纽、快速开始</td>
+<td>不重复功能细节</td>
+</tr>
+<tr>
+<td><a href="Deployment.html">Deployment</a></td>
+<td>部署、镜像与版本、升级迁移</td>
+<td>不解释环境变量语义（链到 Configuration）</td>
+</tr>
+<tr>
+<td><a href="Configuration.html">Configuration</a></td>
+<td>环境变量权威表、用户级运行时设置</td>
+<td>不重复功能页的行为细节</td>
+</tr>
+<tr>
+<td><a href="Data-Sources.html">Data-Sources</a></td>
+<td>点播源/订阅/分享/健康度的<strong>权威</strong>说明</td>
+<td>直播细节归 Live-IPTV</td>
+</tr>
+<tr>
+<td><a href="Live-IPTV.html">Live-IPTV</a></td>
+<td>直播模块权威说明</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="Recommendations.html">Recommendations</a> / <a href="Player.html">Player</a></td>
+<td>对应功能域权威说明</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="Proxy-Security.html">Proxy-Security</a></td>
+<td>鉴权/SSRF/代理设计</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="FAQ.html">FAQ</a></td>
+<td>问题排查，短答案 + 深链</td>
+<td>不长篇展开</td>
+</tr>
+<tr>
+<td><a href="Architecture.html">Architecture</a></td>
+<td>技术栈、目录、数据流、旧版对比</td>
+<td>—</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>同一机制多处提及时，非权威页只写一句概述 + 链接（如健康度自动停用以 Data-Sources 为权威），避免多处描述漂移。</p>
+</blockquote>
+<h2 id="目录结构与数据流">目录结构与数据流</h2>
+<p>见 <a href="Architecture.html">Architecture</a>。</p>
+
+                </div>
+                <nav class="wiki-pager" aria-label="上一篇 / 下一篇">
+                    <a href="Architecture.html"><span class="pager-label">← 上一篇</span><span class="pager-title">架构</span></a>
+                    <a class="pager-next" href="Proxy-Security.html"><span class="pager-label">下一篇 →</span><span class="pager-title">代理与安全</span></a>
+                </nav>
+            </article>
+
+            <!-- Page TOC -->
+            <aside class="wiki-toc" aria-label="本页目录">
+                <div class="wiki-toc-title">本页目录</div>
+                <ul>
+            <li class="toc-h2"><a href="#本地开发环境">本地开发环境</a></li>
+            <li class="toc-h2"><a href="#常用命令">常用命令</a></li>
+            <li class="toc-h2"><a href="#测试">测试</a></li>
+            <li class="toc-h2"><a href="#发布新版本">发布新版本</a></li>
+            <li class="toc-h2"><a href="#文档本-wiki">文档（本 Wiki）</a></li>
+            <li class="toc-h2"><a href="#目录结构与数据流">目录结构与数据流</a></li>
+            </ul>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="wiki-footer">
+        <div class="wiki-container" style="display:block;">
+            <div>
+                <a href="../index.html">LibreTV 门户首页</a> ·
+                <a href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">GitHub 仓库</a> ·
+                <a href="https://github.com/LibreSpark/LibreTV/wiki" target="_blank" rel="noopener noreferrer">Wiki 源</a>
+            </div>
+            <div class="footer-copyright">&copy; <span id="currentYear"></span> LibreTV · 基于 AGPL-3.0 许可证开源 · 文档内容同步自主仓库 Wiki</div>
+        </div>
+    </footer>
+
+    <button class="back-to-top" id="backToTop" aria-label="回到顶部">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+            <path d="M18 15l-6-6-6 6"/>
+        </svg>
+    </button>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="../scripts/wiki.js" defer></script>
+</body>
+</html>
