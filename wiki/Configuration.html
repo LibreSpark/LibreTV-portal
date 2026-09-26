@@ -171,14 +171,20 @@
 <tr>
 <td><code>60S_API_BASE</code></td>
 <td>否</td>
-<td><code>https://60s.viki.moe</code></td>
+<td><code>https://60s.crystelf.top</code></td>
 <td>影视榜单推荐源（豆瓣周榜/百度热播）使用的 <a href="https://github.com/vikiboss/60s" target="_blank" rel="noopener noreferrer">60s API</a> 实例地址。服务端每类榜单缓存 1 小时，官方公共实例限流下通常够用；高频使用可用 <code>docker run -d -p 4399:4399 vikiboss/60s:latest</code> 自部署后指向它</td>
 </tr>
 <tr>
-<td><code>DEBUG</code></td>
+<td><code>FALLBACK_CORS_PROXY</code></td>
 <td>否</td>
-<td><code>false</code></td>
-<td>调试日志</td>
+<td>—</td>
+<td>豆瓣推荐数据直连被拒时降级使用的 CORS 代理地址，见 <a href="Recommendations.html">Recommendations</a></td>
+</tr>
+<tr>
+<td><code>COOKIE_SECURE</code></td>
+<td>否</td>
+<td>按请求协议自动推导</td>
+<td>显式覆盖会话 cookie 的 <code>Secure</code> 标记（<code>true</code> / <code>false</code>）。反向代理未传递 <code>x-forwarded-proto</code> 导致 HTTPS 下「密码正确却无法登录」时设为 <code>true</code>，见 <a href="Deployment.html">Deployment</a></td>
 </tr>
 </tbody></table>
 <blockquote>
