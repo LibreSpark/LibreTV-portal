@@ -37,6 +37,12 @@
         let width, height, dpr, particles = [];
         const COUNT = isMobile ? 36 : 80;
         const COLOR = '0, 204, 255';
+        const LINK_DIST = 140;
+        const LINK_DIST_SQ = LINK_DIST * LINK_DIST;
+        // Cap at ~30fps: the link-pass is O(n²), halving the frame rate
+        // halves the cost with no visible difference at this density.
+        const FRAME_MIN = 1000 / 30;
+        let lastFrame = 0;
 
         function resize() {
             dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -57,7 +63,10 @@
             }));
         }
 
-        function step() {
+        function step(now) {
+            rafId = requestAnimationFrame(step);
+            if (now - lastFrame < FRAME_MIN) return;
+            lastFrame = now;
             ctx.clearRect(0, 0, width, height);
             for (let i = 0; i < particles.length; i++) {
                 const p = particles[i];
@@ -73,24 +82,22 @@
                 for (let j = i + 1; j < particles.length; j++) {
                     const q = particles[j];
                     const dx = p.x - q.x, dy = p.y - q.y;
-                    const dist = Math.hypot(dx, dy);
-                    if (dist < 140) {
-                        ctx.beginPath();
-                        ctx.moveTo(p.x, p.y);
-                        ctx.lineTo(q.x, q.y);
-                        ctx.strokeStyle = `rgba(${COLOR}, ${0.12 * (1 - dist / 140)})`;
-                        ctx.lineWidth = 1;
-                        ctx.stroke();
-                    }
+                    const d2 = dx * dx + dy * dy;
+                    if (d2 > LINK_DIST_SQ) continue;
+                    ctx.beginPath();
+                    ctx.moveTo(p.x, p.y);
+                    ctx.lineTo(q.x, q.y);
+                    ctx.strokeStyle = `rgba(${COLOR}, ${0.12 * (1 - Math.sqrt(d2) / LINK_DIST)})`;
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
                 }
             }
-            rafId = requestAnimationFrame(step);
         }
 
         let rafId;
         resize();
         makeParticles();
-        step();
+        rafId = requestAnimationFrame(step);
 
         window.addEventListener('resize', debounce(() => { resize(); makeParticles(); }, 250), { passive: true });
 
@@ -295,13 +302,15 @@
     async function updateStatsWithGitHubData() {
         const cacheKey = 'github_stats_cache';
         const cacheTimeKey = 'github_stats_cache_time';
-        const EXPIRE = 10 * 60 * 1000;
+        const EXPIRE = 60 * 60 * 1000;
 
         const cached = safeStorageGet(cacheKey);
         const cachedTime = safeStorageGet(cacheTimeKey);
-        if (cached && cachedTime && (Date.now() - parseInt(cachedTime, 10)) < EXPIRE) {
-            applyStats(JSON.parse(cached));
-            return;
+        // Stale-while-revalidate: paint cached numbers immediately, then
+        // refresh in the background when they are older than EXPIRE.
+        if (cached && cachedTime) {
+            try { applyStats(JSON.parse(cached)); } catch (e) { /* corrupt cache: refetch */ }
+            if (Date.now() - parseInt(cachedTime, 10) < EXPIRE) return;
         }
 
         const controller = new AbortController();
@@ -367,6 +376,12 @@
     function setStat(id, value) {
         $$('[data-stat="' + id + '"]').forEach(el => {
             el.dataset.target = value;
+            // Already animated (stale-while-revalidate repaint): write the
+            // fresh number directly instead of replaying the count-up.
+            if (counted.has(el)) {
+                el.textContent = formatNum(value);
+                return;
+            }
             // Render immediately only if already in view; otherwise the
             // IntersectionObserver from initCounters renders on scroll.
             const rect = el.getBoundingClientRect();
@@ -380,7 +395,7 @@
     function initCopy() {
         $$('.copy-btn').forEach(btn => {
             btn.addEventListener('click', async () => {
-                const block = btn.closest('.code-block');
+                const block = btn.closest('.code-wrap');
                 const code = block ? block.querySelector('code') : null;
                 if (!code) return;
                 const text = code.textContent;
