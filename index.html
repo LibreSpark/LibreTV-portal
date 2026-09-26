@@ -19,6 +19,8 @@
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="LibreTV - 免费在线视频聚合搜索与观看平台">
+    <meta property="og:site_name" content="LibreTV">
+    <meta property="og:locale" content="zh_CN">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
@@ -26,6 +28,14 @@
     <meta property="twitter:title" content="LibreTV - 免费在线视频聚合搜索与观看平台">
     <meta property="twitter:description" content="免费、开源的在线视频聚合搜索与观看平台，智能广告过滤，支持苹果CMS V10 API">
     <meta property="twitter:image" content="https://libretv.is-an.org/assets/og-cover.png">
+    <meta property="twitter:image:alt" content="LibreTV - 免费在线视频聚合搜索与观看平台">
+
+    <!-- 资源提示：GitHub 统计与 Umami 统计均为运行时跨域请求 -->
+    <link rel="preconnect" href="https://api.github.com" crossorigin>
+    <link rel="dns-prefetch" href="https://umami.zwei.de.eu.org">
+
+    <!-- PWA -->
+    <link rel="manifest" href="./manifest.webmanifest">
 
     <!-- Favicon：与主应用图标同一素材（logo-black.png）导出的多尺寸，
          48 的整数倍 + 站点根目录 favicon.ico 兜底，避免被抓取端缩放后显示不全 -->
@@ -78,7 +88,7 @@
     <nav class="navbar" aria-label="主导航">
         <div class="nav-container">
             <a class="nav-logo" href="#hero" aria-label="LibreTV 首页">
-                <img src="./assets/logo-black.png" alt="LibreTV Logo" class="logo-img">
+                <img src="./assets/logo-small.png" alt="LibreTV Logo" class="logo-img" width="256" height="256">
                 <span class="logo-text">LibreTV</span>
             </a>
             <div class="nav-menu" id="nav-menu">
@@ -249,19 +259,22 @@
                             <img src="./assets/logos/docker-icon.svg" alt="Docker" class="deployment-logo" width="40" height="40">
                         </div>
                         <h3 class="deployment-title">Docker 部署</h3>
-                        <p class="deployment-description">拉取 GHCR 发布镜像，零构建启动。PASSWORD 为访问密码，必填。</p>
+                        <p class="deployment-description">拉取 GHCR 发布镜像，零构建启动。<code>PASSWORD</code> 为访问密码，必填；<code>PROXY_SECRET</code> 为会话签名密钥，多实例部署建议设置；更多可选变量见下方 Compose 示例。</p>
                         <div class="deployment-code">
-                            <pre class="code-block" tabindex="0"><code>docker run -d \
+                            <div class="code-wrap">
+                                <pre class="code-block" tabindex="0"><code>docker run -d \
   --name libretv \
   --restart unless-stopped \
   -p 8899:8080 \
   -e PASSWORD=your_password \
-  ghcr.io/librespark/libretv:latest</code><button class="copy-btn" type="button" title="复制代码" aria-label="复制代码">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                    <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path>
-                                </svg>
-                            </button></pre>
+  -e PROXY_SECRET=your_secret \
+  ghcr.io/librespark/libretv:latest</code></pre><button class="copy-btn" type="button" title="复制代码" aria-label="复制代码">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div class="deployment-card deployment-card-wide reveal" style="--d:400ms">
@@ -269,9 +282,10 @@
                             <img src="./assets/logos/docker-icon.svg" alt="Docker Compose" class="deployment-logo" width="40" height="40">
                         </div>
                         <h3 class="deployment-title">Docker Compose 部署</h3>
-                        <p class="deployment-description">设置 .env 中的 PASSWORD 后一键启动。</p>
+                        <p class="deployment-description">在 .env 中设置 <code>PASSWORD</code> 后一键启动，注释掉的可选变量按需启用。</p>
                         <div class="deployment-code">
-                            <pre class="code-block" tabindex="0"><code>services:
+                            <div class="code-wrap">
+                                <pre class="code-block" tabindex="0"><code>services:
   libretv:
     image: ghcr.io/librespark/libretv:latest
     container_name: libretv
@@ -279,17 +293,26 @@
       - "8899:8080"
     environment:
       - PASSWORD=${PASSWORD:-your_password}
-    restart: unless-stopped</code><button class="copy-btn" type="button" title="复制代码" aria-label="复制代码">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                    <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path>
-                                </svg>
-                            </button></pre>
+      # - PROXY_SECRET=your-secret      # 多实例部署建议设置
+      # - DEFAULT_SOURCES=[{"name":"示例源",
+      #     "url":"https://example.com/api.php/provide/vod"}]
+      # - DEFAULT_LIVE_SOURCES=[{"name":"直播源",
+      #     "url":"https://example.com/list.m3u"}]
+      # - SEARCH_MAX_PAGES=5            # 每源最多抓取页数
+      # - REQUEST_TIMEOUT=8000          # 代理上游超时（毫秒）
+      # - COOKIE_SECURE=true            # HTTPS 反代登录异常时开启
+    restart: unless-stopped</code></pre><button class="copy-btn" type="button" title="复制代码" aria-label="复制代码">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <p class="deployment-note reveal" style="--d:600ms">
-                    也支持源码运行（<code>npm install &amp;&amp; npm run build &amp;&amp; npm start</code>），更多配置与部署方式参阅<a href="./wiki/Deployment.html">完整部署文档</a>。
+                    也支持源码运行（<code>npm install &amp;&amp; npm run build &amp;&amp; npm start</code>），更多部署方式参阅<a href="./wiki/Deployment.html">完整部署文档</a>；全部环境变量（<code>DEFAULT_SUBSCRIPTIONS</code>、<code>USER_AGENT</code>、<code>60S_API_BASE</code> 等）见<a href="./wiki/Configuration.html">配置文档</a>。
                 </p>
             </div>
         </section>
@@ -340,11 +363,11 @@
                             <div class="api-endpoints">
                                 <div class="api-endpoint">
                                     <span class="endpoint-type">搜索接口</span>
-                                    <code>https://example.com/api.php/provide/vod/?ac=videolist&wd=关键词</code>
+                                    <code>https://example.com/api.php/provide/vod/?ac=videolist&amp;wd=关键词</code>
                                 </div>
                                 <div class="api-endpoint">
                                     <span class="endpoint-type">详情接口</span>
-                                    <code>https://example.com/api.php/provide/vod/?ac=detail&ids=视频ID</code>
+                                    <code>https://example.com/api.php/provide/vod/?ac=detail&amp;ids=视频ID</code>
                                 </div>
                             </div>
                             <div class="api-custom">
@@ -523,7 +546,7 @@
                         <div class="about-card">
                             <div class="card-header">
                                 <div class="card-avatar">
-                                    <img src="./assets/logo-black.png" alt="LibreTV">
+                                    <img src="./assets/logo-small.png" alt="LibreTV" width="256" height="256" loading="lazy" decoding="async">
                                 </div>
                                 <div class="card-info">
                                     <h3>LibreTV Project</h3>
@@ -551,7 +574,7 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <div class="footer-logo">
-                        <img src="./assets/logo-black.png" alt="LibreTV Logo" class="footer-logo-img">
+                        <img src="./assets/logo-small.png" alt="LibreTV Logo" class="footer-logo-img" width="256" height="256" loading="lazy" decoding="async">
                         <span class="footer-logo-text">LibreTV</span>
                     </div>
                     <p class="footer-description">

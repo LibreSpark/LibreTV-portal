@@ -1,12 +1,13 @@
 // LibreTV Portal Service Worker - network-first for HTML, stale-while-revalidate for assets
-const CACHE_NAME = 'libretv-portal-v3';
+const CACHE_NAME = 'libretv-portal-v6';
 const PRECACHE = [
     './',
     './index.html',
+    './manifest.webmanifest',
     './styles/main.css',
     './scripts/main.js',
-    './assets/logo.png',
-    './assets/logo-black.png'
+    './assets/logo-small.png',
+    './assets/nomedia.png'
 ];
 
 self.addEventListener('install', (event) => {

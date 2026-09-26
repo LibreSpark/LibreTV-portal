@@ -487,6 +487,19 @@ section {
     margin: 0 auto;
 }
 
+.section-subtitle a {
+    color: var(--primary-color);
+    text-decoration: none;
+    border-bottom: 1px dashed rgba(0, 204, 255, 0.4);
+    padding-bottom: 1px;
+    transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.section-subtitle a:hover {
+    color: var(--primary-light);
+    border-bottom-color: var(--primary-light);
+}
+
 /* Features Section */
 .features {
     background: transparent;
@@ -1930,7 +1943,13 @@ section {
     transform: translateX(-50%) translateY(0);
 }
 
-/* Code blocks: real <pre> with copy button */
+/* Code blocks: real <pre> with copy button.
+   The button lives in .code-wrap (non-scrolling) so it stays pinned
+   to the visible top-right corner even when the <pre> scrolls. */
+.code-wrap {
+    position: relative;
+}
+
 .code-block {
     position: relative;
     display: block;
@@ -1960,6 +1979,24 @@ section {
         font-size: 0.72rem;
         padding: 1rem 2.5rem 1rem 1rem;
     }
+}
+
+/* ----------------------------------------------------------------
+   Section glow overlays: fade out at their top/bottom edges so
+   adjacent sections blend smoothly — removes the faint seam line
+   where one section's gradient tint stops abruptly at the boundary
+   ---------------------------------------------------------------- */
+.hero::before,
+.features::before,
+.features::after,
+.deployment::before,
+.tech-api::before,
+.stats::before,
+.stats::after,
+.disclaimer::before,
+.about::before {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 48px, #000 calc(100% - 48px), transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 48px, #000 calc(100% - 48px), transparent 100%);
 }
 
 /* ----------------------------------------------------------------
