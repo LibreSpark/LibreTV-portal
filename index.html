@@ -15,19 +15,24 @@
     <meta property="og:url" content="https://libretv.is-an.org/">
     <meta property="og:title" content="LibreTV - 免费在线视频聚合搜索与观看平台">
     <meta property="og:description" content="免费、开源的在线视频聚合搜索与观看平台，智能广告过滤，支持苹果CMS V10 API">
-    <meta property="og:image" content="https://libretv.is-an.org/assets/logo-black.png">
-    <meta property="og:image:alt" content="LibreTV Logo">
+    <meta property="og:image" content="https://libretv.is-an.org/assets/og-cover.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="LibreTV - 免费在线视频聚合搜索与观看平台">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://libretv.is-an.org/">
     <meta property="twitter:title" content="LibreTV - 免费在线视频聚合搜索与观看平台">
     <meta property="twitter:description" content="免费、开源的在线视频聚合搜索与观看平台，智能广告过滤，支持苹果CMS V10 API">
-    <meta property="twitter:image" content="https://libretv.is-an.org/assets/logo-black.png">
+    <meta property="twitter:image" content="https://libretv.is-an.org/assets/og-cover.png">
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="./assets/logo-black.png">
-    <link rel="apple-touch-icon" href="./assets/logo-black.png">
+    <!-- Favicon：与主应用图标同一素材（logo-black.png）导出的多尺寸，
+         48 的整数倍 + 站点根目录 favicon.ico 兜底，避免被抓取端缩放后显示不全 -->
+    <link rel="icon" href="./favicon.ico" sizes="48x48">
+    <link rel="icon" type="image/png" sizes="96x96" href="./assets/icon-96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="./assets/icon-192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png">
 
     <!-- Styles -->
     <link rel="stylesheet" href="./styles/main.css">
@@ -40,7 +45,13 @@
       "name": "LibreTV",
       "url": "https://libretv.is-an.org/",
       "description": "免费、开源的在线视频聚合搜索与观看平台，智能广告过滤，支持苹果CMS V10 API。",
-      "license": "https://www.gnu.org/licenses/agpl-3.0.html"
+      "license": "https://www.gnu.org/licenses/agpl-3.0.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "LibreTV Project",
+        "url": "https://libretv.is-an.org/",
+        "logo": "https://libretv.is-an.org/assets/icon-512.png"
+      }
     }
     </script>
 
@@ -53,6 +64,9 @@
             }
         });
     </script>
+
+    <!-- Umami 站点分析 -->
+    <script defer src="https://umami.zwei.de.eu.org/script.js" data-website-id="46271da6-b4a1-48e1-8946-eb152fc06ca0"></script>
 </head>
 <body>
     <a class="skip-link" href="#hero">跳到主要内容</a>
@@ -115,7 +129,7 @@
                             </svg>
                             <span>查看源码</span>
                         </a>
-                        <a href="https://demo-libretv.is-an.org/" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
+                        <a href="https://tv.bagiinlink.eu.org/" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
                             <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
                                 <polyline points="15 3 21 3 21 9"/>

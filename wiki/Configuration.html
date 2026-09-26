@@ -18,9 +18,12 @@
     <meta name="twitter:title" content="配置 - LibreTV 文档">
     <meta name="twitter:description" content="| 变量 | 必填 | 默认 | 说明 | | | | | | | PASSWORD | 是 | — | 访问密码。未设置时站点可用但所有功能接口返回 503，并提示管理员配置 | | PROXY SECRET | 否 | 从 PASSWORD 派生 | 会话与代理签名密钥。单实例可不设；多实例/负">
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="../assets/logo-black.png">
-    <link rel="apple-touch-icon" href="../assets/logo-black.png">
+    <!-- Favicon：与首页 / 主应用图标同一素材（logo-black.png）导出的多尺寸，
+         48 的整数倍 + 站点根目录 favicon.ico 兜底，避免被抓取端缩放后显示不全 -->
+    <link rel="icon" href="../favicon.ico" sizes="48x48">
+    <link rel="icon" type="image/png" sizes="96x96" href="../assets/icon-96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../assets/icon-192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
 
     <link rel="stylesheet" href="../styles/wiki.css">
     <script>document.documentElement.classList.add('js');</script>

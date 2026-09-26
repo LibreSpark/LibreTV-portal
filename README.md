@@ -12,7 +12,7 @@ LibreTV 的官方门户网站 —— 一个美观、现代、**零外部依赖**
 - **完全可访问**：语义化标签、`<main>` 主体、`skip-link`、键盘可操作的移动端菜单（Esc / 点击外部关闭 / 焦点管理）、`:focus-visible` 焦点样式。
 - **响应式设计**：移动优先，桌面（≥993px）/ 平板（≤992px 堆叠）/ 手机（≤768px）/ 小屏（≤480px）四档断点。
 - **PWA 就绪**：Service Worker（HTML network-first、静态资源 stale-while-revalidate）支持离线访问。
-- **SEO / 社交分享**：Open Graph / Twitter Card（绝对 URL）、JSON-LD 结构化数据、`canonical`、`sitemap.xml`、`robots.txt`。
+- **SEO / 社交分享**：Open Graph / Twitter Card（1200×630 封面、绝对 URL）、JSON-LD 结构化数据（含 `Organization.logo`）、多尺寸 favicon（48 的整数倍 + 根目录 `favicon.ico` 兜底）、`canonical`、`sitemap.xml`、`robots.txt`。
 - **安全**：所有外链 `rel="noopener noreferrer"`、CSP / `X-Frame-Options` / `Referrer-Policy` 等响应头。
 
 ## 📁 项目结构
@@ -32,7 +32,11 @@ LibreTV-portal/
 ├── assets/
 │   ├── logo.png / logo-black.png
 │   ├── nomedia.png
+│   ├── icon-48/96/144/192/512.png   # favicon 各尺寸（由 logo-black.png 等比导出）
+│   ├── apple-touch-icon.png         # iOS 桌面图标（180×180，不透明）
+│   ├── og-cover.png                 # 社交分享卡（1200×630）
 │   └── logos/          # Docker 图标
+├── favicon.ico         # 站点根图标（16/32/48 多尺寸，抓取兜底）
 ├── .github/workflows/
 │   ├── static.yml      # GitHub Pages 部署
 │   └── wiki-sync.yml   # 每日同步主仓库 Wiki

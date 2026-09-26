@@ -18,9 +18,12 @@
     <meta name="twitter:title" content="FAQ - LibreTV 文档">
     <meta name="twitter:description" content="Q: 打开站点一直提示&quot;需要配置密码&quot;？ 服务器未设置 PASSWORD 环境变量。Docker 部署检查 .env；手动部署确认启动命令中带 PASSWORD=...。设置后需重启服务。 Q: 登录后刷新又要求输入密码？ 生产环境（HTTPS）下 Cookie 为 Secure，用 HTTP 访问">
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="../assets/logo-black.png">
-    <link rel="apple-touch-icon" href="../assets/logo-black.png">
+    <!-- Favicon：与首页 / 主应用图标同一素材（logo-black.png）导出的多尺寸，
+         48 的整数倍 + 站点根目录 favicon.ico 兜底，避免被抓取端缩放后显示不全 -->
+    <link rel="icon" href="../favicon.ico" sizes="48x48">
+    <link rel="icon" type="image/png" sizes="96x96" href="../assets/icon-96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../assets/icon-192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
 
     <link rel="stylesheet" href="../styles/wiki.css">
     <script>document.documentElement.classList.add('js');</script>

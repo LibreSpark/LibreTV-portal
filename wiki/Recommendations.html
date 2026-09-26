@@ -18,9 +18,12 @@
     <meta name="twitter:title" content="首页推荐 - LibreTV 文档">
     <meta name="twitter:description" content="首页在没有搜索关键词时展示推荐内容。推荐 数据源可在设置中切换 （设置 → 偏好设置 → 首页与内容 的「首页推荐」开关 + 「推荐数据源」下拉），同一时间只展示一个来源： | 来源 | 内容 | 依赖 | | | | | | 豆瓣 | 电影/剧集分类 + 标签（热门、最新、高分等），一次取 50 ">
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="../assets/logo-black.png">
-    <link rel="apple-touch-icon" href="../assets/logo-black.png">
+    <!-- Favicon：与首页 / 主应用图标同一素材（logo-black.png）导出的多尺寸，
+         48 的整数倍 + 站点根目录 favicon.ico 兜底，避免被抓取端缩放后显示不全 -->
+    <link rel="icon" href="../favicon.ico" sizes="48x48">
+    <link rel="icon" type="image/png" sizes="96x96" href="../assets/icon-96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../assets/icon-192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
 
     <link rel="stylesheet" href="../styles/wiki.css">
     <script>document.documentElement.classList.add('js');</script>
