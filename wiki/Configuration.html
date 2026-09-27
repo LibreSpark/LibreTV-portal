@@ -167,6 +167,12 @@
 <td>预置数据源订阅（LibreTV-SourceList JSON 链接），JSON 数组，见下文 <a href="#预置数据源订阅default_subscriptions">预置数据源订阅</a></td>
 </tr>
 <tr>
+<td><code>DEFAULT_RECOMMEND_SOURCE</code></td>
+<td>否</td>
+<td><code>hot-list</code></td>
+<td>首页推荐数据源的默认值（<code>douban</code> / <code>bangumi</code> / <code>hot-list</code>），见下文 <a href="#首页推荐数据源默认值default_recommend_source">首页推荐数据源默认值</a></td>
+</tr>
+<tr>
 <td><code>LIVE_ALLOW_PRIVATE</code></td>
 <td>否</td>
 <td><code>false</code></td>
@@ -226,6 +232,15 @@
 <li><strong>失败回退</strong>：拉取失败时保留上次成功导入的数据，下次启动自动重试，不影响站点运行；</li>
 <li><strong>用户删除</strong>：同步成功过的预置订阅被用户删除后，不会被自动加回；从未同步成功的则会持续重试直至成功；</li>
 <li>远端清单由部署者自行托管（gist / 私有仓库 raw 均可），更新源列表无需修改容器配置或重启。</li>
+</ul>
+<h3 id="首页推荐数据源默认值default_recommend_source">首页推荐数据源默认值（DEFAULT_RECOMMEND_SOURCE）</h3>
+<p>首页「推荐」区支持豆瓣热门、Bangumi 新番放送、影视热榜三种数据源，用户的选择保存在浏览器本地，出厂默认为影视热榜。部署者可通过该变量为所有用户指定默认项（对应 <a href="https://github.com/LibreSpark/LibreTV/issues/918" target="_blank" rel="noopener noreferrer">issue #918</a> 的场景：换浏览器、清缓存或无痕模式下不再回落到热榜）：</p>
+<pre><code class="language-bash">DEFAULT_RECOMMEND_SOURCE=douban
+</code></pre>
+<ul>
+<li>可选值：<code>douban</code>（豆瓣热门）/ <code>bangumi</code>（Bangumi 每日放送）/ <code>hot-list</code>（影视热榜）；取值非法时告警并忽略，不影响站点运行；</li>
+<li><strong>仅对未主动选择过的用户生效</strong>：用户一旦在设置中主动选择过推荐数据源（或偏好已不是出厂默认值），部署者的默认值不再覆盖——用户的选择始终优先；</li>
+<li>经 <code>/api/status</code> 下发，仅影响首页推荐区的初始展示，不影响其他功能。</li>
 </ul>
 <h2 id="运行时设置用户级">运行时设置（用户级）</h2>
 <p>以下设置保存在每个用户浏览器的 localStorage（键 <code>libretv-settings</code>），通过「设置」抽屉修改：</p>
@@ -382,6 +397,7 @@
             <li class="toc-h3"><a href="#预置采集站default_sources">预置采集站（DEFAULT_SOURCES）</a></li>
             <li class="toc-h3"><a href="#预置直播源default_live_sources">预置直播源（DEFAULT_LIVE_SOURCES）</a></li>
             <li class="toc-h3"><a href="#预置数据源订阅default_subscriptions">预置数据源订阅（DEFAULT_SUBSCRIPTIONS）</a></li>
+            <li class="toc-h3"><a href="#首页推荐数据源默认值default_recommend_source">首页推荐数据源默认值（DEFAULT_RECOMMEND_SOURCE）</a></li>
             <li class="toc-h2"><a href="#运行时设置用户级">运行时设置（用户级）</a></li>
             <li class="toc-h3"><a href="#点播源">点播源</a></li>
             <li class="toc-h3"><a href="#直播源">直播源</a></li>
