@@ -320,26 +320,32 @@
 <li>早期版本把「最近搜索」常驻在搜索框下方，现已改为下拉：不占首屏，也消除了首次搜索后该行出现导致的布局跳动。</li>
 </ul>
 <h3 id="封面图加载方式设置-偏好设置-封面图加载">封面图加载方式（设置 → 偏好设置 → 封面图加载）</h3>
+<p>每种方式是一条「加载链」，加载失败时按链自动降级，无需手动干预：</p>
 <table>
 <thead>
 <tr>
 <th>方式</th>
-<th>说明</th>
+<th>加载链</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>内置代理（默认）</td>
-<td>经 <code>/api/proxy/</code> 转发（带豆瓣 Referer 伪装），规避豆瓣防盗链与图床直连失败</td>
+<td>直连优先（默认）</td>
+<td>原站直连 → 豆瓣封面自动换公共镜像（cmliussss 腾讯/阿里 CDN，实测可绕过豆瓣防盗链）→ 回退内置代理 → 占位图。最省服务器流量</td>
 </tr>
 <tr>
-<td>直连</td>
-<td>浏览器直接加载豆瓣/采集站封面，最快；部分网络下豆瓣图会 418</td>
+<td>内置代理</td>
+<td>全部封面经 <code>/api/proxy?url=</code> 转发（带豆瓣 Referer 伪装），最稳定，消耗服务器流量</td>
 </tr>
 <tr>
 <td>自定义代理</td>
 <td>模板字符串，<code>{url}</code> 为编码后的原图地址；不含占位符则直接拼接</td>
 </tr>
 </tbody></table>
+<ul>
+<li>代理地址为查询串形式（<code>?url=</code>）：路径里的 <code>%2F</code> 会被 EdgeOne 等网关在路由前解码，查询串不受影响，全平台行为一致；旧路径形式仍兼容；</li>
+<li>封面 <code>&lt;img&gt;</code> 均带 <code>referrerPolicy=&quot;no-referrer&quot;</code>，不向图床暴露来源页；</li>
+<li>经代理转发的图片响应缓存 30 天（分片 / key 保守 1 小时）。</li>
+</ul>
 <h3 id="主题">主题</h3>
 <ul>
 <li>头部太阳/月亮/显示器图标，点击在 <strong>浅色 → 深色 → 跟随系统</strong> 间循环；</li>
