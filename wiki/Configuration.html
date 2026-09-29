@@ -173,6 +173,12 @@
 <td>首页推荐数据源的默认值（<code>douban</code> / <code>bangumi</code> / <code>hot-list</code>），见下文 <a href="#首页推荐数据源默认值default_recommend_source">首页推荐数据源默认值</a></td>
 </tr>
 <tr>
+<td><code>DEFAULT_IMAGE_MODE</code></td>
+<td>否</td>
+<td><code>direct</code></td>
+<td>封面图加载方式的默认值（<code>direct</code> / <code>proxy</code>），见下文 <a href="#封面图加载方式默认值default_image_mode">封面图加载方式默认值</a></td>
+</tr>
+<tr>
 <td><code>LIVE_ALLOW_PRIVATE</code></td>
 <td>否</td>
 <td><code>false</code></td>
@@ -241,6 +247,16 @@
 <li>可选值：<code>douban</code>（豆瓣热门）/ <code>bangumi</code>（Bangumi 每日放送）/ <code>hot-list</code>（影视热榜）；取值非法时告警并忽略，不影响站点运行；</li>
 <li><strong>仅对未主动选择过的用户生效</strong>：用户一旦在设置中主动选择过推荐数据源（或偏好已不是出厂默认值），部署者的默认值不再覆盖——用户的选择始终优先；</li>
 <li>经 <code>/api/status</code> 下发，仅影响首页推荐区的初始展示，不影响其他功能。</li>
+</ul>
+<h3 id="封面图加载方式默认值default_image_mode">封面图加载方式默认值（DEFAULT_IMAGE_MODE）</h3>
+<p>封面图加载方式（直连优先 / 内置代理 / 自定义代理）的用户选择保存在浏览器本地，出厂默认为直连优先。部署者可通过该变量为所有用户指定默认项：</p>
+<pre><code class="language-bash">DEFAULT_IMAGE_MODE=proxy
+</code></pre>
+<ul>
+<li>可选值：<code>direct</code>（直连优先，最省服务器流量）/ <code>proxy</code>（内置代理优先，最稳定，消耗服务器流量）；取值非法时告警并忽略，不影响站点运行；</li>
+<li><strong>不开放 <code>custom</code></strong>：自定义代理模板是每用户手填的本地配置，没有全局模板可下发，强设 <code>custom</code> 只会让未填模板的用户静默退化为直连；</li>
+<li><strong>仅对未主动选择过的用户生效</strong>：用户一旦在设置中主动选择过加载方式（或偏好已不是出厂默认值），部署者的默认值不再覆盖——用户的选择始终优先；</li>
+<li>经 <code>/api/status</code> 下发，仅影响封面图的初始加载方式；各方式的行为与降级链见下文 <a href="#封面图加载方式设置--偏好设置--封面图加载">封面图加载方式</a>。</li>
 </ul>
 <h2 id="运行时设置用户级">运行时设置（用户级）</h2>
 <p>以下设置保存在每个用户浏览器的 localStorage（键 <code>libretv-settings</code>），通过「设置」抽屉修改：</p>
@@ -320,26 +336,33 @@
 <li>早期版本把「最近搜索」常驻在搜索框下方，现已改为下拉：不占首屏，也消除了首次搜索后该行出现导致的布局跳动。</li>
 </ul>
 <h3 id="封面图加载方式设置-偏好设置-封面图加载">封面图加载方式（设置 → 偏好设置 → 封面图加载）</h3>
+<p>每种方式是一条「加载链」，加载失败时按链自动降级，无需手动干预：</p>
 <table>
 <thead>
 <tr>
 <th>方式</th>
-<th>说明</th>
+<th>加载链</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>内置代理（默认）</td>
-<td>经 <code>/api/proxy/</code> 转发（带豆瓣 Referer 伪装），规避豆瓣防盗链与图床直连失败</td>
+<td>直连优先（默认）</td>
+<td>原站直连 → 豆瓣封面自动换公共镜像（cmliussss 腾讯/阿里 CDN，实测可绕过豆瓣防盗链）→ 回退内置代理 → 占位图。最省服务器流量</td>
 </tr>
 <tr>
-<td>直连</td>
-<td>浏览器直接加载豆瓣/采集站封面，最快；部分网络下豆瓣图会 418</td>
+<td>内置代理</td>
+<td>全部封面优先经 <code>/api/proxy?url=</code> 转发（带豆瓣 Referer 伪装）→ 失败自动回退公共镜像（仅豆瓣图）→ 原站直连，代理不再是单点。最稳定，消耗服务器流量</td>
 </tr>
 <tr>
 <td>自定义代理</td>
-<td>模板字符串，<code>{url}</code> 为编码后的原图地址；不含占位符则直接拼接</td>
+<td>模板字符串，<code>{url}</code> 为编码后的原图地址；不含占位符则直接拼接。单一地址不降级，模板错误会显式暴露</td>
 </tr>
 </tbody></table>
+<ul>
+<li>部署者可通过 <code>DEFAULT_IMAGE_MODE</code> 为所有用户指定默认加载方式（直连优先 / 内置代理），见上文 <a href="#封面图加载方式默认值default_image_mode">封面图加载方式默认值</a>；</li>
+<li>代理地址为查询串形式（<code>?url=</code>）：路径里的 <code>%2F</code> 会被 EdgeOne 等网关在路由前解码，查询串不受影响，全平台行为一致；旧路径形式仍兼容；</li>
+<li>封面 <code>&lt;img&gt;</code> 均带 <code>referrerPolicy=&quot;no-referrer&quot;</code>，不向图床暴露来源页；</li>
+<li>经代理转发的图片响应缓存 30 天（分片 / key 保守 1 小时）。</li>
+</ul>
 <h3 id="主题">主题</h3>
 <ul>
 <li>头部太阳/月亮/显示器图标，点击在 <strong>浅色 → 深色 → 跟随系统</strong> 间循环；</li>
@@ -398,6 +421,7 @@
             <li class="toc-h3"><a href="#预置直播源default_live_sources">预置直播源（DEFAULT_LIVE_SOURCES）</a></li>
             <li class="toc-h3"><a href="#预置数据源订阅default_subscriptions">预置数据源订阅（DEFAULT_SUBSCRIPTIONS）</a></li>
             <li class="toc-h3"><a href="#首页推荐数据源默认值default_recommend_source">首页推荐数据源默认值（DEFAULT_RECOMMEND_SOURCE）</a></li>
+            <li class="toc-h3"><a href="#封面图加载方式默认值default_image_mode">封面图加载方式默认值（DEFAULT_IMAGE_MODE）</a></li>
             <li class="toc-h2"><a href="#运行时设置用户级">运行时设置（用户级）</a></li>
             <li class="toc-h3"><a href="#点播源">点播源</a></li>
             <li class="toc-h3"><a href="#直播源">直播源</a></li>

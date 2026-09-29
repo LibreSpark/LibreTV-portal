@@ -139,11 +139,19 @@
 </tr>
 <tr>
 <td>错误恢复</td>
-<td>HLS 网络错误自动 <code>startLoad</code>，媒体错误自动 <code>recoverMediaError</code>；多次失败显示错误面板</td>
+<td>决策表驱动的恢复策略（纯决策模块，不碰 hls 实例）：格式硬失败直接换源；网络错误指数退避重试（800ms 起，3 次后换源）；媒体错误先 <code>recoverMediaError</code> 再 <code>swapAudioCodec</code>；连续失败计数在分片成功后清零</td>
 </tr>
 <tr>
 <td>代理回退</td>
-<td>直连致命网络错误（CORS/防盗链/分片被拒）时，自动改走 <code>/api/proxy/</code>（cookie 鉴权）重试一次</td>
+<td>直连致命网络错误（CORS/防盗链/分片被拒）时，自动改走 <code>/api/proxy?url=</code>（cookie 鉴权）重试；换源决策失败弹出换源面板并提示原因</td>
+</tr>
+<tr>
+<td>片段本地缓存</td>
+<td>观看/暂停时把后续分片缓存到浏览器 Cache Storage（LRU：单集 800MB / 全局 2GB），二次播放与断网直接命中；暂停为预取黄金窗口（铺满整集）；预取完成自动预热下一集前 7 分钟；设置 → 播放与过滤可开关与清理</td>
+</tr>
+<tr>
+<td>整集下载</td>
+<td>播放页「下载本集」→ 全局下载管理器（右上角下载图标）；分片并发下载 + 断点续传；输出 TS 或 MP4（mux.js 转封装）；Chromium 支持边下边存磁盘</td>
 </tr>
 <tr>
 <td>画中画 / 截图 / 网页全屏 / 倍速</td>
