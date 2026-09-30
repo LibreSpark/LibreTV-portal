@@ -1489,12 +1489,14 @@ section {
 
     .nav-menu {
         position: fixed;
-        top: var(--nav-height);
+        /* 挂 top:0 并用 padding 让出导航栏：translateY(-105%) 才能把任意高度
+           的面板完全移出屏幕（此前 top:70px + -110% 会留下底部 ~50px 露在导航栏下） */
+        top: 0;
         left: 0;
         right: 0;
         width: auto;
         height: auto;
-        max-height: calc(100dvh - var(--nav-height));
+        max-height: 100dvh;
         overflow-y: auto;
         background: rgba(10, 10, 10, 0.96);
         backdrop-filter: var(--blur-glass);
@@ -1504,8 +1506,10 @@ section {
         justify-content: flex-start;
         align-items: stretch;
         gap: 0.25rem;
-        padding: 0.75rem 1rem 1rem;
-        transform: translateY(-110%);
+        padding: calc(var(--nav-height) + 0.75rem) 1rem 1rem;
+        /* 层级压在导航栏（z-index 1000）之下：面板从其背后滑入滑出 */
+        z-index: 999;
+        transform: translateY(-105%);
         transition: transform var(--transition-normal);
     }
 
