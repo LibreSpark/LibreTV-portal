@@ -254,12 +254,15 @@ body::before {
     display: none;
     flex-direction: column;
     cursor: pointer;
-    gap: 0.25rem;
+    gap: 0.375rem;
+    padding: 0.5rem;
+    margin: -0.5rem;
 }
 
 .bar {
-    width: 1.5rem;
+    width: 1.375rem;
     height: 2px;
+    border-radius: 2px;
     background: var(--text-primary);
     transition: all var(--transition-normal);
 }
@@ -1487,26 +1490,34 @@ section {
     .nav-menu {
         position: fixed;
         top: var(--nav-height);
-        left: -100%;
-        width: 100%;
-        height: calc(100vh - var(--nav-height));
-        background: rgba(10, 10, 10, 0.95);
+        left: 0;
+        right: 0;
+        width: auto;
+        height: auto;
+        max-height: calc(100dvh - var(--nav-height));
+        overflow-y: auto;
+        background: rgba(10, 10, 10, 0.96);
         backdrop-filter: var(--blur-glass);
+        border-bottom: 1px solid var(--border-color);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
         flex-direction: column;
         justify-content: flex-start;
-        align-items: center;
-        padding: 2rem;
-        transition: left var(--transition-normal);
+        align-items: stretch;
+        gap: 0.25rem;
+        padding: 0.75rem 1rem 1rem;
+        transform: translateY(-110%);
+        transition: transform var(--transition-normal);
     }
 
     .nav-menu.active {
-        left: 0;
+        transform: translateY(0);
     }
 
     .nav-toggle {
         display: flex;
     }
 
+    /* 汉堡 → X：bars 高 2px、间距 4px，中心距 6px，位移必须精确才能对齐成 X */
     .nav-toggle.active .bar:nth-child(2) {
         opacity: 0;
     }
@@ -1517,6 +1528,27 @@ section {
 
     .nav-toggle.active .bar:nth-child(3) {
         transform: translateY(-8px) rotate(-45deg);
+    }
+
+    .nav-menu .nav-link {
+        padding: 0.85rem 0.75rem;
+        font-size: 1rem;
+        border-radius: 0.5rem;
+    }
+
+    .nav-menu .nav-link::after {
+        display: none;
+    }
+
+    .nav-menu .nav-link:hover,
+    .nav-menu .nav-link:active {
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--text-primary);
+    }
+
+    .nav-menu .github-link {
+        justify-content: center;
+        margin-top: 0.5rem;
     }
 
     /* Hero Section */
