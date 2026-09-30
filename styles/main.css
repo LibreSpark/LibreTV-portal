@@ -36,6 +36,7 @@
 
 html {
     scroll-behavior: smooth;
+    color-scheme: dark;
 }
 
 body {
@@ -1830,23 +1831,37 @@ section {
     }
 }
 
-/* Scrollbar Styling */
+/* Scrollbar Styling：低调中性滚动条（原主色荧光青在暗色页面上过于刺眼） */
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.16) transparent;
+}
+
+/* Chromium / WebKit */
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--dark-surface);
+    background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--primary-color);
+    background: rgba(255, 255, 255, 0.12);
     border-radius: 4px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--primary-light);
+    background: rgba(255, 255, 255, 0.24);
+    background-clip: padding-box;
+}
+
+::-webkit-scrollbar-corner {
+    background: transparent;
 }
 
 /* Selection Styling */
