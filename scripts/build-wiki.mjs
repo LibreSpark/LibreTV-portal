@@ -228,6 +228,15 @@ for (const [pageName, page] of pages) {
 
     const outName = isHome ? 'index.html' : `${encodeURIComponent(pageName)}.html`;
     const outPath = path.join(WIKI_DIR, outName);
+
+    // 右侧 TOC 栏在 ≤1280px 隐藏，此时把同一份目录内联进侧栏，窄屏也能页内跳转
+    const toc = buildToc(html);
+    const tocInline = toc === '<!-- 无小节 -->' ? '' :
+        `                    <div class="wiki-sidebar-toc">
+                        <div class="wiki-toc-title">本页目录</div>
+                        <nav class="wiki-toc wiki-toc-inline">${toc}</nav>
+                    </div>`;
+
     const finalHtml = fill(TEMPLATE, {
         TITLE: escapeHtml(title),
         DESCRIPTION: escapeHtml(description),
@@ -235,7 +244,8 @@ for (const [pageName, page] of pages) {
         PAGE_NAME: encodeURIComponent(pageName),
         SIDEBAR: buildSidebarNav(pageName),
         CONTENT: html,
-        TOC: buildToc(html),
+        TOC: toc,
+        TOC_INLINE: tocInline,
         PREV_NEXT: buildPager(pageName),
         PARTICLES: isHome ? '<canvas id="particles-js" aria-hidden="true"></canvas>' : ''
     });

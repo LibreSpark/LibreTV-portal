@@ -319,24 +319,36 @@ body::before {
     display: none;
 }
 
-/* Mobile sidebar toggle */
+/* 文档目录开关：导航栏内的紧凑按钮，仅 ≤992px 显示 */
 .wiki-sidebar-toggle {
     display: none;
-    position: fixed;
-    left: 1rem;
-    bottom: 1.25rem;
-    z-index: 1100;
-    padding: 0.6rem 1.1rem;
+    margin-left: auto;
+    margin-right: 1.25rem;
+    padding: 0.5rem 1rem;
     border-radius: 2rem;
     border: 1px solid rgba(0, 204, 255, 0.4);
-    background: rgba(10, 10, 10, 0.92);
+    background: rgba(0, 204, 255, 0.08);
     color: var(--primary-color);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
     cursor: pointer;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
-    backdrop-filter: var(--blur-glass);
-    -webkit-backdrop-filter: var(--blur-glass);
+}
+
+/* 内联「本页目录」：右侧 TOC 栏被隐藏的宽度下接管页内跳转 */
+.wiki-sidebar-toc {
+    display: none;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.wiki-toc-inline {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    font-size: 0.82rem;
 }
 
 .wiki-sidebar-backdrop {
@@ -844,6 +856,15 @@ body::before {
     .wiki-toc {
         display: none;
     }
+
+    .wiki-sidebar-toc {
+        display: block;
+    }
+
+    /* 内联副本取消 sticky，右侧栏隐藏后 .wiki-toc 的 display:none 不该连带它 */
+    .wiki-sidebar-toc .wiki-toc {
+        display: block;
+    }
 }
 
 /* Responsive: ≤992px 侧栏改为抽屉 */
@@ -855,21 +876,37 @@ body::before {
 
     .wiki-sidebar {
         position: fixed;
-        top: 0;
+        top: var(--nav-height);
         left: 0;
         bottom: 0;
         width: min(300px, 85vw);
-        max-height: 100vh;
+        max-height: calc(100dvh - var(--nav-height));
         background: rgba(10, 10, 10, 0.98);
         z-index: 1150;
-        padding: 1rem;
+        padding: 1rem 1rem calc(1rem + env(safe-area-inset-bottom));
         transform: translateX(-105%);
-        transition: transform var(--transition-normal);
+        visibility: hidden;
+        transition: transform var(--transition-normal), visibility var(--transition-normal);
         overflow-y: auto;
+        overscroll-behavior: contain;
     }
 
     .wiki-sidebar.open {
         transform: translateX(0);
+        visibility: visible;
+    }
+
+    /* 抽屉打开时锁住背景滚动，并把导航栏抬到遮罩之上（按钮可直接收起抽屉） */
+    html.drawer-open,
+    html.drawer-open body {
+        overflow: hidden;
+    }
+
+    html.drawer-open .navbar {
+        z-index: 1160;
+        /* .navbar 是 transition: all，z-index 也会被动画：打开后 ~300ms 内导航栏
+           仍低于遮罩（1140），目录按钮点不动 —— 这里必须让它立即生效 */
+        transition: none;
     }
 
     .wiki-sidebar.open .wiki-sidebar-inner {
@@ -895,7 +932,8 @@ body::before {
     }
 
     .wiki-sidebar-toggle {
-        display: block;
+        display: inline-flex;
+        align-items: center;
     }
 
     .wiki-sidebar-close {
@@ -945,6 +983,17 @@ body::before {
 
     .nav-toggle {
         display: flex;
+    }
+
+    /* logo + 「☰ 目录」+ 汉堡同排，320px 屏也放不下 2rem 横向留白 */
+    .nav-container {
+        padding: 1rem 1.25rem;
+        gap: 0.75rem;
+    }
+
+    .wiki-sidebar-toggle {
+        margin-right: 0.25rem;
+        padding: 0.45rem 0.8rem;
     }
 
     .wiki-container {

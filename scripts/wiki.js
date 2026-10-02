@@ -147,6 +147,7 @@
         const toggleBtn = document.getElementById('sidebarToggle');
         if (!sidebar || !sidebar.classList.contains('open')) return;
         sidebar.classList.remove('open');
+        document.documentElement.classList.remove('drawer-open');
         if (backdrop) backdrop.classList.remove('show');
         if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
     }
@@ -160,6 +161,7 @@
 
         toggleBtn.addEventListener('click', () => {
             const open = sidebar.classList.toggle('open');
+            document.documentElement.classList.toggle('drawer-open', open);
             if (backdrop) backdrop.classList.toggle('show', open);
             toggleBtn.setAttribute('aria-expanded', String(open));
         });
@@ -167,8 +169,8 @@
         if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
         if (backdrop) backdrop.addEventListener('click', closeSidebar);
 
-        // 点击侧栏链接后收起抽屉
-        $$('.wiki-nav a', sidebar).forEach(a => a.addEventListener('click', closeSidebar));
+        // 抽屉里点任意链接都收起：页内目录锚点收起后才能真正看到正文
+        $$('a', sidebar).forEach(a => a.addEventListener('click', closeSidebar));
     }
 
     /* ---------------------------------------------------------------- *

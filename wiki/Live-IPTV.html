@@ -40,6 +40,7 @@
                 <img src="../assets/logo-small.png" alt="LibreTV Logo" class="logo-img">
                 <span class="logo-text">LibreTV</span>
             </a>
+            <button class="wiki-sidebar-toggle" id="sidebarToggle" type="button" aria-controls="wiki-sidebar" aria-expanded="false">☰ 目录</button>
             <div class="nav-menu" id="nav-menu">
                 <a href="../index.html" class="nav-link">首页</a>
                 <a href="index.html" class="nav-link active">文档</a>
@@ -81,13 +82,32 @@
                             <li><a class="nav-external" href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">GitHub 仓库 ↗</a></li>
                         </ul>
                     </nav>
+                    <div class="wiki-sidebar-toc">
+                        <div class="wiki-toc-title">本页目录</div>
+                        <nav class="wiki-toc wiki-toc-inline"><ul>
+            <li class="toc-h2"><a href="#入口与整体结构">入口与整体结构</a></li>
+            <li class="toc-h2"><a href="#添加直播源">添加直播源</a></li>
+            <li class="toc-h3"><a href="#公开测试源">公开测试源</a></li>
+            <li class="toc-h2"><a href="#频道侧栏">频道侧栏</a></li>
+            <li class="toc-h2"><a href="#播放">播放</a></li>
+            <li class="toc-h3"><a href="#与点播播放器的关系">与点播播放器的关系</a></li>
+            <li class="toc-h2"><a href="#批量测活分片级">批量测活（分片级）</a></li>
+            <li class="toc-h3"><a href="#探测方式">探测方式</a></li>
+            <li class="toc-h3"><a href="#结果含义">结果含义</a></li>
+            <li class="toc-h3"><a href="#性能与缓存">性能与缓存</a></li>
+            <li class="toc-h3"><a href="#局限">局限</a></li>
+            <li class="toc-h2"><a href="#节目单epg">节目单（EPG）</a></li>
+            <li class="toc-h2"><a href="#订阅导出">订阅导出</a></li>
+            <li class="toc-h2"><a href="#播放不了排查顺序">播放不了？排查顺序</a></li>
+            <li class="toc-h2"><a href="#技术实现要点开发者">技术实现要点（开发者）</a></li>
+            </ul></nav>
+                    </div>
                     <div class="wiki-sidebar-meta">
                         <a href="https://github.com/LibreSpark/LibreTV/wiki/Live-IPTV" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页 ↗</a>
                     </div>
                 </div>
             </aside>
             <div class="wiki-sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
-            <button class="wiki-sidebar-toggle" id="sidebarToggle" type="button" aria-controls="wiki-sidebar" aria-expanded="false">☰ 文档目录</button>
 
             <!-- Content -->
             <article class="wiki-content">
