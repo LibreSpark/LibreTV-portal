@@ -1507,7 +1507,8 @@ section {
         align-items: stretch;
         gap: 0.25rem;
         padding: calc(var(--nav-height) + 0.75rem) 1rem 1rem;
-        /* 层级压在导航栏（z-index 1000）之下：面板从其背后滑入滑出 */
+        /* 面板挂在 .navbar（fixed, z-index 1000）内部，999 只相对同级生效，
+           逃不出导航栏的堆叠上下文 —— 所以 logo 和汉堡键必须显式抬到面板之上 */
         z-index: 999;
         transform: translateY(-105%);
         transition: transform var(--transition-normal);
@@ -1515,6 +1516,13 @@ section {
 
     .nav-menu.active {
         transform: translateY(0);
+    }
+
+    .nav-logo,
+    .nav-toggle {
+        /* z-index 需要 position 才生效；否则被 .nav-menu 面板盖住，X 点不动 */
+        position: relative;
+        z-index: 1000;
     }
 
     .nav-toggle {

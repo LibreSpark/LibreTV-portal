@@ -40,6 +40,7 @@
                 <img src="../assets/logo-small.png" alt="LibreTV Logo" class="logo-img">
                 <span class="logo-text">LibreTV</span>
             </a>
+            <button class="wiki-sidebar-toggle" id="sidebarToggle" type="button" aria-controls="wiki-sidebar" aria-expanded="false">☰ 目录</button>
             <div class="nav-menu" id="nav-menu">
                 <a href="../index.html" class="nav-link">首页</a>
                 <a href="index.html" class="nav-link active">文档</a>
@@ -81,13 +82,29 @@
                             <li><a class="nav-external" href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">GitHub 仓库 ↗</a></li>
                         </ul>
                     </nav>
+                    <div class="wiki-sidebar-toc">
+                        <div class="wiki-toc-title">本页目录</div>
+                        <nav class="wiki-toc wiki-toc-inline"><ul>
+            <li class="toc-h2"><a href="#支持的点播源类型">支持的点播源类型</a></li>
+            <li class="toc-h2"><a href="#添加点播源">添加点播源</a></li>
+            <li class="toc-h2"><a href="#详情页爬取特殊源">详情页爬取（特殊源）</a></li>
+            <li class="toc-h2"><a href="#服务端聚合行为">服务端聚合行为</a></li>
+            <li class="toc-h2"><a href="#源可用性测试与自动停用">源可用性测试与自动停用</a></li>
+            <li class="toc-h2"><a href="#数据源订阅-分享">数据源订阅 / 分享</a></li>
+            <li class="toc-h3"><a href="#订阅格式libretv-sourcelist-json">订阅格式（LibreTV-SourceList JSON）</a></li>
+            <li class="toc-h3"><a href="#兼容-tvbox-配置">兼容 TVBOX 配置</a></li>
+            <li class="toc-h3"><a href="#订阅行为">订阅行为</a></li>
+            <li class="toc-h3"><a href="#分享导出-发布链接">分享（导出 / 发布链接）</a></li>
+            <li class="toc-h2"><a href="#点播源配置的数据流">点播源配置的数据流</a></li>
+            <li class="toc-h2"><a href="#常见问题">常见问题</a></li>
+            </ul></nav>
+                    </div>
                     <div class="wiki-sidebar-meta">
                         <a href="https://github.com/LibreSpark/LibreTV/wiki/Data-Sources" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页 ↗</a>
                     </div>
                 </div>
             </aside>
             <div class="wiki-sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
-            <button class="wiki-sidebar-toggle" id="sidebarToggle" type="button" aria-controls="wiki-sidebar" aria-expanded="false">☰ 文档目录</button>
 
             <!-- Content -->
             <article class="wiki-content">

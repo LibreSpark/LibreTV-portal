@@ -40,6 +40,7 @@
                 <img src="../assets/logo-small.png" alt="LibreTV Logo" class="logo-img">
                 <span class="logo-text">LibreTV</span>
             </a>
+            <button class="wiki-sidebar-toggle" id="sidebarToggle" type="button" aria-controls="wiki-sidebar" aria-expanded="false">☰ 目录</button>
             <div class="nav-menu" id="nav-menu">
                 <a href="../index.html" class="nav-link">首页</a>
                 <a href="index.html" class="nav-link active">文档</a>
@@ -81,13 +82,27 @@
                             <li><a class="nav-external" href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">GitHub 仓库 ↗</a></li>
                         </ul>
                     </nav>
+                    <div class="wiki-sidebar-toc">
+                        <div class="wiki-toc-title">本页目录</div>
+                        <nav class="wiki-toc wiki-toc-inline"><ul>
+            <li class="toc-h2"><a href="#鉴权模型">鉴权模型</a></li>
+            <li class="toc-h3"><a href="#会话">会话</a></li>
+            <li class="toc-h3"><a href="#速率限制">速率限制</a></li>
+            <li class="toc-h3"><a href="#与旧版的安全差异">与旧版的安全差异</a></li>
+            <li class="toc-h2"><a href="#代理get-apiproxyltencoded-urlgt">代理（GET /api/proxy/&amp;lt;encoded-url&amp;gt;）</a></li>
+            <li class="toc-h3"><a href="#访问规则">访问规则</a></li>
+            <li class="toc-h3"><a href="#ssrf-防护双层">SSRF 防护（双层）</a></li>
+            <li class="toc-h3"><a href="#行为">行为</a></li>
+            <li class="toc-h3"><a href="#上游伪装">上游伪装</a></li>
+            <li class="toc-h2"><a href="#已知边界">已知边界</a></li>
+            </ul></nav>
+                    </div>
                     <div class="wiki-sidebar-meta">
                         <a href="https://github.com/LibreSpark/LibreTV/wiki/Proxy-Security" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页 ↗</a>
                     </div>
                 </div>
             </aside>
             <div class="wiki-sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
-            <button class="wiki-sidebar-toggle" id="sidebarToggle" type="button" aria-controls="wiki-sidebar" aria-expanded="false">☰ 文档目录</button>
 
             <!-- Content -->
             <article class="wiki-content">
