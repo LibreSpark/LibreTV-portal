@@ -6,6 +6,12 @@ on:
   push:
     branches: ["main"]
 
+  # wiki-sync 以默认 GITHUB_TOKEN 提交，GitHub 不会为该 push 触发本 workflow，
+  # 因此改为跟随其运行完成来补一次部署。
+  workflow_run:
+    workflows: ["Sync LibreTV Wiki"]
+    types: [completed]
+
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -24,6 +30,7 @@ concurrency:
 jobs:
   # Single deploy job since we're just deploying
   deploy:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
