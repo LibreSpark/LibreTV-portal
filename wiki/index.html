@@ -124,7 +124,7 @@ docker compose pull &amp;&amp; docker compose up -d
 npm install
 PASSWORD=dev-password npm run dev   # http://localhost:8080
 </code></pre>
-<p>生产部署务必通过 HTTPS 访问（localhost 除外），否则会话 cookie 会被浏览器丢弃——表现为「密码正确却无法登录」，详见 <a href="Deployment.html">部署</a>。</p>
+<p>对外提供服务建议套上 HTTPS（密码在 POST body 中明文传输）；登录本身不依赖 HTTPS——会话 cookie 的 <code>Secure</code> 按请求协议自动推导，纯 HTTP 也能正常登录，详见 <a href="Deployment.html">部署</a>。</p>
 <h2 id="文档目录">文档目录</h2>
 <p><strong>部署与配置</strong></p>
 <table>

@@ -222,7 +222,7 @@
 <td><code>COOKIE_SECURE</code></td>
 <td>否</td>
 <td>按请求协议自动推导</td>
-<td>显式覆盖会话 cookie 的 <code>Secure</code> 标记（<code>true</code> / <code>false</code>）。反向代理未传递 <code>x-forwarded-proto</code> 导致 HTTPS 下「密码正确却无法登录」时设为 <code>true</code>，见 <a href="Deployment.html">Deployment</a></td>
+<td>显式覆盖会话 cookie 的 <code>Secure</code> 标记（<code>true</code> / <code>false</code>）。反向代理终结 TLS 但未传递 <code>x-forwarded-proto</code> 时 cookie 不会带 <code>Secure</code>（不影响登录，只是少一层保护），设为 <code>true</code> 可强制，见 <a href="Deployment.html">Deployment</a></td>
 </tr>
 </tbody></table>
 <blockquote>
@@ -250,13 +250,15 @@
 <li>解析失败告警并整体忽略。功能详见 <a href="Live-IPTV.html">Live-IPTV</a>。</li>
 </ul>
 <h3 id="预置数据源订阅default_subscriptions">预置数据源订阅（DEFAULT_SUBSCRIPTIONS）</h3>
-<p>部署者无需把源列表内联进环境变量，只填 LibreTV-SourceList JSON 链接即可，首次访问自动为所有用户导入点播源与直播源（也接受 TVBOX 配置地址，见 <a href="Data-Sources.html#兼容-tvbox-配置">Data-Sources · 兼容 TVBOX 配置</a>）：</p>
-<pre><code class="language-bash">DEFAULT_SUBSCRIPTIONS=[&quot;https://example.com/sources.json&quot;,{&quot;url&quot;:&quot;https://example.com/other.json&quot;,&quot;name&quot;:&quot;备用清单&quot;}]
+<p>部署者无需把源列表内联进环境变量，只填 LibreTV-SourceList JSON 链接即可，首次访问自动为所有用户导入点播源与直播源（也接受 TVBOX 配置地址与接口目录，见 <a href="Data-Sources.html#兼容-tvbox-配置">Data-Sources · 兼容 TVBOX 配置</a>）：</p>
+<pre><code class="language-bash">DEFAULT_SUBSCRIPTIONS=[&quot;https://example.com/sources.json&quot;,{&quot;url&quot;:&quot;https://example.com/other.json&quot;,&quot;name&quot;:&quot;备用清单&quot;,&quot;refreshDays&quot;:10}]
 </code></pre>
 <ul>
-<li>数组元素为订阅 URL 字符串，或 <code>{url, name}</code> 对象（name 作为订阅条目显示名，可选）；</li>
+<li>数组元素为订阅 URL 字符串，或 <code>{url, name, refreshDays}</code> 对象（name 作为订阅条目显示名，可选）；</li>
 <li>自动导入走与手动订阅完全相同的流程：点播源默认勾选（成人过滤开启时跳过成人源）、直播源自动启用，均带「订阅」标识；</li>
-<li><strong>同步时机</strong>：首次自动导入后，超过 24 小时未同步的预置订阅会在启动阶段静默刷新一次；也可随时在设置中手动同步（⟳）；</li>
+<li><strong>同步时机</strong>：首次自动导入后，按各订阅的 <code>refreshDays</code>（1-365 天，缺省 1 天）在启动阶段静默刷新；也可随时在设置中手动同步（⟳）；</li>
+<li><strong>刷新周期可由用户覆盖</strong>：源管理面板里每个订阅都有独立的周期下拉（关闭 / 1 / 3 / 7 / 14 / 30 天），默认关闭即纯手动；面板设置优先于环境变量，即 <code>refreshDays</code> 只决定初始值。面板里的自动刷新有护栏：打开站点时检查是否到期，单次最多刷新 5 个、并发 2 个，页面不可见或离线时跳过；连续失败 3 次自动暂停该订阅，手动同步成功后恢复；</li>
+<li><strong>去重</strong>：同一地址写两遍只订阅一次（地址先归一化——去尾部斜杠与空的 <code>?</code> / <code>#</code>——再按 url 去重，名称以首次出现为准）；</li>
 <li><strong>失败回退</strong>：拉取失败时保留上次成功导入的数据，下次启动自动重试，不影响站点运行；</li>
 <li><strong>用户删除</strong>：同步成功过的预置订阅被用户删除后，不会被自动加回；从未同步成功的则会持续重试直至成功；</li>
 <li>远端清单由部署者自行托管（gist / 私有仓库 raw 均可），更新源列表无需修改容器配置或重启。</li>
@@ -301,7 +303,7 @@
 <li>入口：设置 → 源管理 → 数据源订阅；保存订阅地址、名称、上次同步时间；</li>
 <li>一份订阅可同时下发点播源与直播源，订阅地址兼容 LibreTV-SourceList JSON 与 TVBOX 配置，格式与行为见 <a href="Data-Sources.html#数据源订阅--分享">Data-Sources · 数据源订阅</a>；</li>
 <li><strong>整体启用 / 停用</strong>：每条订阅的开关可临时停用它，其源不再参与搜索；<strong>不改各源勾选状态、不删数据</strong>，重新打开即完全恢复（无损可逆）；</li>
-<li>同步为手动操作（订阅条目 <strong>⟳</strong>），远端列表更新后需手动刷新；部署者可通过 <code>DEFAULT_SUBSCRIPTIONS</code> 预置订阅，首次访问自动导入、超 24h 静默刷新，见上文 <a href="#预置数据源订阅default_subscriptions">预置数据源订阅</a>；</li>
+<li><strong>同步</strong>：订阅条目 <strong>⟳</strong> 手动强制同步；也可在条目上的周期下拉里开启自动刷新（关闭 / 1 / 3 / 7 / 14 / 30 天，默认关闭），到期才在打开站点时后台静默同步。部署者可通过 <code>DEFAULT_SUBSCRIPTIONS</code> 预置订阅与初始周期，面板设置优先，见上文 <a href="#预置数据源订阅default_subscriptions">预置数据源订阅</a>；</li>
 <li><strong>分享</strong>：「导出数据源」导出全量 JSON 文件供自行托管；「发布为链接」把<strong>仅已勾选启用</strong>的源发布到公开粘贴板并直接返回订阅 URL（注意事项见 <a href="Data-Sources.html#分享导出--发布链接">Data-Sources · 分享</a>）；</li>
 <li>删除订阅会移除其导入的两类源（含启用状态与最近观看），但<strong>保留已收藏的频道</strong>。</li>
 </ul>

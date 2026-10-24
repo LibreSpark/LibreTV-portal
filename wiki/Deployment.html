@@ -93,6 +93,7 @@
             <li class="toc-h3"><a href="#本地源码构建不经过-ci">本地源码构建（不经过 CI）</a></li>
             <li class="toc-h3"><a href="#构建上下文">构建上下文</a></li>
             <li class="toc-h3"><a href="#docker-composeyml">docker-compose.yml</a></li>
+            <li class="toc-h2"><a href="#免-docker预构建包">免 Docker（预构建包）</a></li>
             <li class="toc-h2"><a href="#手动部署">手动部署</a></li>
             <li class="toc-h3"><a href="#生产建议">生产建议</a></li>
             <li class="toc-h2"><a href="#环境变量">环境变量</a></li>
@@ -146,8 +147,8 @@ git push --tags
 与 <code>/api/status</code> 返回值脱节），再跑类型检查与单测，通过则构建 <code>linux/amd64</code> + <code>linux/arm64</code>
 双架构镜像并推送，产出三个 tag：</p>
 <ul>
-<li><code>ghcr.io/librespark/libretv:2.0.1</code>（完整版本）</li>
-<li><code>ghcr.io/librespark/libretv:2.0</code>（次版本）</li>
+<li><code>ghcr.io/librespark/libretv:&lt;版本&gt;</code>（完整版本）</li>
+<li><code>ghcr.io/librespark/libretv:&lt;主.次&gt;</code>（次版本）</li>
 <li><code>ghcr.io/librespark/libretv:latest</code></li>
 </ul>
 <p>无需配置任何 secrets，<code>GITHUB_TOKEN</code> 由 GitHub 自动注入并具备 <code>packages: write</code> 权限。
@@ -158,7 +159,7 @@ echo &quot;PASSWORD=your-strong-password&quot; &gt; .env
 docker compose pull &amp;&amp; docker compose up -d     # 拉取 ghcr.io/librespark/libretv:latest
 </code></pre>
 <p>锁定特定版本时在 <code>.env</code> 中设置：</p>
-<pre><code class="language-bash">LIBRETV_IMAGE=ghcr.io/librespark/libretv:2.0.1
+<pre><code class="language-bash">LIBRETV_IMAGE=ghcr.io/librespark/libretv:&lt;版本&gt;
 </code></pre>
 <h3 id="本地源码构建不经过-ci">本地源码构建（不经过 CI）</h3>
 <p><code>docker-compose.yml</code> 同时声明了 <code>build: .</code> 与 <code>image:</code>，本地没有镜像时会用源码构建
@@ -215,14 +216,43 @@ docker compose pull &amp;&amp; docker compose up -d     # 拉取 ghcr.io/libresp
 # 可选：会话/代理签名密钥，单实例可不设（不设时从 PASSWORD 派生）
 # PROXY_SECRET=            # openssl rand -hex 32
 # 可选：锁定镜像版本
-# LIBRETV_IMAGE=ghcr.io/librespark/libretv:2.7.0
+# LIBRETV_IMAGE=ghcr.io/librespark/libretv:&lt;版本&gt;
 </code></pre>
 <p>几点说明：</p>
 <ul>
 <li>JSON 数组形式的变量（<code>DEFAULT_SOURCES</code> / <code>DEFAULT_LIVE_SOURCES</code> / <code>DEFAULT_SUBSCRIPTIONS</code>）必须是合法 JSON，解析失败只会告警并<strong>整体忽略</strong>，不影响站点启动；</li>
 <li><strong>无需挂载卷</strong>：服务无状态，升级即 <code>docker compose pull &amp;&amp; docker compose up -d</code>，用户数据留在浏览器端；</li>
-<li>生产环境需用反向代理（Nginx / Caddy）终结 HTTPS 后转发到 8080，否则会话 cookie（带 <code>Secure</code>）会被浏览器丢弃，表现为&quot;密码正确却无法登录&quot;；</li>
+<li>建议用反向代理（Nginx / Caddy）终结 HTTPS 后转发到 8080，避免密码在公网明文传输；登录本身不依赖 HTTPS——会话 cookie 的 <code>Secure</code> 按 <code>x-forwarded-proto</code> 自动推导，纯 HTTP 部署也能正常登录；</li>
 <li>各变量含义与默认值见 <a href="Configuration.html">Configuration</a>。</li>
+</ul>
+<h2 id="免-docker预构建包">免 Docker（预构建包）</h2>
+<p>每个版本都在 <a href="https://github.com/LibreSpark/LibreTV/releases" target="_blank" rel="noopener noreferrer">Releases</a> 附一个 <code>libretv-&lt;版本&gt;-standalone.tar.gz</code> 与对应的 <code>SHA256SUMS</code>，解压后直接用 Node 启动——不需要 Docker，也不需要构建。要求 Node.js ≥ 18。</p>
+<pre><code class="language-bash">VER=&lt;版本&gt;    # 以 Releases 中的实际版本为准，也可用 /api/status 返回的 version 核对
+curl -LO &quot;https://github.com/LibreSpark/LibreTV/releases/download/v${VER}/libretv-${VER}-standalone.tar.gz&quot;
+curl -LO &quot;https://github.com/LibreSpark/LibreTV/releases/download/v${VER}/SHA256SUMS&quot;
+sha256sum -c SHA256SUMS
+
+mkdir -p libretv                      # 包内没有顶层目录，目标目录必须先存在
+tar -xzf &quot;libretv-${VER}-standalone.tar.gz&quot; -C libretv
+cd libretv
+PASSWORD=your-password PORT=8080 node server.js
+</code></pre>
+<p>Windows（PowerShell，Windows 10 及以上自带 <code>tar</code>）：</p>
+<pre><code class="language-powershell">mkdir libretv
+tar -xzf .\libretv-&lt;版本&gt;-standalone.tar.gz -C .\libretv
+cd libretv
+$env:PASSWORD=&quot;your-password&quot;; $env:PORT=&quot;8080&quot;; node .\server.js
+</code></pre>
+<blockquote>
+<p>在 Git Bash 里启动时，<code>HOSTNAME</code> 会被设成机器名，而 <code>server.js</code> 拿它当绑定地址；若出现绑定异常，显式指定 <code>$env:HOSTNAME=&quot;127.0.0.1&quot;</code>（仅本机）或 <code>&quot;0.0.0.0&quot;</code>（局域网可访问）。</p>
+</blockquote>
+<p>几点说明：</p>
+<ul>
+<li>包内是 Next.js standalone 产物（<code>server.js</code> + <code>public</code> + 静态资源 + 运行时依赖），<strong>与 CPU 架构无关</strong>，x86_64 / arm64 / armv7 都能跑，适合用不了 Docker 的设备（如 ARMv7 路由器）；</li>
+<li><strong>不传 <code>PORT</code> 时监听 3000</strong>（<code>server.js</code> 的默认值），与镜像内的 8080 不同，按需显式指定；</li>
+<li>包内<strong>不含 <code>.env</code></strong>，所有配置走环境变量，语义与 Docker 部署完全一致，见 <a href="Configuration.html">Configuration</a>；</li>
+<li>包内不含 <code>sharp</code>（本项目不开图片优化，封面走代理原图），因此不带任何平台相关的原生模块；</li>
+<li>升级即下载新版包、解压到新目录后切换，用户数据在浏览器端，无需迁移。</li>
 </ul>
 <h2 id="手动部署">手动部署</h2>
 <p>要求 Node.js ≥ 20（推荐 22）：</p>
@@ -235,8 +265,7 @@ PASSWORD=your-password npm start          # 默认 8080 端口
 </blockquote>
 <h3 id="生产建议">生产建议</h3>
 <ul>
-<li>使用反向代理（Nginx / Caddy）终结 HTTPS，转发到 8080；</li>
-<li>会话 Cookie 在生产环境（<code>NODE_ENV=production</code>）下自动启用 <code>Secure</code>，需 HTTPS 访问；</li>
+<li>使用反向代理（Nginx / Caddy）终结 HTTPS，转发到 8080，并确保传递 <code>x-forwarded-proto</code>（cookie 的 <code>Secure</code> 由它推导；未传递时不影响登录，只是少一层保护，可用 <code>COOKIE_SECURE=true</code> 强制）；</li>
 <li>设置 <code>PROXY_SECRET</code> 而非依赖 PASSWORD 派生，避免更换密码导致全员会话失效以外的副作用。</li>
 </ul>
 <h2 id="环境变量">环境变量</h2>
@@ -288,6 +317,7 @@ curl -i &quot;http://localhost:8080/api/proxy/http%3A%2F%2F127.0.0.1%3A8080%2F&q
             <li class="toc-h3"><a href="#本地源码构建不经过-ci">本地源码构建（不经过 CI）</a></li>
             <li class="toc-h3"><a href="#构建上下文">构建上下文</a></li>
             <li class="toc-h3"><a href="#docker-composeyml">docker-compose.yml</a></li>
+            <li class="toc-h2"><a href="#免-docker预构建包">免 Docker（预构建包）</a></li>
             <li class="toc-h2"><a href="#手动部署">手动部署</a></li>
             <li class="toc-h3"><a href="#生产建议">生产建议</a></li>
             <li class="toc-h2"><a href="#环境变量">环境变量</a></li>

@@ -118,7 +118,7 @@
 <li>登录：<code>POST /api/auth</code>，body 携带明文密码（<strong>不走 URL</strong>，避免进访问日志）；</li>
 <li>服务端用 SHA-256 摘要做<strong>恒定时间比较</strong>（<code>crypto.timingSafeEqual</code>），不暴露时序信息；</li>
 <li>通过后签发会话 Cookie：<code>ltv_session = &lt;过期时间戳&gt;.&lt;HMAC-SHA256(密钥, 时间戳)&gt;</code>；<ul>
-<li><code>httpOnly</code>（JS 不可读）、<code>SameSite=Lax</code>、生产环境 <code>Secure</code>、有效期 90 天；</li>
+<li><code>httpOnly</code>（JS 不可读）、<code>SameSite=Lax</code>、有效期 90 天；<code>Secure</code> 按 <code>x-forwarded-proto</code> 推导，可用 <code>COOKIE_SECURE</code> 显式覆盖；</li>
 <li>密钥 = <code>PROXY_SECRET</code>，未设置时从 <code>PASSWORD</code> 派生；</li>
 </ul>
 </li>

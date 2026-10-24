@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FAQ - LibreTV 文档</title>
-    <meta name="description" content="Q: 打开站点一直提示&quot;需要配置密码&quot;？ 服务器未设置 PASSWORD 环境变量。Docker 部署检查 .env；手动部署确认启动命令中带 PASSWORD=...。设置后需重启服务。 Q: 登录后刷新又要求输入密码？ 生产环境（HTTPS）下 Cookie 为 Secure，用 HTTP 访问">
+    <meta name="description" content="Q: 打开站点一直提示&quot;需要配置密码&quot;？ 服务器未设置 PASSWORD 环境变量。Docker 部署检查 .env；手动部署确认启动命令中带 PASSWORD=...。设置后需重启服务。 Q: 登录后刷新又要求输入密码？ 换了访问地址（例如先 http://192.168.1.5:8080、后 h">
     <meta name="theme-color" content="#0a0a0a">
     <meta name="author" content="LibreTV Team">
     <link rel="canonical" href="https://libretv.is-an.org/wiki/FAQ.html">
@@ -13,10 +13,10 @@
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://libretv.is-an.org/wiki/FAQ.html">
     <meta property="og:title" content="FAQ - LibreTV 文档">
-    <meta property="og:description" content="Q: 打开站点一直提示&quot;需要配置密码&quot;？ 服务器未设置 PASSWORD 环境变量。Docker 部署检查 .env；手动部署确认启动命令中带 PASSWORD=...。设置后需重启服务。 Q: 登录后刷新又要求输入密码？ 生产环境（HTTPS）下 Cookie 为 Secure，用 HTTP 访问">
+    <meta property="og:description" content="Q: 打开站点一直提示&quot;需要配置密码&quot;？ 服务器未设置 PASSWORD 环境变量。Docker 部署检查 .env；手动部署确认启动命令中带 PASSWORD=...。设置后需重启服务。 Q: 登录后刷新又要求输入密码？ 换了访问地址（例如先 http://192.168.1.5:8080、后 h">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="FAQ - LibreTV 文档">
-    <meta name="twitter:description" content="Q: 打开站点一直提示&quot;需要配置密码&quot;？ 服务器未设置 PASSWORD 环境变量。Docker 部署检查 .env；手动部署确认启动命令中带 PASSWORD=...。设置后需重启服务。 Q: 登录后刷新又要求输入密码？ 生产环境（HTTPS）下 Cookie 为 Secure，用 HTTP 访问">
+    <meta name="twitter:description" content="Q: 打开站点一直提示&quot;需要配置密码&quot;？ 服务器未设置 PASSWORD 环境变量。Docker 部署检查 .env；手动部署确认启动命令中带 PASSWORD=...。设置后需重启服务。 Q: 登录后刷新又要求输入密码？ 换了访问地址（例如先 http://192.168.1.5:8080、后 h">
 
     <!-- Favicon：与首页 / 主应用图标同一素材（logo-black.png）导出的多尺寸，
          48 的整数倍 + 站点根目录 favicon.ico 兜底，避免被抓取端缩放后显示不全 -->
@@ -113,7 +113,8 @@
 服务器未设置 <code>PASSWORD</code> 环境变量。Docker 部署检查 <code>.env</code>；手动部署确认启动命令中带 <code>PASSWORD=...</code>。设置后需重启服务。</p>
 <p><strong>Q: 登录后刷新又要求输入密码？</strong></p>
 <ul>
-<li>生产环境（HTTPS）下 Cookie 为 <code>Secure</code>，用 HTTP 访问生产构建会导致 Cookie 无法保存——请配置 HTTPS 或以开发模式运行；</li>
+<li>换了访问地址（例如先 <code>http://192.168.1.5:8080</code>、后 <code>http://localhost:8080</code>）：cookie 按 host 隔离，需在同一地址下登录；</li>
+<li>浏览器禁用了 cookie 或处于无痕模式（部分浏览器关闭窗口即清）；</li>
 <li>多实例部署未设置 <code>PROXY_SECRET</code>：各实例派生密钥不同，会话互不认账。</li>
 </ul>
 <p><strong>Q: 忘记密码怎么办？</strong>
@@ -144,6 +145,8 @@
 确认「自动连播」开关已打开（播放页操作栏或设置中）。</p>
 <p><strong>Q: 换源后集数对不上？</strong>
 换源按集数索引对齐，目标源集数少于当前集数时会回到第 1 集。</p>
+<p><strong>Q: 自动广告过滤抓不住某些广告怎么办？</strong>
+用播放器控制条的「标记广告」：在广告播放时点一下，当前分段即被标记——当集立即跳过，并通过分片指纹让本片源之后所有集数自动跳过。标记是人工判定、零误伤，且与「广告切片过滤」开关互相独立。详见 <a href="Player.html#用户标记广告">Player · 用户标记广告</a>。</p>
 <h2 id="直播-iptv-相关">直播 / IPTV 相关</h2>
 <p><strong>Q: 直播页提示&quot;请先在设置中添加直播源&quot;？</strong>
 本项目不内置任何频道。到「设置 → 源管理 → 直播源」添加 M3U 订阅地址（如 <code>https://iptv-org.github.io/iptv/countries/cn.m3u</code>），或部署者通过 <code>DEFAULT_LIVE_SOURCES</code> 预置。</p>

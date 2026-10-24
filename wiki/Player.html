@@ -89,6 +89,7 @@
             <li class="toc-h2"><a href="#功能">功能</a></li>
             <li class="toc-h2"><a href="#快捷键">快捷键</a></li>
             <li class="toc-h2"><a href="#播放进度与历史">播放进度与历史</a></li>
+            <li class="toc-h2"><a href="#用户标记广告">用户标记广告</a></li>
             <li class="toc-h2"><a href="#播放失败的排查顺序">播放失败的排查顺序</a></li>
             </ul></nav>
                     </div>
@@ -146,6 +147,10 @@
 <tr>
 <td>广告过滤</td>
 <td>自定义 hls.js loader 对 manifest/level 文本剔除 <code>#EXT-X-DISCONTINUITY</code> 广告分段（设置中可关）</td>
+</tr>
+<tr>
+<td>用户标记广告</td>
+<td>播放器控制条「标记广告」按钮：把当前分段标记为广告，当集立即跳过，并学习分片指纹——本片源之后所有集数命中指纹即自动跳过；详见下文 <a href="#用户标记广告">用户标记广告</a></td>
 </tr>
 <tr>
 <td>错误恢复</td>
@@ -211,6 +216,20 @@
 <li><strong>历史</strong>：进入播放页 2 秒后写入 <code>history</code> 表（仅 <code>sourceKey + vodId + episodeIndex</code> 定位信息），播放中增量更新进度；</li>
 <li><strong>剧集同步</strong>：从历史进入播放页时重新拉取详情，天然获得最新剧集列表（旧版需专门的同步逻辑）。</li>
 </ul>
+<h2 id="用户标记广告">用户标记广告</h2>
+<p>自动广告过滤（URL 特征/片头/中插三层启发式）无法覆盖所有插入形态——与正片同构的广告（同分组宽度、相近码率）没有任何可靠的自动判据。用户标记是<strong>人工 ground truth 兜底</strong>：亲眼确认、标记即真相、零误伤。</p>
+<p><strong>交互</strong>：播放器控制条「标记广告」按钮。按下时系统用 hls.js 运行时结构（fragments 按连续相同 <code>cc</code> 分组，即 <code>#EXT-X-DISCONTINUITY</code> 边界）把&quot;当前播放位置&quot;翻译成精确的分组范围——<strong>用户不掐秒表</strong>。实测广告在源站拼接时总是独立成组（组边界=广告边界），一键即可精确覆盖。</p>
+<ul>
+<li><strong>统一「标记 + 跳过」语义</strong>：标记后该分组加入跳过列表，落在区间内立即跳到组尾；进度条以红色斜纹色块标出广告区间，列表（播放器下方）展示本集全部已过滤条目；</li>
+<li><strong>指纹学习与跨集跳过</strong>：组内分片取内容前 64KB 计算 SHA-256 入库（<code>adFingerprints</code> 表，<code>user</code> 信任级）。实测同一支广告跨集的 URL 全部不同但<strong>字节完全一致</strong>，之后任何一集的分片命中指纹 → 自动跳过命中分片所在的整个分组；</li>
+<li><strong>回退顺滑</strong>：手动 seek/回退落入广告区间视为<strong>回看意图</strong>——不弹回，正常播放该段；离开区间后自动跳过恢复（ SponsorBlock 同款语义）。连续 ← 可顺滑穿越广告区，无卡死；</li>
+<li><strong>画面预览缩略图</strong>：条目带画面预览（组内分片构造 mini-m3u8，共用隐藏预览播放器静音播到 0.3s 截帧），一眼确认广告/正片；标记缩略图持久化，指纹命中条目实时生成；</li>
+<li><strong>扩展</strong>：广告占多个分组时，10 秒内再次点击自动并入相邻分组（toast 提示范围与撤销）；</li>
+<li><strong>撤销/删除</strong>：toast 撤销按钮；设置 → 播放与过滤 → 标记列表可逐条删除（连带清理指纹与孤儿指纹）；</li>
+<li><strong>降级</strong>：源没有 DISCONTINUITY（整集一组）时退化为标记当前分片（粒度变粗，功能可用）；</li>
+<li><strong>迁移</strong>：标记与指纹随「配置导入导出」一并迁移（<code>adMarks</code>/<code>adFingerprints</code>）。</li>
+</ul>
+<p><strong>信任级与边界</strong>：<code>user</code> 来源指纹是人工判定，优先级最高、不受「广告切片过滤」开关影响（那是自动三层自己的开关），时间轴剔除同理。用户标记只能帮&quot;看过的人&quot;和&quot;后来的人&quot;——每部片第一个遇到新广告的人仍会看到一次（标记后该段即从进度条移除或被跳过）。</p>
 <h2 id="播放失败的排查顺序">播放失败的排查顺序</h2>
 <ol>
 <li><strong>换源</strong>：点击「切换资源」，选择测速绿色（低延迟）的其他源；</li>
@@ -234,6 +253,7 @@
             <li class="toc-h2"><a href="#功能">功能</a></li>
             <li class="toc-h2"><a href="#快捷键">快捷键</a></li>
             <li class="toc-h2"><a href="#播放进度与历史">播放进度与历史</a></li>
+            <li class="toc-h2"><a href="#用户标记广告">用户标记广告</a></li>
             <li class="toc-h2"><a href="#播放失败的排查顺序">播放失败的排查顺序</a></li>
             </ul>
             </aside>
